@@ -38,10 +38,26 @@ export function start(cwd: string, taskId: string, mediaType: "image" | "video" 
   if (tasks.size >= 1000) throw Object.assign(new Error("生成任务过多，请稍后重试"), { status: 429 });
   const task: MediaTask = { cwd, controller: new AbortController(), touchedAt: Date.now() };
   tasks.set(taskId, task);
-  void generateMedia(cwd, mediaType, request, task.controller.signal).then(
+  const startedAt = Date.now();
+  let stage = "prepare";
+  let errorCode = "";
+  console.info("[媒体任务] 开始", { taskId, mediaType, providerId: request.providerId, modelId: request.modelId });
+  void generateMedia(cwd, mediaType, request, task.controller.signal, value => { stage = value; }).then(
     files => { task.result ??= success(files); },
-    cause => { task.result ??= { ...errorFromCause(cause), data: null }; },
-  ).finally(() => { task.settledAt = Date.now(); });
+    cause => {
+      let current: unknown = cause;
+      for (let depth = 0; depth < 5 && current && typeof current === "object"; depth++) {
+        const detail = current as { code?: unknown; cause?: unknown };
+        if (typeof detail.code === "string" && /^[A-Z][A-Z0-9_]{1,63}$/.test(detail.code)) errorCode = detail.code;
+        current = detail.cause;
+      }
+      const failure = errorFromCause(cause);
+      task.result ??= { ...failure, message: `${failure.message}\n执行阶段：${stage}${errorCode ? `\n错误码：${errorCode}` : ""}`, data: null };
+    },
+  ).finally(() => {
+    task.settledAt = Date.now();
+    console.info("[媒体任务] 结束", { taskId, mediaType, stage, code: task.result?.code, errorCode: errorCode || undefined, durationMs: task.settledAt - startedAt });
+  });
 }
 
 export function status(cwd: string, taskIds: string[]) {

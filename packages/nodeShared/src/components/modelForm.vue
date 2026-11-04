@@ -13,9 +13,10 @@ import {
 } from "element-plus";
 import type { NodeMediaModel } from "@toonflow/nodes-scaffold/runtime";
 
-const props = defineProps<{ rules?: NodeMediaModel["rules"]; disabled?: boolean }>();
+const props = defineProps<{ rules?: NodeMediaModel["rules"]; disabled?: boolean; teleported?: boolean }>();
 const other = defineModel<Record<string, unknown>>({ required: true });
-const formState = computed(() => ({ rules: formCreate.copyRules(props.rules ?? []), key: Symbol() }));
+const formState = computed(() => ({ rules: formCreate.copyRules(props.rules ?? []).map(rule =>
+  rule.type === "select" && props.teleported === false ? { ...rule, props: { ...rule.props, teleported: false } } : rule), key: Symbol() }));
 const formOptions = computed<Options>(() => ({
   form: { labelPosition: "top", size: "small", disabled: props.disabled },
   appendValue: false,

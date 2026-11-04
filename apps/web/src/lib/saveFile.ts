@@ -6,9 +6,12 @@ declare global {
   interface WindowEventMap {
     "toonflow:mobile-save": CustomEvent<{ requestId: string; saved: boolean; error?: string }>;
   }
+  interface Window {
+    showSaveFilePicker?: (options: { suggestedName: string }) => Promise<{ createWritable: () => Promise<{ write: (data: Blob) => Promise<void>; close: () => Promise<void>; abort: () => Promise<void> }> }>;
+  }
 }
 
-export default async function saveFile(content: Blob | (() => Promise<Blob>), fileName: string): Promise<boolean> {
+export default async function saveFile(content: Blob | (() => Promise<Blob>), fileName: string, chooseLocation = false): Promise<boolean> {
   if (actualPlatform.isMobile) {
     const blob = typeof content === "function" ? await content() : content;
     const { data } = await axios.post<{ url: string }>("/api/mobile/exports", blob, {
@@ -50,6 +53,25 @@ export default async function saveFile(content: Blob | (() => Promise<Blob>), fi
     if (data.code !== 200 || typeof data.data?.saved !== "boolean") throw new Error(data.message || "保存文件失败");
     return data.data.saved;
   }
+  if (chooseLocation && window.showSaveFilePicker) {
+    let handle: Awaited<ReturnType<NonNullable<Window["showSaveFilePicker"]>>>;
+    try {
+      handle = await window.showSaveFilePicker({ suggestedName: fileName });
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") return false;
+      throw error;
+    }
+    const blob = typeof content === "function" ? await content() : content;
+    const writable = await handle.createWritable();
+    try {
+      await writable.write(blob);
+      await writable.close();
+    } catch (error) {
+      await writable.abort().catch(() => {});
+      throw error;
+    }
+    return true;
+  }
   const blob = typeof content === "function" ? await content() : content;
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
@@ -65,6 +87,7 @@ export default async function saveFile(content: Blob | (() => Promise<Blob>), fi
 export function registerDownloads() {
   const pending = new WeakSet<HTMLAnchorElement>();
   function handleDownload(event: MouseEvent) {
+    if (!event.isTrusted && !actualPlatform.isDesktop && !actualPlatform.isMobile) return;
     const link = event.composedPath().find(element => element instanceof HTMLAnchorElement && element.hasAttribute("download")) as HTMLAnchorElement | undefined;
     if (!link?.href || event.button !== 0) return;
     const url = new URL(link.href);
@@ -74,13 +97,13 @@ export function registerDownloads() {
     pending.add(link);
     link.dispatchEvent(new CustomEvent("downloadstate", { detail: true }));
     // ACT: 捕获同源下载以兼容已安装节点；Android 先暂存内容，再交给系统文件选择器。
-    void saveFile(() => axios.get<Blob>(url.href, { responseType: "blob" }).then(({ data }) => data), link.download || "download").catch(error => {
+    void saveFile(() => axios.get<Blob>(url.href, { responseType: "blob" }).then(({ data }) => data), link.download || "download", true).catch(error => {
       ElMessage.error(axios.isAxiosError<{ message?: string }>(error) ? error.response?.data?.message || error.message : error instanceof Error ? error.message : "保存文件失败");
     }).finally(() => {
       pending.delete(link);
       link.dispatchEvent(new CustomEvent("downloadstate", { detail: false }));
     });
   }
-  if (actualPlatform.isDesktop || actualPlatform.isMobile) document.addEventListener("click", handleDownload, true);
+  if (actualPlatform.isDesktop || actualPlatform.isMobile || window.showSaveFilePicker) document.addEventListener("click", handleDownload, true);
   return () => document.removeEventListener("click", handleDownload, true);
 }

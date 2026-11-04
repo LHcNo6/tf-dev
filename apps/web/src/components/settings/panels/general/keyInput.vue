@@ -19,7 +19,7 @@
         :aria-label="label"
         :aria-pressed="recording"
         :title="recording ? '按键录制，Esc 取消' : '点击修改快捷键'"
-        @click="draft = code; recording = true"
+        @click="startRecording"
         @keydown.stop="capture"
         @keyup.stop="finishModifiers"
         @blur="cancelRecording">
@@ -72,6 +72,12 @@ const recording = ref(false);
 const optionsVisible = ref(false);
 watch(() => [code, mode], () => { draft.value = code; });
 watch(() => mode, () => { recording.value = false; });
+
+function startRecording(event: MouseEvent) {
+  (event.currentTarget as HTMLButtonElement).focus({ preventScroll: true });
+  draft.value = code;
+  recording.value = true;
+}
 
 function capture(event: KeyboardEvent) {
   if (!recording.value) return;

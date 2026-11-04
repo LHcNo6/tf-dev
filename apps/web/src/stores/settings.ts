@@ -135,10 +135,10 @@ export function saveSettings(update?: (current: Record<string, unknown>) => Reco
     const patch = update?.(settings.value);
     if (update && !patch) return false;
     const requestedNodeMenu = JSON.stringify(((patch?.general ?? settings.value.general) as { nodeMenu?: unknown } | undefined)?.nodeMenu);
-    const { data } = await axios.put<{ code: number; data: { customProviders?: CustomProvider[]; mediaProvider?: { id: string }; modelRefreshErrors?: string[]; nodeMenu?: StoredNodeMenuItem[] | null; aiModels?: ResolvedAiModel[] } | null }>(
+    const { data } = await axios.put<{ code: number; message?: string; data: { customProviders?: CustomProvider[]; mediaProvider?: { id: string }; modelRefreshErrors?: string[]; nodeMenu?: StoredNodeMenuItem[] | null; aiModels?: ResolvedAiModel[] } | null }>(
       "/api/settings/save", { settings: { ...settings.value, ...patch } }, { headers: { "x-toonflow-workspace": "1" } },
     );
-    if (data.code !== 200) throw new Error("保存设置失败");
+    if (data.code !== 200) throw new Error(data.message || "保存设置失败");
     if (data.data?.aiModels) applyModelReasoning(data.data.aiModels);
     const providers = data.data?.customProviders;
     if ((patch && Object.hasOwn(patch, "customProviders")) || providers) invalidateNodeModels("language");
@@ -174,5 +174,9 @@ export function saveSettings(update?: (current: Record<string, unknown>) => Reco
 
 watch(settings, () => {
   if (!settingsReady || applyingSettings) return;
-  void saveSettings().catch(() => { ElMessage.error("设置保存失败，请稍后重试"); });
+  void saveSettings().catch(error => {
+    ElMessage.error(axios.isAxiosError<{ message?: string }>(error)
+      ? error.response?.data?.message || (error.response ? error.message : "设置保存失败，无法连接服务，请检查服务状态")
+      : error instanceof Error ? error.message : "设置保存失败，请稍后重试");
+  });
 }, { deep: true, flush: "sync" });

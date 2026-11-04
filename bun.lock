@@ -562,6 +562,27 @@
         "vue": "^3.5.42",
       },
     },
+    "packages/nodes/videoComposeNode": {
+      "name": "@toonflow/node-video-compose",
+      "version": "1.0.0",
+      "dependencies": {
+        "@tabler/icons-vue": "^3.46.0",
+      },
+      "devDependencies": {
+        "@toonflow/ffmpeg": "workspace:*",
+        "@toonflow/node-video": "workspace:*",
+        "@toonflow/nodes-scaffold": "workspace:*",
+        "sass": "1.104.0",
+        "typescript": "~6.0.3",
+        "vite": "^8.2.2",
+        "vue-tsc": "^3.3.11",
+      },
+      "peerDependencies": {
+        "@vue-flow/core": "^1.48.2",
+        "element-plus": "^2.14.5",
+        "vue": "^3.5.42",
+      },
+    },
     "packages/nodes/videoGenerationNode": {
       "name": "@toonflow/node-video-generation",
       "version": "2.0.0",
@@ -1433,6 +1454,8 @@
     "@toonflow/node-text": ["@toonflow/node-text@workspace:packages/nodes/textNode"],
 
     "@toonflow/node-video": ["@toonflow/node-video@workspace:packages/nodes/videoNode"],
+
+    "@toonflow/node-video-compose": ["@toonflow/node-video-compose@workspace:packages/nodes/videoComposeNode"],
 
     "@toonflow/node-video-generation": ["@toonflow/node-video-generation@workspace:packages/nodes/videoGenerationNode"],
 
@@ -2939,6 +2962,8 @@
     "@toonflow/node-text/typescript": ["typescript@6.0.3", "https://registry.npmmirror.com/typescript/-/typescript-6.0.3.tgz", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw=="],
 
     "@toonflow/node-video/typescript": ["typescript@6.0.3", "https://registry.npmmirror.com/typescript/-/typescript-6.0.3.tgz", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw=="],
+
+    "@toonflow/node-video-compose/typescript": ["typescript@6.0.3", "https://registry.npmmirror.com/typescript/-/typescript-6.0.3.tgz", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw=="],
 
     "@toonflow/node-video-generation/typescript": ["typescript@6.0.3", "https://registry.npmmirror.com/typescript/-/typescript-6.0.3.tgz", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw=="],
 

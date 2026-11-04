@@ -54,7 +54,7 @@ export function useNode<T extends NodeOutputs = NodeOutputs>(options: NodeOption
     outputs,
     nodeEvent,
     nodeTools,
-    ai: useNodeAi(),
+    ai: useNodeAi(node.data),
     ffmpeg: useNodeFfmpeg(),
     asr: useNodeAsr(),
     files: {

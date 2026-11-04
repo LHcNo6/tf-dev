@@ -39,6 +39,7 @@
 - [多语言维护说明](../packages/i18n/readme.md)：字典抽取、动态文案、前后端接入和语言回退。
 - [多语言回归记录](../packages/i18n/regression.md)：已完成的检查与已知范围。
 - [MCP 接入说明](../packages/mcp/README.md)：外部客户端连接与工具能力。
+- [安泰信媒体模型维护说明](./antaixinModels.md)：模型发现、分类规则与生成能力边界。
 
 ## 目录约定
 
@@ -53,3 +54,7 @@ docs/
 ```
 
 各子包的实现与维护说明保留在对应 `packages/` 目录。更新项目介绍时，以根目录 `README.md` 为准同步其余二十份译版；图片统一复用 `images/`，移动文件时同时更新 Markdown 和 HTML 中的相对链接。
+
+## 视频合成维护
+
+- [合成视频节点维护](videoComposition.md)

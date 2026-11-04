@@ -2,8 +2,9 @@ import logger from "morgan";
 import express from "express";
 import cors from "cors";
 import { createHash } from "node:crypto";
+import { constants } from "node:fs";
 import { resolve } from "node:path";
-import { readFile, readdir } from "@toonflow/file";
+import { copyFile, readFile, readdir } from "@toonflow/file";
 import type { Request, Response, NextFunction } from "express";
 import buildRoute from "@/core";
 import { errorFromCause } from "@/lib/responseFormat";
@@ -68,6 +69,9 @@ export async function createApp({
       providerRevision = hash.digest("hex");
     }
     await initializePlugins(resolve(dataDirectory, "providers"), sourceDirectory, autoInstallProviders, providerRevision);
+    // Keep an existing custom adapter, including user edits, when starting a new build.
+    await copyFile(resolve(sourceDirectory, "antaixin.ts"), resolve(dataDirectory, "providers/antaixin.ts"), constants.COPYFILE_EXCL)
+      .catch((error: NodeJS.ErrnoException) => { if (error.code !== "EEXIST") throw error; });
   }
   // ACT: 技能和团队只补首次安装，保留用户修改。
   if (dataDirectory && skillsRoot) await initializePlugins(resolve(dataDirectory, "skills"), skillsRoot);

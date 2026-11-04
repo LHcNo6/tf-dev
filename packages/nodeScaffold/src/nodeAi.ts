@@ -4,6 +4,18 @@ import { createAssistantMessageEventStream, type AssistantMessage, type Context,
 import { EventSourceParserStream } from "eventsource-parser/stream";
 import type { MediaGenerationRequest, MediaModel } from "@toonflow/tools-scaffold/runtime";
 import type { NodeOutput } from "./values";
+import type { NodeData } from "./connection";
+
+export type NodeModelCall = {
+  id: string;
+  type: "text" | "image" | "video" | "audio";
+  providerId: string;
+  modelId: string;
+  startedAt: string;
+  durationMs: number;
+  status: "succeeded" | "failed" | "cancelled";
+  detail: string;
+};
 
 export type NodeAiModel = {
   providerId: string;
@@ -62,7 +74,7 @@ export type NodeAiTool = {
 
 async function readResult<T>(response: Response): Promise<T> {
   const result = await response.json();
-  if (!response.ok || result.code !== 200) throw new Error(result.message || `AI 请求失败（HTTP ${response.status}），请稍后重试。`);
+  if (!response.ok || result.code !== 200) throw new Error(`${result.message || "AI 请求失败"}（HTTP ${response.status}，业务状态 ${result.code ?? "未知"}）${result.data ? `\n详情：${JSON.stringify(result.data)}` : ""}`);
   return result.data;
 }
 
@@ -181,7 +193,7 @@ function createMediaTasks() {
         finish(result) {
           cleanup();
           if (result.code === 200 && result.data) resolve(result.data);
-          else reject(new Error(result.message || "媒体生成失败"));
+          else reject(new Error(`${result.message || "媒体生成失败"}（业务状态 ${result.code}）${result.data ? `\n详情：${JSON.stringify(result.data)}` : ""}`));
         },
         fail(error) { cleanup(); reject(error); },
       });
@@ -271,10 +283,33 @@ async function requestModel(input: NodeAiRequest, context: Context, model: Model
   return stream;
 }
 
-export function useNodeAi() {
+export function useNodeAi(nodeData?: NodeData) {
   const controller = new AbortController();
   onScopeDispose(() => controller.abort());
   const requestSignal = (signal?: AbortSignal) => signal ? AbortSignal.any([controller.signal, signal]) : controller.signal;
+
+  async function recordCall<T>(type: NodeModelCall["type"], input: { providerId: string; modelId: string }, signal: AbortSignal | undefined, task: () => Promise<T>): Promise<T> {
+    const started = Date.now();
+    const save = (status: NodeModelCall["status"], detail: string) => {
+      if (!nodeData) return;
+      const call: NodeModelCall = {
+        id: crypto.randomUUID(), type, providerId: input.providerId, modelId: input.modelId,
+        startedAt: new Date(started).toISOString(), durationMs: Date.now() - started, status,
+        detail: detail.slice(0, 16000),
+      };
+      // ACT: 每个节点最多保留 100 条，避免画布文件无限增长。
+      nodeData.modelCalls = [call, ...(Array.isArray(nodeData.modelCalls) ? nodeData.modelCalls : [])].slice(0, 100);
+    };
+    try {
+      const result = await task();
+      save("succeeded", Array.isArray(result) ? `生成完成，返回 ${result.length} 个结果。` : "模型调用完成。");
+      return result;
+    } catch (error) {
+      const cancelled = signal?.aborted || controller.signal.aborted || error instanceof Error && error.name === "AbortError";
+      save(cancelled ? "cancelled" : "failed", error instanceof Error ? `${error.name}: ${error.message}` : String(error));
+      throw error;
+    }
+  }
 
   async function getModels(signal?: AbortSignal) {
     return readModels<NodeAiModel>("/api/ai/models", requestSignal(signal));
@@ -379,18 +414,18 @@ export function useNodeAi() {
   }
 
   function generateImage(input: NodeImageRequest, signal?: AbortSignal) {
-    return generateMedia("image", input, signal);
+    return recordCall("image", input, signal, () => generateMedia("image", input, signal));
   }
 
   function generateVideo(input: NodeVideoRequest, signal?: AbortSignal) {
-    return generateMedia("video", input, signal);
+    return recordCall("video", input, signal, () => generateMedia("video", input, signal));
   }
 
   function generateAudio(input: NodeAudioRequest, signal?: AbortSignal) {
-    return generateMedia("audio", input, signal);
+    return recordCall("audio", input, signal, () => generateMedia("audio", input, signal));
   }
 
-  async function generate(input: NodeAiRequest): Promise<NodeAiResult> {
+  async function generateText(input: NodeAiRequest): Promise<NodeAiResult> {
     const signal = requestSignal(input.signal);
     const callSignal = input.tools?.length ? AbortSignal.any([signal, AbortSignal.timeout(600000)]) : signal;
     const { providerId, modelId, prompt, systemPrompt, onEvent } = input;
@@ -438,6 +473,10 @@ export function useNodeAi() {
     const text = message.content.filter(part => part.type === "text").map(part => part.text).join("");
     const reasoning = message.content.filter(part => part.type === "thinking").map(part => part.thinking).join("");
     return { text, ...(reasoning ? { reasoning } : {}) };
+  }
+
+  function generate(input: NodeAiRequest) {
+    return recordCall("text", input, input.signal, () => generateText(input));
   }
 
   return { getModels, getMediaModels, getMediaPrice, generateImage, generateVideo, generateAudio, generate };

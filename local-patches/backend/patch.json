@@ -1,0 +1,16 @@
+{
+  "providerBeforeSha256": "4e7abcb001e0fa945e2e54568d2bf02d9e2c2bb777cc01848b71071c597525ff",
+  "backendBeforeSha256": "3ab018f1f01cac70dad1752bc7cdd8257a4118a6173f93f3701c223c6ed644d7",
+  "helperBeforeSha256": "b3492a136d691420fcec439369304a0f1ed7ab6c0c511af8a7f3f1f2749a21d7",
+  "backendAfterSha256": "f23a6214201b91c93f34e69a04b7d33cbee20f3a5d53b9652561e5e50aaf9587",
+  "backendReplacements": [
+    [
+      "[\"tfRouter\",\"apiMart\",\"metaso\",\"compshare\"].includes(g.providerId)",
+      "[\"tfRouter\",\"apiMart\",\"metaso\",\"compshare\",\"antaixin\"].includes(g.providerId)"
+    ],
+    [
+      "if(__toonflowPreferOrigin&&g===\"image\"){",
+      "if(__toonflowPreferOrigin){"
+    ]
+  ]
+}

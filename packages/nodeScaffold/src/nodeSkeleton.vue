@@ -1,7 +1,7 @@
 <template>
   <div v-if="documentTarget" class="nodeDocumentPlaceholder" :style="canvasSize" aria-hidden="true" />
   <teleport :to="documentTarget ?? 'body'" :disabled="!documentTarget">
-  <div ref="skeletonElement" v-bind="$attrs" class="nodeSkeleton" :class="{ documentNode: documentTarget, resized: !!resizedStyle.height, resizing: !!resize }" :style="resizedStyle" @wheel.capture="zoomCanvas" @dblclick.stop="focusNode" @contextmenu="documentTarget && openMenu($event)">
+  <div ref="skeletonElement" v-bind="$attrs" class="nodeSkeleton" :class="{ documentNode: documentTarget, resized: !!resizedStyle.height, resizing: !!resize, selectedNode: node.selected }" :style="resizedStyle" @wheel.capture="zoomCanvas" @dblclick.stop="focusNode" @contextmenu="documentTarget && openMenu($event)">
     <el-dropdown
       v-if="!readOnly"
       ref="menu"
@@ -106,6 +106,7 @@
         {{ label }}
       </span>
       <div v-if="!readOnly" class="nodeActions nodrag nopan" @pointerdown.stop @mousedown.stop @dblclick.stop>
+        <el-button :icon="IconListDetails" text title="模型调用记录" aria-label="模型调用记录" @click.stop="callsVisible = true" />
         <el-button
           :icon="IconRefresh"
           :loading="loading || reloading"
@@ -173,6 +174,20 @@
     </div>
   </div>
   </teleport>
+  <el-dialog v-model="callsVisible" title="模型调用记录" width="min(720px, 92vw)" appendToBody>
+    <div v-if="!modelCalls.length" class="callEmpty">暂无模型调用记录</div>
+    <div v-else class="callList">
+      <div v-for="call in modelCalls" :key="call.id" class="callItem">
+        <div class="callHeading">
+          <strong :class="call.status">{{ call.status === 'succeeded' ? '成功' : call.status === 'cancelled' ? '已取消' : '失败' }}</strong>
+          <span>{{ { text: '文本', image: '图片', video: '视频', audio: '音频' }[call.type] }}模型</span>
+          <time>{{ new Date(call.startedAt).toLocaleString() }}</time>
+        </div>
+        <div class="callMeta">供应商：{{ call.providerId }} · 模型：{{ call.modelId }} · 耗时：{{ (call.durationMs / 1000).toFixed(1) }} 秒</div>
+        <div class="callDetail" tabindex="0">{{ call.detail }}</div>
+      </div>
+    </div>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
@@ -190,8 +205,9 @@ import {
   IconCircleDashed,
   IconCircleDot,
   IconLoader2,
+  IconListDetails,
 } from "@tabler/icons-vue";
-import { ElCard, ElButton, ElDivider, ElDropdown, ElDropdownMenu, ElDropdownItem, ElMessage } from "element-plus";
+import { ElCard, ElButton, ElDialog, ElDivider, ElDropdown, ElDropdownMenu, ElDropdownItem, ElMessage } from "element-plus";
 import type { DropdownInstance } from "element-plus";
 import { validateConnection } from "./connection";
 import { useNodeEvent } from "./nodeEvent";
@@ -235,7 +251,9 @@ const handleGroups = computed(() => [
   { type: "source" as const, position: Position.Right, items: props.handles.filter((item) => item.type === "source") },
 ]);
 const cardHeight = computed(() => Math.max(100, ...handleGroups.value.map((group) => (group.items.length + 1) * 44)));
-const { id: nodeId, node } = useNode();
+const { id: nodeId, node } = useNode<NodeData>();
+const callsVisible = ref(false);
+const modelCalls = computed(() => Array.isArray(node.data.modelCalls) ? node.data.modelCalls : []);
 const documentContext = inject<NodeDocumentContext | undefined>("nodeDocument", undefined);
 const documentTarget = computed(() => props.readOnly ? undefined : documentContext?.targets.get(nodeId));
 const skeletonElement = ref<HTMLElement>();
@@ -664,6 +682,27 @@ watch(
 </script>
 
 <style scoped>
+.callEmpty { color: var(--el-text-color-secondary); }
+.callList {
+  max-height: 60vh;
+  overflow: auto;
+  .callItem {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--el-border-color-lighter);
+    .callHeading {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      .succeeded { color: var(--el-color-success); }
+      .failed { color: var(--el-color-danger); }
+      .cancelled { color: var(--el-text-color-secondary); }
+      time { margin-left: auto; color: var(--el-text-color-secondary); }
+    }
+    .callMeta { margin-top: 6px; color: var(--el-text-color-secondary); overflow-wrap: anywhere; }
+    .callDetail { margin-top: 8px; white-space: pre-wrap; overflow-wrap: anywhere; }
+  }
+}
 .nodeSkeleton {
   position: relative;
   width: 220px;
@@ -718,7 +757,8 @@ watch(
     opacity: 1;
   }
 
-  &:hover .titleBar .nodeActions {
+  &:hover .titleBar .nodeActions,
+  &.selectedNode .titleBar .nodeActions {
     visibility: visible;
   }
 

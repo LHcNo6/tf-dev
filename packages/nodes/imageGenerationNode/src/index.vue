@@ -221,6 +221,15 @@ const generationInput = computed<Omit<NodeImageRequest, "directory"> | undefined
     outputDirectory: `assets/${id}`,
     images: references.flatMap(item => item.dataType === "IMAGE" && item.value ? [{ path: item.value.url, mimeType: item.value.mimeType }] : []),
   };
+  if (!inpaint && choice.providerId === "antaixin" && ["nano-banana-2", "wan2.7-image-pro", "grok-imagine-image-2.0", "kling-image-o1"].includes(choice.modelId)) {
+    input.prompt = input.prompt.replace(/\{\{ref (\d+)\}\}/g, (marker, number: string) => {
+      const index = Number(number) - 1;
+      const reference = references[index];
+      if (!reference) return marker;
+      if (reference.dataType !== "IMAGE") return `参考 ${number}`;
+      return `Image ${references.slice(0, index + 1).filter(item => item.dataType === "IMAGE" && item.value).length}`;
+    });
+  }
   if (inpaint) {
     let imageIndex = 3 + (inpaint.images?.length ?? 0);
     const mapping = refList.value.flatMap((item, index) => item.dataType === "IMAGE" && item.value
@@ -537,6 +546,7 @@ nodeTools.register({
 .promptCard {
   .inpaintInfo { margin-bottom: 8px; }
   .promptFooter {
+    flex-wrap: wrap;
     display: flex;
     align-items: center;
     justify-content: flex-start;

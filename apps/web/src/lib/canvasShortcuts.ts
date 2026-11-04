@@ -12,7 +12,7 @@ export const defaultCanvasShortcuts = {
   copyOnDrag: "Alt",
   duplicateOnDrag: isMac ? "Alt+Meta" : "Ctrl+Alt",
   pan: "Space",
-  zoom: "Ctrl",
+  zoom: isMac ? "Alt" : "Ctrl",
   selection: "None",
   multiSelection: "",
   moveTool: "KeyV",
@@ -64,7 +64,7 @@ export const canvasShortcutFields: {
 
 const keyLabels: Record<string, string> = {
   None: "无需按键",
-  Ctrl: "Ctrl", Alt: "Alt", Shift: "Shift", Meta: isMac ? "⌘" : "Win",
+  Ctrl: "Ctrl", Alt: isMac ? "Option (Alt)" : "Alt", Shift: "Shift", Meta: isMac ? "⌘" : "Win",
   Space: "Space", Escape: "Esc", Enter: "Enter", Tab: "Tab", Backspace: "⌫", Delete: "Delete",
   ArrowLeft: "←", ArrowRight: "→", ArrowUp: "↑", ArrowDown: "↓",
   Home: "Home", End: "End", PageUp: "PageUp", PageDown: "PageDown", Insert: "Insert",

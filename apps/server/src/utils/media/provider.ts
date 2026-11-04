@@ -350,16 +350,23 @@ export async function refreshMediaProviderModels(fileName: string, revision?: st
     })).max(2000) }).parse(await response.json());
     if (!result.data.length) throw new Error("未获取到媒体模型，保留原有列表");
     const requestedType = z.enum(["text", "image", "video", "audio"]).safeParse(modelsUrl.searchParams.get("type"));
-    return result.data.map(({ modelInfo, ...model }) => {
+    return result.data.flatMap(({ modelInfo, ...model }) => {
       const id = model.id.trim();
       const previous = provider.models.find(item => item.id === id)
         ?? (provider.id === tfRouter.id ? tfRouter.models.find(item => item.id === id) : undefined);
-      const type = model.type ?? (requestedType.success ? requestedType.data : previous?.type);
+      const endpoints = Array.isArray(model.supported_endpoint_types) ? model.supported_endpoint_types : [];
+      const antaixinType = provider.id === "antaixin"
+        ? endpoints.includes("openai-video") || id === "seedance-2.5-video" ? "video"
+          : endpoints.includes("image-generation") || /^(?:grok-imagine-image|kling-image|nano-banana|qwen-image|recraft|seedream|wan\d.*image)/i.test(id) ? "image"
+            : undefined
+        : undefined;
+      const type = model.type ?? (requestedType.success ? requestedType.data : previous?.type ?? antaixinType);
+      if (!type && provider.id === "antaixin") return [];
       if (!type) invalid(t`模型 ${id} 缺少 type，请在返回数据或 modelsUrl 的 type 参数中指定`);
       if (requestedType.success && type !== requestedType.data) invalid(t`模型 ${id} 的 type 与请求类型不一致`);
       // ACT: modelInfo 覆盖已有能力；缺省字段沿用同名配置，新模型不猜测生成能力。
       const merged = { ...previous, ...model, ...modelInfo, id, label: model.label ?? previous?.label
-        ?? (typeof model.display_name === "string" ? model.display_name : typeof model.displayName === "string" ? model.displayName : id), type };
+        ?? (provider.id === "antaixin" ? `${id}（生成协议待适配）` : typeof model.display_name === "string" ? model.display_name : typeof model.displayName === "string" ? model.displayName : id), type };
       Reflect.deleteProperty(merged, "modelInfo");
       return merged;
     });
@@ -387,7 +394,7 @@ export async function loadMediaProviderSource(source: string, config: Record<str
   const { id } = parseProvider(source);
   // ACT: VM 只隔离可信供应商的全局上下文；不可信代码需要独立进程等更强隔离。
   const context = createContext({
-    Buffer, URL, URLSearchParams, TextEncoder, TextDecoder, Blob,
+    Buffer, URL, URLSearchParams, TextEncoder, TextDecoder, Blob, FormData, Request,
     AbortController, AbortSignal, setTimeout, clearTimeout,
   }, { codeGeneration: { strings: false, wasm: false } });
   const rejectImport = () => { throw new Error("供应商不能导入模块，请使用 this.tool 中的宿主工具"); };

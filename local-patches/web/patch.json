@@ -1,0 +1,26 @@
+{
+  "general-D8-WLH3D.js": {
+    "before": "f62899fee73632bee0857e27bed52196db953eb8874dafd73f64ef5ea269d159",
+    "after": "d3cee0d0a201e6ec4cd56b867351a23d9f8d5d71d030ba340d44968c7c5a4d5e",
+    "replacements": [
+      [
+        "onClick:l[2]||=e=>{d.value=c.code,v.value=!0}",
+        "onClick:l[2]||=e=>{e.currentTarget.focus({preventScroll:!0}),d.value=c.code,v.value=!0}"
+      ]
+    ]
+  },
+  "settings-B16bkTNF.js": {
+    "before": "e54c6fedacff07818882834352c0af1d7074ba398ba3703a08521c66b20df1d6",
+    "after": "77eb7c178e311e30aa2c1f1eb9fab82948c908b1fff3a576cfea18dd0f8c1303",
+    "replacements": [
+      [
+        "zoom:`Ctrl`,selection:",
+        "zoom:l?`Alt`:`Ctrl`,selection:"
+      ],
+      [
+        "Ctrl:`Ctrl`,Alt:`Alt`,Shift:",
+        "Ctrl:`Ctrl`,Alt:l?`Option (Alt)`:`Alt`,Shift:"
+      ]
+    ]
+  }
+}

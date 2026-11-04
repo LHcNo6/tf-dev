@@ -21,6 +21,7 @@ export type NodeData = {
   label?: string;
   handles?: NodeHandle[];
   outputs?: NodeOutputs;
+  modelCalls?: import("./nodeAi").NodeModelCall[];
 };
 
 function getDataTypes(dataType: NodeHandle["dataType"]) {

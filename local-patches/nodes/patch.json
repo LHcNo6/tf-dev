@@ -1,0 +1,10 @@
+{
+  "videoGenerationNode.umd.js": {
+    "before": "f7fcf30b1af72113d195d35c322648c55bf29b5062abd021b0fc2906215f5793",
+    "after": "123b6cff77ad9cc67c9039d7b5f6ec9199bf1d7902656f438c10a67361e28e3a"
+  },
+  "imageGenerationNode.umd.js": {
+    "before": "4e6e18408e5a9c057233ce3d8848b6b3e37a8a1e5eb6e67475da3be47fefb2d6",
+    "after": "5300c39f95d5f2fb6ccadb4f819a4ac47b4a75547f623170bd26e0c6601fa5f3"
+  }
+}

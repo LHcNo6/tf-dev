@@ -1,0 +1,26 @@
+{
+  "version": "4.1.1",
+  "files": [
+    {
+      "path": "/Applications/toonflow.app/Contents/Resources/app/bun/toonflow-media-origin.js",
+      "beforeSha256": "b3492a136d691420fcec439369304a0f1ed7ab6c0c511af8a7f3f1f2749a21d7",
+      "afterSha256": "dda7f0d5b1a41c3a33b25aeadb7e87415426ef84042b9411c586da4eadbcb35b",
+      "mode": 420,
+      "backup": "/Users/llx/Documents/Codex/2026-10-29/b/work/toonflow-4.1/install-backups/toonflow-media-origin.js"
+    },
+    {
+      "path": "/Applications/toonflow.app/Contents/Resources/app/bun/index.js",
+      "beforeSha256": "3ab018f1f01cac70dad1752bc7cdd8257a4118a6173f93f3701c223c6ed644d7",
+      "afterSha256": "f23a6214201b91c93f34e69a04b7d33cbee20f3a5d53b9652561e5e50aaf9587",
+      "mode": 420,
+      "backup": "/Users/llx/Documents/Codex/2026-10-29/b/work/toonflow-4.1/install-backups/index.js"
+    },
+    {
+      "path": "/Applications/data/providers/antaixin.ts",
+      "beforeSha256": "4e7abcb001e0fa945e2e54568d2bf02d9e2c2bb777cc01848b71071c597525ff",
+      "afterSha256": "a8db9b32868b9141556eb0070ef67295309d172e9cfb7f5862c175af8c9e1dea",
+      "mode": 384,
+      "backup": "/Users/llx/Documents/Codex/2026-10-29/b/work/toonflow-4.1/install-backups/antaixin.ts"
+    }
+  ]
+}

@@ -13,10 +13,11 @@
       <el-button :icon="IconMusic" text :disabled="!outputFile || generating || deleting || uploading || actions?.processing" @click.stop="actions?.open('extractAudio')">提取音轨</el-button>
       <el-button :icon="IconLayersSubtract" text :disabled="!outputFile || generating || deleting || uploading || actions?.processing" @click.stop="actions?.open('separate')">分离音视频</el-button>
       <el-button :icon="IconScissors" text :disabled="!outputFile || generating || deleting || uploading || actions?.processing" @click.stop="actions?.open('trim')">截取片段</el-button>
+      <el-button :icon="IconPlayerSkipForward" text :loading="extractingFrame" :disabled="!outputFile || generating || deleting || uploading || extractingFrame" @click.stop="extractFrame()">提取尾帧</el-button>
       <el-button :icon="IconMovie" text :loading="actions?.creatingAnalysis" :disabled="!outputFile || generating || deleting || uploading || actions?.processing || actions?.creatingAnalysis" @click.stop="actions?.createFrameAnalysis()">逐帧拉片</el-button>
-      <mediaHistory mediaType="video" :current="outputFile" :disabled="generating || deleting || uploading" @select="outputs.video = { dataType: 'VIDEO', value: $event }" />
-      <el-button :icon="IconTransfer" :loading="uploading" :disabled="generating || deleting" text title="替换视频" aria-label="替换视频" @click.stop="fileInput?.click()">替换视频</el-button>
-      <input ref="fileInput" type="file" accept="video/*" hidden aria-label="选择替换视频" :disabled="generating || deleting || uploading" @change="replaceOutput" />
+      <mediaHistory mediaType="video" :current="outputFile" :disabled="generating || deleting || uploading || extractingFrame" @select="outputs.video = { dataType: 'VIDEO', value: $event }" />
+      <el-button :icon="IconTransfer" :loading="uploading" :disabled="generating || deleting || extractingFrame" text title="替换视频" aria-label="替换视频" @click.stop="fileInput?.click()">替换视频</el-button>
+      <input ref="fileInput" type="file" accept="video/*" hidden aria-label="选择替换视频" :disabled="generating || deleting || uploading || extractingFrame" @change="replaceOutput" />
     </template>
     <template #topRightActions>
       <el-dropdown trigger="click" placement="bottom-end" :disabled="!player?.ready || player?.capturing || generating || deleting || uploading" @command="player?.captureFrame($event)">
@@ -88,7 +89,7 @@
             <el-button
               class="sendButton"
               :icon="generating ? IconPlayerStop : IconArrowUp"
-              :disabled="deleting || uploading || (!generating && (!generationPrompt || !selectedModel))"
+              :disabled="deleting || uploading || extractingFrame || (!generating && (!generationPrompt || !selectedModel))"
               :title="generating ? '停止生成' : '生成视频'"
               :aria-label="generating ? '停止生成' : '生成视频'"
               @click="generating ? generationController?.abort() : startGeneration().catch((error) => showNodeError(error, '视频生成失败'))" />
@@ -101,7 +102,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onMounted, onScopeDispose, ref, shallowRef, watch } from "vue";
+import { computed, inject, nextTick, onMounted, onScopeDispose, ref, shallowRef, watch } from "vue";
+import { useVueFlow } from "@vue-flow/core";
 import { ElButton, ElCard, ElSelect, ElOption, ElOptionGroup, ElLoading, ElDropdown, ElDropdownMenu, ElDropdownItem } from "element-plus";
 import { IconCameraAi, IconSparkles, IconArrowUp, IconPlayerStop, IconTransfer, IconMusic, IconLayersSubtract, IconScissors, IconMovie, IconPhotoScan, IconPlayerSkipBack, IconPlayerSkipForward } from "@tabler/icons-vue";
 import { nodeSkeleton, nodeTools, useNode, z, type NodeMediaModel, type NodeVideoRequest, type NodeHandle } from "@toonflow/nodes-scaffold/runtime";
@@ -118,6 +120,8 @@ import referenceItem from "@toonflow/node-shared/referenceItem";
 import mediaHistory from "@toonflow/node-shared/mediaHistory";
 import mediaPrice from "@toonflow/node-shared/mediaPrice";
 import generationSettings from "./components/generationSettings.vue";
+import { uploadNodeFile } from "@toonflow/nodes-scaffold/workspaceFiles";
+import { extractLastFrame } from "./extractLastFrame";
 
 defineOptions({
   inheritAttrs: false,
@@ -132,7 +136,7 @@ const { id, node, nodeProps, nodeEvent, outputs, files, ai, updateNodeInternals 
   label: "视频生成",
 });
 type PromptModel = NonNullable<InstanceType<typeof promptInput>["$props"]["modelValue"]>;
-const data = computed(() => node.data as { prompt: string; promptModel: PromptModel; model: string; duration?: number; resolution: string; ratio: string; mode: string; generateAudio: boolean; other: Record<string, unknown> });
+const data = computed(() => node.data as { prompt: string; promptModel: PromptModel; model: string; duration?: number; resolution: string; ratio: string; mode: string; generateAudio: boolean; other: Record<string, unknown>; lastFrameNodeId?: string });
 data.value.prompt ??= "";
 data.value.promptModel ??= [];
 data.value.model ??= "";
@@ -145,6 +149,10 @@ const { refList, referenceMentions, materialMentions, selectMaterialReference, s
 const models = shallowRef<NodeMediaModel[]>([]);
 const modelsLoading = ref(false);
 const uploading = ref(false);
+const extractingFrame = ref(false);
+const flow = useVueFlow();
+const getCanvas = inject<(() => { id: string } | undefined) | undefined>("canvas", undefined);
+const getWorkspaceDirectory = inject<(() => string) | undefined>("workspaceDirectory", undefined);
 const fileInput = ref<HTMLInputElement>();
 let disposed = false;
 const deleting = ref(false);
@@ -152,6 +160,8 @@ const player = ref<InstanceType<typeof videoPlayer>>();
 const actions = ref<InstanceType<typeof videoActions>>();
 const videoWidth = ref(0);
 let generationController: AbortController | undefined;
+let frameController: AbortController | undefined;
+let frameTask: Promise<void> | undefined;
 const generationState = useNodeGeneration(outputs, () => generationController?.abort());
 const { generating } = generationState;
 let generation: Promise<void> | undefined;
@@ -283,7 +293,9 @@ onScopeDispose(() => {
   window.removeEventListener("toonflow:plugin-installed", refreshProviderModels);
   window.removeEventListener("toonflow:provider-config-changed", refreshProviderModels);
   generationController?.abort();
+  frameController?.abort();
 });
+watch(() => getCanvas?.()?.id, () => frameController?.abort(), { flush: "sync" });
 
 async function refreshProviderModels(event: Event) {
   if (event.type === "toonflow:plugin-installed" && (event as CustomEvent<{ type?: string }>).detail?.type !== "provider") return;
@@ -299,7 +311,7 @@ async function replaceOutput(event: Event) {
   const input = event.target as HTMLInputElement;
   const file = input.files?.[0];
   input.value = "";
-  if (!file || generating.value || deleting.value || uploading.value || disposed) return;
+  if (!file || generating.value || deleting.value || uploading.value || extractingFrame.value || disposed) return;
   if (!file.type.startsWith("video/")) return void showNodeError("请选择视频文件", "视频替换失败");
   if (!file.size || file.size > 100 * 1024 * 1024) return void showNodeError("视频不能为空且不能超过 100 MB", "视频替换失败");
   uploading.value = true;
@@ -317,6 +329,66 @@ async function replaceOutput(event: Event) {
   } finally {
     uploading.value = false;
   }
+}
+
+function extractFrame() {
+  if (frameTask || !outputFile.value || disposed || deleting.value) return frameTask;
+  const source = { ...outputFile.value };
+  const controller = frameController = new AbortController();
+  extractingFrame.value = true;
+  frameTask = (async () => {
+    await Promise.resolve();
+    let path = "";
+    let committed = false;
+    let workspace: ReturnType<typeof files.getWorkspaceFiles> | undefined;
+    try {
+      const canvasId = getCanvas?.()?.id;
+      const directory = getWorkspaceDirectory?.();
+      workspace = files.getWorkspaceFiles();
+      function verify() {
+        controller.signal.throwIfAborted();
+        if (disposed || flow.findNode(id) !== node || getCanvas?.()?.id !== canvasId || getWorkspaceDirectory?.() !== directory
+          || outputFile.value?.url !== source.url || outputFile.value?.mimeType !== source.mimeType) throw new Error("视频或画布已变化，请重新提取尾帧");
+        if (!flow.nodeTypes?.value?.["remote-imageNode"]) throw new Error("请先启用图片节点插件");
+      }
+      verify();
+      const content = await workspace.read(source.url);
+      verify();
+      const frame = await extractLastFrame(content, source.mimeType, controller.signal);
+      verify();
+      const existing = data.value.lastFrameNodeId ? flow.findNode(data.value.lastFrameNodeId) : undefined;
+      const target = existing?.type === "remote-imageNode" && existing.data.lastFrameOwnerId === id ? existing : undefined;
+      const previousOutput = target?.data.outputs?.image;
+      const targetId = target?.id ?? crypto.randomUUID();
+      path = await uploadNodeFile(workspace, targetId, new File([frame.blob], "frame.png", { type: "image/png" }));
+      verify();
+      if (target && (flow.findNode(targetId) !== target || target.data.outputs?.image !== previousOutput)) throw new Error("尾帧图片节点已变化，请重新提取");
+      const image = { dataType: "IMAGE" as const, value: { url: path, mimeType: "image/png" } };
+      if (target) {
+        target.data.outputs ??= {};
+        target.data.outputs.image = image;
+      } else {
+        const x = node.computedPosition.x + (node.dimensions.width || 320) + 40;
+        let y = node.computedPosition.y;
+        const width = 240 * frame.width / frame.height + 18;
+        for (const other of [...flow.getNodes.value].sort((a, b) => a.computedPosition.y - b.computedPosition.y)) {
+          const position = other.computedPosition;
+          if (position.x < x + width && position.x + (other.dimensions.width || 320) > x && position.y < y + 300 && position.y + (other.dimensions.height || 300) > y) y = position.y + (other.dimensions.height || 300) + 24;
+        }
+        flow.addNodes({ id: targetId, type: "remote-imageNode", position: { x, y }, data: { label: `${node.data.label || "视频"} · 尾帧`, lastFrameOwnerId: id, outputs: { image } } });
+        data.value.lastFrameNodeId = targetId;
+      }
+      committed = true;
+    } catch (error) {
+      if (!controller.signal.aborted && !disposed) showNodeError(error, "尾帧提取失败，请点击“提取尾帧”重试");
+    } finally {
+      if (path && !committed && workspace) await workspace.remove(path).catch(error => { if (!disposed) showNodeError(error, "临时尾帧清理失败"); });
+      extractingFrame.value = false;
+      frameController = undefined;
+      frameTask = undefined;
+    }
+  })();
+  return frameTask;
 }
 
 function loadModels() {
@@ -341,6 +413,7 @@ async function startGeneration() {
   const choice = selectedModel.value;
   if (generating.value) throw new Error("视频正在生成，请等待完成");
   if (uploading.value) throw new Error("视频正在替换，请等待完成");
+  if (extractingFrame.value) throw new Error("正在提取尾帧，请等待完成");
   if (deleting.value) throw new Error("节点正在删除");
   // ACT: 提交时按稳定 ID 解析，避免依赖编辑器挂载及异步重排同步。
   const references = referenceMentions.value;
@@ -373,6 +446,7 @@ async function startGeneration() {
       if (!result) throw new Error("供应商未返回视频");
       outputs.value.video = { dataType: "VIDEO", value: { url: result.path, mimeType: result.mimeType } };
     }))
+    .then(() => extractFrame())
     .catch((error) => showNodeError(error, "视频生成失败"))
     .finally(() => {
       generationController = undefined;
@@ -381,14 +455,16 @@ async function startGeneration() {
 }
 
 nodeEvent.on("save", (reason) => {
-  if (reason === "reload" && (generating.value || uploading.value || deleting.value)) throw new Error("视频处理中，请完成后再刷新节点");
+  if (reason === "reload" && (generating.value || uploading.value || deleting.value || extractingFrame.value)) throw new Error("视频处理中，请完成后再刷新节点");
 });
 nodeEvent.on("delete", async () => {
   if (uploading.value) throw new Error("视频正在替换，请稍后删除节点");
   deleting.value = true;
   generationController?.abort();
+  frameController?.abort();
   try {
     await generation;
+    await frameTask;
     await files.removeNodeFiles();
   } finally {
     deleting.value = false;
@@ -534,6 +610,7 @@ nodeTools.register({
   }
 
   .promptFooter {
+    flex-wrap: wrap;
     display: flex;
     align-items: center;
     justify-content: flex-start;

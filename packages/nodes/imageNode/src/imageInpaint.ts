@@ -23,7 +23,7 @@ export function useImageInpaint() {
   const { id, node } = useNode();
   const { findNode } = useVueFlow();
   const files = useNodeFiles();
-  const ai = useNodeAi();
+  const ai = useNodeAi(node.data);
 
   return async function generateInpaint(input: NodeImageRequest, inpaint: ImageInpaint, signal: AbortSignal): Promise<NodeImageResult[]> {
     signal.throwIfAborted();

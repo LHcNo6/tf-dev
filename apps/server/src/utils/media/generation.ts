@@ -8,6 +8,7 @@ import { getMediaProvider, listMediaProviders, loadMediaProviderSource } from "@
 import { lockWorkspaceFiles, resolveWorkspacePath, writeWorkspaceFile } from "@/utils/workspace/files";
 import { beginGeneration, getProviderPrice } from "@/utils/media/billing";
 import { detectMimeType, readPriceReference } from "@/utils/media/priceReference";
+import { rememberGeneratedImageOrigin, removeGeneratedImageOrigin, resolveOriginalImageUrl } from "./origin.js";
 
 const maxMediaSize = 100 * 1024 * 1024;
 const mediaExtensions: Record<string, string> = {
@@ -43,13 +44,15 @@ export async function listMediaModels(): Promise<MediaModel[]> {
       ...(model.type === "audio" ? { voices: model.voices } : {}),
       ...(model.type === "image" ? {
         imageSizes: imageOptions(Array.isArray(model.imageSizes) ? model.imageSizes : builtIn?.imageSizes, /^[^\u0000-\u001f\u007f]+$/),
-        imageRatios: imageOptions(Array.isArray(model.imageRatios) ? model.imageRatios : builtIn?.imageRatios, /^[1-9]\d{0,3}:[1-9]\d{0,3}$/),
+        imageRatios: imageOptions(Array.isArray(model.imageRatios) ? model.imageRatios : builtIn?.imageRatios, /^[1-9]\d{0,3}(?:\.\d{1,3})?:[1-9]\d{0,3}(?:\.\d{1,3})?$/),
       } : {}),
     } as MediaModel];
   }));
 }
 
-export async function readReference(cwd: string, reference: MediaReference, mediaType: string, signal?: AbortSignal): Promise<Extract<MediaInput, { type: "base64" }>> {
+export function readReference(cwd: string, reference: MediaReference, mediaType: string, signal?: AbortSignal): Promise<Extract<MediaInput, { type: "base64" }>>;
+export function readReference(cwd: string, reference: MediaReference, mediaType: string, signal: AbortSignal | undefined, preferOrigin: true): Promise<MediaInput>;
+export async function readReference(cwd: string, reference: MediaReference, mediaType: string, signal?: AbortSignal, preferOrigin = false): Promise<MediaInput> {
   signal?.throwIfAborted();
   const { path } = await resolveWorkspacePath(cwd, reference.path);
   const info = await stat(path);
@@ -58,12 +61,19 @@ export async function readReference(cwd: string, reference: MediaReference, medi
   if (!bytes.length || bytes.length > maxMediaSize) invalid("参考媒体为空或超过 100 MB");
   const mimeType = detectMimeType(bytes, reference.mimeType);
   if (!mimeType.startsWith(`${mediaType}/`)) invalid(t`参考媒体类型须为 ${mediaType}`);
+  if (preferOrigin) {
+    const url = await resolveOriginalImageUrl(path, bytes, mimeType, signal);
+    if (url) return { type: "url", url, mimeType, name: reference.path };
+  }
   return { type: "base64", data: bytes.toString("base64"), mimeType, name: reference.path };
 }
 
 async function downloadAsset(url: string, signal?: AbortSignal) {
   if (!/^https?:\/\//i.test(url)) invalid("生成结果必须使用 HTTP 或 HTTPS 地址");
-  const response = await fetch(url, { signal });
+  const response = await fetch(url, { signal }).catch(error => {
+    signal?.throwIfAborted();
+    throw new Error(`下载生成结果失败：无法连接 ${new URL(url).hostname}`, { cause: error });
+  });
   if (!response.ok) throw new Error(t`下载生成结果失败（HTTP ${response.status}）`);
   if (Number(response.headers.get("content-length")) > maxMediaSize) {
     await response.body?.cancel();
@@ -113,7 +123,7 @@ async function assetBytes(asset: MediaAsset, mediaType: "image" | "video" | "aud
 async function prepareRequest<T>(directory: string | undefined, mediaType: "image" | "video" | "audio", request: MediaGenerationRequest,
   read: (cwd: string, reference: MediaReference, type: string, signal?: AbortSignal) => Promise<T>, signal?: AbortSignal) {
   // ACT: 仅向已适配引用映射的内置供应商传递，其他第三方适配器仍接收原有公共参数。
-  const referenceOrder = mediaType === "video" && ["tfRouter", "apiMart", "metaso", "compshare"].includes(request.providerId) ? request.referenceOrder : undefined;
+  const referenceOrder = mediaType === "video" && ["tfRouter", "apiMart", "metaso", "compshare", "antaixin"].includes(request.providerId) ? request.referenceOrder : undefined;
   if (referenceOrder) {
     const media = { image: request.images, video: request.videos, audio: request.audios };
     for (const [index, reference] of referenceOrder.entries()) {
@@ -186,7 +196,9 @@ export async function generateMedia(
   mediaType: "image" | "video" | "audio",
   request: MediaGenerationRequest,
   signal?: AbortSignal,
+  onStage?: (stage: string) => void,
 ): Promise<GeneratedMedia[]> {
+  onStage?.("prepare");
   signal?.throwIfAborted();
   if (!request.prompt.trim()) invalid("请输入生成提示词");
   const directory = await realpath(cwd);
@@ -197,7 +209,8 @@ export async function generateMedia(
   if (typeof generate !== "function") invalid(t`此供应商不支持${translateMessage({ image: "图片", video: "视频", audio: "音频" }[mediaType])}生成`);
   const rules = Array.isArray(provider.rules) ? provider.rules : [];
   if (rules.some(rule => rule.field === "apiKey") && (typeof provider.config.apiKey !== "string" || !provider.config.apiKey.trim())) invalid("请先在媒体模型设置中配置供应商 API Key");
-  const prepared = await prepareRequest(directory, mediaType, request, readReference, signal);
+  const read = mediaType === "video" ? (cwd: string, ref: MediaReference, type: string, abort?: AbortSignal) => readReference(cwd, ref, type, abort, true) : readReference;
+  const prepared = await prepareRequest(directory, mediaType, request, read, signal);
   signal?.throwIfAborted();
   const finish = beginGeneration(provider);
   const written: string[] = [];
@@ -205,13 +218,16 @@ export async function generateMedia(
   try {
     signal?.throwIfAborted();
     const { type, ...parameters } = prepared;
+    onStage?.("provider");
     const assets = type === "audio" ? await provider.generateAudio!(parameters as AudioRequest)
       : type === "image" ? await provider.generateImage!(parameters as ImageRequest) : await provider.generateVideo!(parameters as VideoRequest);
     if (!Array.isArray(assets) || !assets.length) invalid("供应商未返回生成结果");
     for (const asset of assets) {
       signal?.throwIfAborted();
+      onStage?.("readResult");
       const { bytes, mimeType } = await assetBytes(asset, mediaType, signal);
       signal?.throwIfAborted();
+      onStage?.("saveFile");
       const output = await resolveWorkspacePath(directory, outputDirectory, true);
       const release = lockWorkspaceFiles([output.path]);
       try {
@@ -221,6 +237,7 @@ export async function generateMedia(
         signal?.throwIfAborted();
         await writeWorkspaceFile(path, bytes, true);
         written.push(path);
+        await rememberGeneratedImageOrigin(path, asset, bytes, mimeType, signal);
         result.push({ path: relative(directory, path).replace(/\\/g, "/"), mimeType, mediaType });
       } finally { release(); }
     }
@@ -228,7 +245,10 @@ export async function generateMedia(
     return result;
   } catch (err) {
     // ACT: 只回滚本次创建的文件，保留目录中已有的节点资源。
-    await Promise.all(written.map(path => unlink(path).catch((error: NodeJS.ErrnoException) => { if (error.code !== "ENOENT") throw error; })));
+    await Promise.all(written.map(async path => {
+      await removeGeneratedImageOrigin(path);
+      await unlink(path).catch((error: NodeJS.ErrnoException) => { if (error.code !== "ENOENT") throw error; });
+    }));
     throw err;
   } finally { finish(); }
 }
