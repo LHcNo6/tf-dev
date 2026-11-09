@@ -4,7 +4,7 @@ import cors from "cors";
 import { createHash } from "node:crypto";
 import { constants } from "node:fs";
 import { resolve } from "node:path";
-import { copyFile, readFile, readdir } from "@toonflow/file";
+import { copyFile, cp, mkdir, readFile, readdir, rm, stat } from "@toonflow/file";
 import type { Request, Response, NextFunction } from "express";
 import buildRoute from "@/core";
 import { errorFromCause } from "@/lib/responseFormat";
@@ -74,7 +74,28 @@ export async function createApp({
       .catch((error: NodeJS.ErrnoException) => { if (error.code !== "EEXIST") throw error; });
   }
   // ACT: 技能和团队只补首次安装，保留用户修改。
-  if (dataDirectory && skillsRoot) await initializePlugins(resolve(dataDirectory, "skills"), skillsRoot);
+  if (dataDirectory && skillsRoot) {
+    const targetRoot = resolve(dataDirectory, "skills");
+    await initializePlugins(targetRoot, skillsRoot);
+    // 已初始化的数据目录也要发现新工作流；同名目录存在时保留用户版本。
+    for (const name of ["longVideoWorkflow"]) {
+      const source = resolve(skillsRoot, name);
+      const available = await stat(source).then(info => info.isDirectory()).catch((error: NodeJS.ErrnoException) => {
+        if (error.code === "ENOENT") return false;
+        throw error;
+      });
+      if (!available) continue;
+      const target = resolve(targetRoot, name);
+      const created = await mkdir(target).then(() => true).catch((error: NodeJS.ErrnoException) => {
+        if (error.code === "EEXIST") return false;
+        throw error;
+      });
+      if (created) {
+        try { await cp(source, target, { recursive: true, force: false }); }
+        catch (error) { await rm(target, { recursive: true, force: true }); throw error; }
+      }
+    }
+  }
   if (dataDirectory && agentsRoot) await initializePlugins(resolve(dataDirectory, "agents"), agentsRoot);
   const app = express();
   app.locals.appVersion = appVersion;
