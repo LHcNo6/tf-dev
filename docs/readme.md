@@ -40,6 +40,7 @@
 - [多语言回归记录](../packages/i18n/regression.md)：已完成的检查与已知范围。
 - [MCP 接入说明](../packages/mcp/README.md)：外部客户端连接与工具能力。
 - [安泰信媒体模型维护说明](./antaixinModels.md)：模型发现、分类规则与生成能力边界。
+- [宠物短视频工作流维护说明](./petShortVideo.md)：资产节点、生成授权、安装和验证边界。
 
 ## 目录约定
 

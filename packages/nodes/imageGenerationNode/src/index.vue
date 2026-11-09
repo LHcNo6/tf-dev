@@ -18,12 +18,12 @@
       <el-button :icon="IconLayoutGrid" :disabled="generating || deleting || uploading || lighting?.generating || multiAngle?.generating || panorama?.busy || !previewUrl" :loading="gridSplit?.splitting" text title="宫格切分" aria-label="宫格切分" @click.stop="gridSplit?.open($event)">宫格切分</el-button>
       <mediaHistory mediaType="image" :current="outputFile" :disabled="generating || deleting || uploading || lighting?.generating || multiAngle?.generating || panorama?.busy" @select="outputs.image = { dataType: 'IMAGE', value: $event }" />
       <el-button :icon="IconTransfer" :loading="uploading" :disabled="generating || deleting || lighting?.generating || multiAngle?.generating || panorama?.busy" text title="替换图片" aria-label="替换图片" @click.stop="fileInput?.click()">替换图片</el-button>
-      <input ref="fileInput" type="file" accept="image/*" hidden aria-label="选择替换图片" :disabled="generating || deleting || uploading || lighting?.generating || multiAngle?.generating || panorama?.busy" @change="replaceOutput" />
     </template>
     <template #topRightActions>
       <el-button :icon="IconPencil" :disabled="generating || deleting || uploading || lighting?.generating || multiAngle?.generating || panorama?.busy || !previewUrl || gridSplit?.splitting" text title="标记" aria-label="标记" @click.stop="startEditor('mark')" />
     </template>
     <div v-loading="generating || uploading" class="imageContent nopan" :aria-busy="generating || uploading">
+      <input ref="fileInput" type="file" accept="image/*" hidden aria-label="选择图片" :disabled="generating || deleting || uploading || lighting?.generating || multiAngle?.generating || panorama?.busy" @change="replaceOutput" />
       <imageEditor
         v-if="previewUrl"
         ref="editor"
@@ -37,8 +37,9 @@
         <img :src="inpaintGuideUrl" alt="局部重绘标注图" draggable="false" @load="resizeImage" @error="showNodeError('无法读取重绘标注图', '重绘标注读取失败')" />
         <span>红色标注为重绘区域</span>
       </div>
-      <div v-else class="imageEmpty" role="img" aria-label="暂无生成图片">
+      <div v-else class="imageEmpty">
         <icon-photo-ai :size="48" stroke="1.25" aria-hidden="true" />
+        <el-button class="nodrag nopan" :icon="IconUpload" text :loading="uploading" :disabled="generating || deleting || uploading || lighting?.generating || multiAngle?.generating || panorama?.busy" aria-label="上传图片" @dblclick.stop @click.stop="fileInput?.click()">上传图片</el-button>
       </div>
     </div>
     <template v-if="editor?.mode !== 'mark'" #bottom>
@@ -114,7 +115,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, onScopeDispose, ref, shallowRef, watch } from "vue";
 import { ElButton, ElCard, ElSelect, ElOption, ElOptionGroup, ElLoading, ElImageViewer } from "element-plus";
-import { IconCheck, IconPhotoAi, IconSparkles, IconArrowUp, IconPlayerStop, IconTransfer, IconLayoutGrid, IconBrush, IconPencil, IconSun, IconCameraRotate, IconPanoramaHorizontal, IconChevronDown } from "@tabler/icons-vue";
+import { IconCheck, IconPhotoAi, IconSparkles, IconArrowUp, IconPlayerStop, IconTransfer, IconUpload, IconLayoutGrid, IconBrush, IconPencil, IconSun, IconCameraRotate, IconPanoramaHorizontal, IconChevronDown } from "@tabler/icons-vue";
 import { nodeSkeleton, nodeTools, useNode, z, type NodeMediaModel, type NodeImageRequest, type NodeHandle } from "@toonflow/nodes-scaffold/runtime";
 import { groupNodeModels } from "@toonflow/node-shared/groupNodeModels";
 import { showNodeError } from "@toonflow/node-shared/showNodeError";
