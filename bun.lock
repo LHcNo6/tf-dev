@@ -489,7 +489,7 @@
     },
     "packages/nodes/imageGenerationNode": {
       "name": "@toonflow/node-image-generation",
-      "version": "2.0.0",
+      "version": "2.0.2",
       "dependencies": {
         "@tabler/icons-vue": "^3.46.0",
       },
@@ -585,7 +585,7 @@
     },
     "packages/nodes/videoGenerationNode": {
       "name": "@toonflow/node-video-generation",
-      "version": "2.0.0",
+      "version": "2.0.2",
       "dependencies": {
         "@tabler/icons-vue": "^3.46.0",
       },
@@ -732,7 +732,7 @@
     },
     "packages/tools/canvas": {
       "name": "@toonflow/tool-canvas",
-      "version": "3.0.0",
+      "version": "3.0.1",
       "dependencies": {
         "@tabler/icons-vue": "^3.46.0",
         "zod": "^4.6.2",
@@ -770,7 +770,7 @@
     },
     "packages/tools/sandbox": {
       "name": "@toonflow/tool-sandbox",
-      "version": "2.0.0",
+      "version": "2.0.1",
       "dependencies": {
         "just-bash": "3.6.0",
         "zod": "^4.6.2",

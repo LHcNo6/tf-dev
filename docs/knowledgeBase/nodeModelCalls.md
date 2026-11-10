@@ -2,22 +2,24 @@
 
 ## 状态与用途
 
+2026-11-10 更新：新图片和视频调用由服务端在提交供应商前将记录写入工作区 `.toonflow/modelCalls/`，结束后更新同一调用编号。节点窗口合并旧画布记录和独立记录；服务重启后未结束的记录显示状态未知。持久化失败阻止提交；终态写入失败时，服务进程保留终态并提供窗口内重试。详情及验证边界见[本次变更](changes/modelCallPersistence20261110.md)。
+
 记录本仓库 2026-11-03 对节点模型调用信息的改动，供后续维护和验收。本文编写时分支为 `local-development`，基础提交为 `af6e884`；该功能仍是工作区未提交改动，不能将基础提交视为包含本功能的提交。运行状态、插件文件和安装版是否更新，应以实际环境为准。
 
-在画布中选中节点，点击节点标题右侧的“模型调用记录”图标，可打开该节点的记录窗口。窗口显示调用类型、成功／失败／取消、供应商 ID、模型 ID、开始时间、耗时和结果详情。旧调用没有记录，窗口会显示“暂无模型调用记录”。
+在画布中选中节点，点击节点标题右侧的“模型调用记录”图标，可打开该节点的记录窗口。窗口显示调用类型、运行中／成功／失败／取消、供应商 ID、模型 ID、开始时间、耗时和结果详情。旧调用没有记录，窗口会显示“暂无模型调用记录”。
 
 ## 实现与数据流
 
 | 职责 | 位置 | 维护要点 |
 | --- | --- | --- |
-| 调用封装与记录 | [nodeAi.ts](../packages/nodeScaffold/src/nodeAi.ts) | `useNodeAi(nodeData?)` 的 `recordCall` 包装文本、图片、视频和音频生成；传入节点数据才写记录。 |
-| 节点绑定 | [useNode.ts](../packages/nodeScaffold/src/useNode.ts) | `useNode()` 把当前 `node.data` 传给 `useNodeAi`。 |
-| 局部重绘 | [imageInpaint.ts](../packages/nodes/imageNode/src/imageInpaint.ts) | 单独创建的 `useNodeAi` 同样绑定当前节点；记录的是生成模型调用，后续本地合成错误不在该调用结果内。 |
-| 展示入口 | [nodeSkeleton.vue](../packages/nodeScaffold/src/nodeSkeleton.vue) | 公共标题栏按钮和对话框读取当前节点的 `modelCalls`；选中或悬停时显示标题操作按钮。 |
-| 画布保存 | [canvas/index.vue](../apps/web/src/pages/workspace/panels/canvas/index.vue) | 深度监听节点数据变化并安排画布保存；记录随画布数据保存，仍受既有防抖、写入和错误处理机制约束。 |
-| 媒体错误 | [tasks.ts](../apps/server/src/utils/media/tasks.ts) | 媒体任务失败时在响应消息中附加执行阶段和可识别的错误码。 |
+| 调用封装与记录 | [nodeAi.ts](../../packages/nodeScaffold/src/nodeAi.ts) | `useNodeAi(nodeData?)` 的 `recordCall` 包装文本、图片、视频和音频生成；传入节点数据才写记录。 |
+| 节点绑定 | [useNode.ts](../../packages/nodeScaffold/src/useNode.ts) | `useNode()` 把当前 `node.data` 传给 `useNodeAi`。 |
+| 局部重绘 | [imageInpaint.ts](../../packages/nodes/imageNode/src/imageInpaint.ts) | 单独创建的 `useNodeAi` 同样绑定当前节点；记录的是生成模型调用，后续本地合成错误不在该调用结果内。 |
+| 展示入口 | [nodeSkeleton.vue](../../packages/nodeScaffold/src/nodeSkeleton.vue) | 公共标题栏按钮和对话框读取当前节点的 `modelCalls`；选中或悬停时显示标题操作按钮。 |
+| 画布保存 | [canvas/index.vue](../../apps/web/src/pages/workspace/panels/canvas/index.vue) | 深度监听节点数据变化并安排画布保存；记录随画布数据保存，仍受既有防抖、写入和错误处理机制约束。 |
+| 媒体错误 | [tasks.ts](../../apps/server/src/utils/media/tasks.ts) | 媒体任务失败时在响应消息中附加执行阶段和可识别的错误码。 |
 
-`NodeModelCall` 类型定义在 `nodeAi.ts`，通过 [connection.ts](../packages/nodeScaffold/src/connection.ts) 的 `NodeData.modelCalls` 存入节点数据。每条包括 `id`、`type`、`providerId`、`modelId`、`startedAt`、`durationMs`、`status` 和 `detail`；新记录排在前面，每个节点最多保留 100 条，单条详情截取前 16000 个字符。成功的媒体调用记录返回结果数量，文本调用记录“模型调用完成”。调用结束后才写入记录，没有进行中记录。
+`NodeModelCall` 类型定义在 `nodeAi.ts`，通过 [connection.ts](../../packages/nodeScaffold/src/connection.ts) 的 `NodeData.modelCalls` 存入节点数据。每条包括 `id`、`type`、`providerId`、`modelId`、`startedAt`、`durationMs`、`status` 和 `detail`；新记录排在前面，每个节点最多保留 100 条，单条详情截取前 16000 个字符。成功的媒体调用记录返回结果数量，文本调用记录“模型调用完成”。2026-11-10起图片、视频在请求开始时写入 `running`，结束后更新同一 ID；原生生成节点及局部重绘的记录 ID 与生成编号关联。窗口打开期间显示运行记录的实时已用时间；文本、音频仍在调用结束后写入。自动等待与超时检查见[生成等待维护](generationWaiting.md)。
 
 ## 覆盖与限制
 
@@ -26,7 +28,8 @@
 - 取消由传入的取消信号、组件销毁或 `AbortError` 判断；取消只表示客户端调用已取消，不能证明供应商任务或费用已撤销。
 - 错误详情取决于服务端和供应商实际返回的消息。媒体任务阶段包括 `prepare`、`provider`、`readResult`、`saveFile`；错误码只在异常链中找到符合格式的值时附加。任务层将错误响应的 `data` 置为 `null`，因此窗口不能恢复被丢弃的结构化详情。
 - 记录不主动保存提示词、完整请求或生成结果；但上游错误消息本身可能包含敏感内容，并会写入画布文件，分享画布前应检查。错误详情不保证完整保留，也不追溯功能上线前的调用。
-- 复制节点会复制节点数据，因此也可能复制已有调用记录；记录不是独立审计日志。节点删除、画布文件丢失或保存失败会影响记录。
+- 旧画布记录仍随节点数据复制、保存；新媒体记录独立于画布快照，节点保存首次调用时的画布标识以便画布改名后继续关联记录。完整复制画布时若节点 ID 与该标识也被复制，副本会引用同一批记录；不要把它作为完整审计日志。
+- 服务重启后无法重试保存在已退出进程内的终态，磁盘上的未结束记录显示状态未知；取消仅表示本地请求取消，不证明供应商已停止。
 - 已安装的桌面应用与开发工作区分别使用各自的数据和插件目录；开发构建及服务重启不代表安装版已更新。
 
 ## 构建与排查

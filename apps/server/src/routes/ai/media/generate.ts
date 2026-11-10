@@ -8,8 +8,13 @@ import { translateMessage, validationOptions } from "@/lib/i18n";
 
 export default Router().post("/", validateFields({
   directory: z.string().min(1).max(4096), mediaType: z.enum(["image", "video", "audio"]), taskId: z.uuid().optional(),
+  callScope: z.object({ canvasId: z.string().min(1).max(4096), nodeId: z.string().min(1).max(256), callId: z.uuid(), startedAt: z.iso.datetime() }).optional(),
 }), async (req, res) => {
-  const { directory, mediaType, taskId, ...request } = req.body;
+  const { directory, mediaType, taskId, callScope, ...request } = req.body;
+  if (callScope && (!taskId || taskId !== callScope.callId || mediaType === "audio")) {
+    res.status(400).json(error("模型调用记录标识无效", null, 400));
+    return;
+  }
   const parsed = (mediaType === "image" ? imageGenerationSchema : mediaType === "video" ? videoGenerationSchema : audioGenerationSchema).safeParse(request, validationOptions());
   if (!parsed.success) {
     res.status(400).json(error("参数错误", parsed.error.issues.map(issue => ({ ...issue, message: translateMessage(issue.message) })), 400));
@@ -18,8 +23,8 @@ export default Router().post("/", validateFields({
   const cwd = await u.workspace.resolveWorkspace(req, directory);
   if (taskId) {
     if (req.aborted || res.destroyed) return;
-    u.mediaTasks.start(cwd, taskId, mediaType, parsed.data);
-    res.set("Cache-Control", "no-store").json(success({ taskId }));
+    await u.mediaTasks.start(cwd, taskId, mediaType, parsed.data, callScope);
+    res.set("Cache-Control", "no-store").json(success({ taskId, recordSaved: !!callScope }));
     return;
   }
   const controller = new AbortController();

@@ -2,7 +2,7 @@
 
 `@toonflow/nodes-scaffold` 提供共享 Vite 配置、节点骨架与宿主接口。节点插件在 `packages/nodes/*` 中各自维护依赖、Vue 子组件和构建入口；跨插件共享源码位于 `packages/nodeShared`，作为独立包 `@toonflow/node-shared`，不单独构建节点。
 
-节点模型调用记录的实现、维护和验证边界见 [节点模型调用记录](../../docs/nodeModelCalls.md)。
+节点模型调用记录的实现、维护和验证边界见 [节点模型调用记录](../../docs/knowledgeBase/nodeModelCalls.md)。
 
 ```text
 packages/nodeScaffold/

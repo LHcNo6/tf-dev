@@ -51,7 +51,7 @@
           @preview="setReferencePreview"
           @remove="removeReference" />
         <div v-if="frameMode" class="referenceHint">
-          {{ selectedMode === "startFrameOptional" ? "仅一张图片时作为尾帧；两张图片按顺序作为首帧、尾帧" : "图片引用按顺序作为首帧、尾帧" }}
+          {{ data.firstFrameBinding ? "已显式绑定首帧" : selectedMode === "startFrameOptional" ? "仅一张图片时作为尾帧；两张图片按顺序作为首帧、尾帧" : "图片引用按顺序作为首帧、尾帧" }}
         </div>
         <promptInput v-model="data.promptModel" v-model:text="data.prompt" :references="referenceMentions" :materials="materialMentions" :selectMaterial="selectMaterialReference" :selectAsset="selectAssetReference" expandable />
         <div class="promptFooter">
@@ -137,7 +137,10 @@ const { id, node, nodeProps, nodeEvent, outputs, files, ai, updateNodeInternals 
   label: "视频生成",
 });
 type PromptModel = NonNullable<InstanceType<typeof promptInput>["$props"]["modelValue"]>;
-const data = computed(() => node.data as { prompt: string; promptModel: PromptModel; model: string; duration?: number; resolution: string; ratio: string; mode: string; generateAudio: boolean; other: Record<string, unknown>; lastFrameNodeId?: string });
+type FrameBinding = { source: string; sourceHandle: string; path: string };
+type GenerationRecord = { attemptId: string; videoUrl: string; videoMimeType: string };
+type FrameRecord = { nodeId: string; videoUrl: string; videoMimeType: string; imageUrl: string; attemptId?: string };
+const data = computed(() => node.data as { prompt: string; promptModel: PromptModel; model: string; duration?: number; resolution: string; ratio: string; mode: string; generateAudio: boolean; other: Record<string, unknown>; lastFrameNodeId?: string; lastFrameRecord?: FrameRecord; lastGenerationRecord?: GenerationRecord; firstFrameBinding?: FrameBinding });
 data.value.prompt ??= "";
 data.value.promptModel ??= [];
 data.value.model ??= "";
@@ -151,6 +154,9 @@ const models = shallowRef<NodeMediaModel[]>([]);
 const modelsLoading = ref(false);
 const uploading = ref(false);
 const extractingFrame = ref(false);
+const frameStatus = ref<"idle" | "pending" | "running" | "succeeded" | "failed" | "cancelled">("idle");
+const frameError = ref("");
+const frameWaits = new Set<() => void>();
 const flow = useVueFlow();
 const getCanvas = inject<(() => { id: string } | undefined) | undefined>("canvas", undefined);
 const getWorkspaceDirectory = inject<(() => string) | undefined>("workspaceDirectory", undefined);
@@ -163,7 +169,7 @@ const videoWidth = ref(0);
 let generationController: AbortController | undefined;
 let frameController: AbortController | undefined;
 let frameTask: Promise<void> | undefined;
-const generationState = useNodeGeneration(outputs, () => generationController?.abort());
+const generationState = useNodeGeneration(outputs, () => generationController?.abort(), { mediaType: "video", getModelCalls: () => node.data.modelCalls });
 const { generating } = generationState;
 let generation: Promise<void> | undefined;
 let modelsRequest: Promise<void> | undefined;
@@ -183,6 +189,7 @@ const matchingModes = computed(() => getMatchingModes(selectedModel.value));
 function getMatchingModes(choice?: NodeMediaModel) {
   return (choice?.mode ?? []).filter((mode) => {
     const { image, video, audio } = mediaCounts.value;
+    if (data.value.firstFrameBinding) return mode === "endFrameOptional" && image === 1 && !video && !audio;
     if (Array.isArray(mode)) return image + video + audio > 0 && Object.entries(mediaCounts.value).every(([type, count]) =>
       count <= Number(mode.find((item) => item.startsWith(`${type}Reference:`))?.split(":")[1] ?? 0)
     );
@@ -257,7 +264,7 @@ function getGenerationInput(prompt: string): Omit<NodeVideoRequest, "directory">
     return { type: "text" };
   });
   const firstFrame = frameMode.value && (selectedMode.value !== "startFrameOptional" || images.length > 1) ? images[0] : undefined;
-  const lastFrame = frameMode.value ? images[selectedMode.value === "startFrameOptional" && images.length === 1 ? 0 : 1] : undefined;
+  const lastFrame = frameMode.value && !data.value.firstFrameBinding ? images[selectedMode.value === "startFrameOptional" && images.length === 1 ? 0 : 1] : undefined;
   return {
     providerId: choice.providerId,
     modelId: choice.modelId,
@@ -295,6 +302,7 @@ onScopeDispose(() => {
   window.removeEventListener("toonflow:provider-config-changed", refreshProviderModels);
   generationController?.abort();
   frameController?.abort();
+  for (const stopWait of frameWaits) stopWait();
 });
 watch(() => getCanvas?.()?.id, () => frameController?.abort(), { flush: "sync" });
 
@@ -337,6 +345,9 @@ function extractFrame() {
   const source = { ...outputFile.value };
   const controller = frameController = new AbortController();
   extractingFrame.value = true;
+  data.value.lastFrameRecord = undefined;
+  frameStatus.value = "running";
+  frameError.value = "";
   frameTask = (async () => {
     await Promise.resolve();
     let path = "";
@@ -379,8 +390,13 @@ function extractFrame() {
         flow.addNodes({ id: targetId, type: "remote-imageNode", position: { x, y }, data: { label: `${node.data.label || "视频"} · 尾帧`, lastFrameOwnerId: id, outputs: { image } } });
         data.value.lastFrameNodeId = targetId;
       }
+      const generated = data.value.lastGenerationRecord;
+      data.value.lastFrameRecord = { nodeId: targetId, videoUrl: source.url, videoMimeType: source.mimeType, imageUrl: path, ...(generated?.videoUrl === source.url && generated.videoMimeType === source.mimeType ? { attemptId: generated.attemptId } : {}) };
       committed = true;
+      frameStatus.value = "succeeded";
     } catch (error) {
+      frameStatus.value = controller.signal.aborted ? "cancelled" : "failed";
+      frameError.value = controller.signal.aborted ? "尾帧提取已取消" : error instanceof Error ? error.message : "尾帧提取失败";
       if (!controller.signal.aborted && !disposed) showNodeError(error, "尾帧提取失败，请点击“提取尾帧”重试");
     } finally {
       if (path && !committed && workspace) await workspace.remove(path).catch(error => { if (!disposed) showNodeError(error, "临时尾帧清理失败"); });
@@ -426,6 +442,7 @@ async function startGeneration() {
   const input = getGenerationInput(prompt);
   if (!choice || !input) throw new Error("请先选择视频模型");
   if (!input.prompt) throw new Error("请输入生成提示词");
+  if (data.value.firstFrameBinding) validateFirstFrame(data.value.firstFrameBinding);
   if (refList.value.some(item => item.value === undefined)) throw new Error("引用节点暂无内容，请先补充引用内容");
   for (const match of input.prompt.matchAll(/\{\{ref (\d+)\}\}/g)) {
     const reference = refList.value[Number(match[1]) - 1];
@@ -434,25 +451,31 @@ async function startGeneration() {
   if (choice.mode?.length && !matchingModes.value.length) throw new Error("当前模型没有适合这些参考素材的生成模式，请更换模型或调整引用");
   const workspace = files.getWorkspaceFiles();
   const controller = new AbortController();
+  const attemptId = crypto.randomUUID();
   generationController = controller;
+  data.value.lastFrameRecord = undefined;
+  data.value.lastGenerationRecord = undefined;
+  frameStatus.value = "pending";
+  frameError.value = "";
   // ACT: 工具立即返回，任务由节点持有，停止或卸载时取消。
-  generation = generationState.run(() => workspace
+  generation = generationState.run(call => workspace
     .list()
     .then(({ directory }) => {
       controller.signal.throwIfAborted();
-      return ai.generateVideo({ ...input, directory }, controller.signal);
+      return ai.generateVideo({ ...input, directory }, controller.signal, call);
     })
     .then(([result]) => {
       controller.signal.throwIfAborted();
       if (!result) throw new Error("供应商未返回视频");
       outputs.value.video = { dataType: "VIDEO", value: { url: result.path, mimeType: result.mimeType } };
-    }))
+      data.value.lastGenerationRecord = { attemptId, videoUrl: result.path, videoMimeType: result.mimeType };
+    }), attemptId)
     .then(() => extractFrame())
-    .catch((error) => showNodeError(error, "视频生成失败"))
+    .catch((error) => { frameStatus.value = "failed"; frameError.value = "视频生成失败，未提取尾帧"; showNodeError(error, "视频生成失败"); })
     .finally(() => {
       generationController = undefined;
     });
-  return { status: "generating" };
+  return { status: "generating", ...generationState.getAttempt() };
 }
 
 nodeEvent.on("save", (reason) => {
@@ -480,7 +503,44 @@ async function resizeVideo(event: Event) {
   updateNodeInternals();
 }
 
-function getConfig() {
+function validateFirstFrame(binding: FrameBinding, choice = selectedModel.value, checkMode = true) {
+  if (!choice?.mode?.includes("endFrameOptional")) throw new Error("当前模型未声明支持仅首帧模式，请选择支持首帧的模型");
+  if (checkMode && selectedMode.value !== "endFrameOptional") throw new Error("首帧绑定需要首帧模式，请重新设置");
+  const media = refList.value.filter(item => item.dataType === "IMAGE" || item.dataType === "VIDEO" || item.dataType === "AUDIO");
+  const image = media[0];
+  if (media.length !== 1 || image?.dataType !== "IMAGE" || image.source !== binding.source || image.sourceHandle !== binding.sourceHandle || image.value?.url !== binding.path) throw new Error("首帧来源或文件已变化，或存在不兼容的其他媒体参考；请重新核对");
+  const sourceNode = flow.findNode(binding.source);
+  const sourceOutput = sourceNode?.data.outputs?.[binding.sourceHandle];
+  if (!sourceNode || !flow.getEdges.value.some(edge => edge.source === binding.source && edge.sourceHandle === binding.sourceHandle && edge.target === id && edge.targetHandle === "in") || sourceOutput?.dataType !== "IMAGE" || sourceOutput.value?.url !== binding.path) throw new Error("首帧连接或来源已变化，请重新核对");
+  const ownerId = sourceNode?.data.lastFrameOwnerId;
+  if (typeof ownerId === "string") {
+    const owner = flow.findNode(ownerId);
+    const record = owner?.data.lastFrameRecord as FrameRecord | undefined;
+    const video = owner?.data.outputs?.video;
+    if (!record || record.nodeId !== binding.source || record.imageUrl !== binding.path || video?.dataType !== "VIDEO" || video.value?.url !== record.videoUrl || video.value?.mimeType !== record.videoMimeType) throw new Error("尾帧与来源视频不匹配，请等待提取完成或重新提取");
+  }
+}
+
+function getLastFrameStatus() {
+  const record = data.value.lastFrameRecord;
+  const imageNode = record ? flow.findNode(record.nodeId) : undefined;
+  const image = imageNode?.data.outputs?.image;
+  const valid = !!record && data.value.lastFrameNodeId === record.nodeId && imageNode?.data.lastFrameOwnerId === id
+    && image?.dataType === "IMAGE" && image.value?.url === record.imageUrl
+    && outputFile.value?.url === record.videoUrl && outputFile.value?.mimeType === record.videoMimeType;
+  const status = frameStatus.value === "pending" || frameStatus.value === "running" || frameStatus.value === "failed" || frameStatus.value === "cancelled"
+    ? frameStatus.value : valid ? "succeeded" : "idle";
+  const generated = data.value.lastGenerationRecord;
+  const attemptId = valid && record.attemptId && generated?.attemptId === record.attemptId && generated.videoUrl === record.videoUrl && generated.videoMimeType === record.videoMimeType ? record.attemptId : undefined;
+  return { status, ...(frameError.value ? { error: frameError.value } : {}), video: outputFile.value, ...(valid ? { nodeId: record.nodeId, sourceHandle: "image", image: image.value, videoUrl: record.videoUrl, attemptId } : {}) };
+}
+
+function getConfig(includeModels = false) {
+  let firstFrameError = "";
+  if (data.value.firstFrameBinding) {
+    try { validateFirstFrame(data.value.firstFrameBinding); }
+    catch (error) { firstFrameError = error instanceof Error ? error.message : "首帧绑定无效"; }
+  }
   return {
     config: {
       providerId: selectedModel.value?.providerId ?? "",
@@ -491,28 +551,85 @@ function getConfig() {
       mode: selectedMode.value,
       generateAudio: data.value.generateAudio,
       other: data.value.other,
+      firstFrameBinding: data.value.firstFrameBinding ?? null,
+      firstFrame: data.value.firstFrameBinding ? generationInput.value?.firstFrame : undefined,
+      firstFrameError: firstFrameError || undefined,
     },
-    models: models.value,
+    selectedModel: selectedModel.value ?? null,
+    ...(includeModels ? { models: models.value } : {}),
     ratios: ratioOptions,
     matchingModes: matchingModes.value,
   };
 }
 
 nodeTools.register({
-  name: "getConfig",
-  description: "读取此视频生成节点的当前配置、可选视频模型能力、通用比例及适合当前引用的模式，不含密钥；时长与分辨率须符合 durationResolutionMap",
+  name: "getLastFrameStatus",
+  description: "查询尾帧提取状态及有效图片来源；succeeded 表示关联节点、图片和当前视频匹配，旧尾帧不作为有效结果",
+  parameters: z.strictObject({}),
+  execute: getLastFrameStatus,
+});
+nodeTools.register({
+  name: "waitLastFrame",
+  description: "等待当前视频的尾帧提取，最多 30 秒；pending 或 running 可继续等待，取消等待不取消提取",
   parameters: z.strictObject({}),
   async execute(_args, { signal }) {
     signal?.throwIfAborted();
+    if (frameStatus.value !== "pending" && frameStatus.value !== "running") return getLastFrameStatus();
+    return await new Promise<ReturnType<typeof getLastFrameStatus>>((resolve, reject) => {
+      const finish = (failure?: unknown) => { clearTimeout(timer); stop(); signal?.removeEventListener("abort", onAbort); frameWaits.delete(onDispose); if (failure) reject(failure); else resolve(getLastFrameStatus()); };
+      const onAbort = () => finish(signal?.reason ?? new Error("等待已取消"));
+      const onDispose = () => finish(new Error("节点已卸载，无法等待尾帧"));
+      const stop = watch(frameStatus, value => { if (value !== "pending" && value !== "running") finish(); });
+      const timer = setTimeout(() => finish(), 30000);
+      frameWaits.add(onDispose);
+      signal?.addEventListener("abort", onAbort, { once: true });
+      if (signal?.aborted) onAbort();
+    });
+  },
+});
+nodeTools.register({
+  name: "extractLastFrame",
+  description: "对当前视频重新提取尾帧，不启动视频生成；通过 waitLastFrame 查询结果",
+  parameters: z.strictObject({}),
+  execute() {
+    if (generating.value || uploading.value || deleting.value || extractingFrame.value || !outputFile.value) throw new Error("当前无法提取尾帧，请先确认视频和节点状态");
+    void extractFrame();
+    return getLastFrameStatus();
+  },
+});
+nodeTools.register({
+  name: "setFirstFrameBinding",
+  description: "将已连接的单张图片显式绑定为首帧并选择首帧模式；需提供当前图片路径，传 null 清除绑定；不生成视频",
+  parameters: z.strictObject({ binding: z.object({ source: z.string().min(1), sourceHandle: z.string().min(1), path: z.string().min(1) }).strict().nullable() }),
+  async execute({ binding }, { signal }) {
+    if (generating.value || deleting.value || uploading.value || extractingFrame.value) throw new Error("节点正在处理，请稍后设置首帧");
+    signal?.throwIfAborted();
+    if (!binding) { data.value.firstFrameBinding = undefined; return getConfig(); }
     await loadModels();
     signal?.throwIfAborted();
+    if (generating.value || deleting.value || uploading.value || extractingFrame.value) throw new Error("节点正在处理，请稍后设置首帧");
+    validateFirstFrame(binding, selectedModel.value, false);
+    data.value.firstFrameBinding = binding;
+    data.value.mode = JSON.stringify("endFrameOptional");
     return getConfig();
   },
 });
 
 nodeTools.register({
+  name: "getConfig",
+  description: "读取此视频生成节点的当前配置、所选模型能力、通用比例及适合当前引用的模式；includeModels 为 true 时返回完整可选模型目录，不含密钥；时长与分辨率须符合 durationResolutionMap",
+  parameters: z.strictObject({ includeModels: z.boolean().optional() }),
+  async execute({ includeModels }, { signal }) {
+    signal?.throwIfAborted();
+    await loadModels();
+    signal?.throwIfAborted();
+    return getConfig(includeModels);
+  },
+});
+
+nodeTools.register({
   name: "setConfig",
-  description: "修改此视频生成节点的模型、时长、分辨率、比例、模式或声音；先用 getConfig 查询能力，providerId 与 modelId 必须同时提供；mode 使用返回的原始字符串或数组，须匹配当前引用；不修改提示词、不启动生成",
+  description: "修改此视频生成节点的模型、时长、分辨率、比例、模式或声音；选择模型时先用 getConfig 的 includeModels 查询，providerId 与 modelId 必须同时提供；mode 使用返回的原始字符串或数组，须匹配当前引用；返回当前配置和所选模型能力，不修改提示词、不启动生成",
   parameters: z.strictObject({
     providerId: z.string().min(1).optional(),
     modelId: z.string().min(1).optional(),
@@ -530,7 +647,7 @@ nodeTools.register({
     if (generating.value || deleting.value) throw new Error("节点正在生成或删除，请稍后修改配置");
     const choice = args.modelId === undefined ? selectedModel.value
       : models.value.find((item) => item.providerId === args.providerId && item.modelId === args.modelId);
-    if (!choice) throw new Error("请选择 getConfig 返回的有效视频模型");
+    if (!choice) throw new Error("请选择 getConfig({includeModels:true}) 返回的有效视频模型");
     const durations = getDurations(choice);
     if (args.duration !== undefined && !durations.includes(args.duration)) throw new Error(`当前模型不支持时长 ${args.duration}，可选：${durations.join("、")}`);
     const duration = args.duration ?? (durations.includes(data.value.duration!) ? data.value.duration : durations[0]);

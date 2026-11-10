@@ -4,6 +4,19 @@
       <div class="menuContent">
         <el-input v-model="projectNameDraft" class="workspaceNameInput" :style="{ '--workspaceName': JSON.stringify(projectNameDraft || ' ') }" size="small" :title="directory" :disabled="!workspaceStore.project" aria-label="项目名称"
           @keydown.stop @keydown.enter="saveProjectName" @keydown.esc.prevent="projectNameDraft = workspaceName" @blur="saveProjectName" />
+        <el-dropdown trigger="click" placement="bottom-start" :showArrow="false" @command="switchProject">
+          <el-button class="workspaceTrigger" text :disabled="!workspaceStore.project" aria-label="工作区" :title="directory">
+            <icon-chevron-down :size="14" aria-hidden="true" />
+          </el-button>
+          <template #dropdown>
+            <el-dropdown-menu class="workspaceList">
+              <el-dropdown-item v-for="item in sortedProjects" :key="item.directory" :command="item.directory" :title="item.directory" :disabled="item.directory === directory">
+                <span class="workspaceEntry">{{ item.name }}</span>
+                <icon-check v-if="item.directory === directory" :size="16" aria-hidden="true" />
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
         <el-divider direction="vertical" />
         <el-popover v-model:visible="canvasListVisible" trigger="click" placement="bottom-start" :width="320" :showArrow="false" :disabled="!directory">
           <template #reference>
@@ -100,6 +113,8 @@ const props = defineProps<{
   flushSave: (action?: () => Promise<void>) => Promise<void>;
 }>();
 const workspaceStore = useWorkspaceStore();
+const switchProject = inject<(directory: string) => Promise<void>>("switchProject", async () => {});
+const sortedProjects = computed(() => [...workspaceStore.projectList].sort((left, right) => right.lastOpenedAt - left.lastOpenedAt));
 const balanceVisible = ref(false);
 const rechargeVisible = ref(false);
 const balanceFormat = computed(() => new Intl.NumberFormat(locale.value, { maximumFractionDigits: 6 }));
@@ -982,7 +997,23 @@ defineExpose({ getCanvases, peekCanvases, initialized, addCanvas, switchCanvas, 
       span { min-width: 0; max-width: 160px; overflow: hidden; text-overflow: ellipsis; }
     }
 
+    .workspaceTrigger {
+      width: 20px;
+      height: 28px;
+      padding: 0;
+    }
+
   }
 }
 
+</style>
+
+<style lang="scss">
+.workspaceList {
+  max-height: min(440px, calc(100dvh - 120px));
+  overflow-y: auto;
+
+  .el-dropdown-menu__item { display: flex; justify-content: space-between; gap: 12px; }
+  .workspaceEntry { max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
 </style>

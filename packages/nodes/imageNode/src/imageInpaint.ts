@@ -1,5 +1,5 @@
 import { useNode, useVueFlow } from "@vue-flow/core";
-import { uploadNodeFile, useNodeAi, useNodeFiles, type NodeImageRequest, type NodeImageResult } from "@toonflow/nodes-scaffold/runtime";
+import { uploadNodeFile, useNodeAi, useNodeFiles, type NodeGenerationCall, type NodeImageRequest, type NodeImageResult } from "@toonflow/nodes-scaffold/runtime";
 import { showNodeError } from "@toonflow/node-shared/showNodeError";
 
 export type ImageInpaint = { source: string; original: string; guide: string; mask: string; images: NonNullable<NodeImageRequest["images"]> };
@@ -23,9 +23,9 @@ export function useImageInpaint() {
   const { id, node } = useNode();
   const { findNode } = useVueFlow();
   const files = useNodeFiles();
-  const ai = useNodeAi(node.data);
+  const ai = useNodeAi(node.data, id);
 
-  return async function generateInpaint(input: NodeImageRequest, inpaint: ImageInpaint, signal: AbortSignal): Promise<NodeImageResult[]> {
+  return async function generateInpaint(input: NodeImageRequest, inpaint: ImageInpaint, signal: AbortSignal, generationCall?: NodeGenerationCall): Promise<NodeImageResult[]> {
     signal.throwIfAborted();
     if (!inpaint || ![inpaint.original, inpaint.guide, inpaint.mask].every(path => typeof path === "string" && path.trim())
       || !Array.isArray(inpaint.images) || inpaint.images.some(image => !image || typeof image.path !== "string" || !image.path.trim() || typeof image.mimeType !== "string" || !image.mimeType.startsWith("image/"))) {
@@ -72,7 +72,7 @@ export function useImageInpaint() {
         ...input,
         directory,
         outputDirectory: `assets/${temporaryId}`,
-      }, inpaint), signal);
+      }, inpaint), signal, generationCall);
       signal.throwIfAborted();
       if (!result) throw new Error("供应商未返回图片");
       const generated = await readImage(result.path, result.mimeType);

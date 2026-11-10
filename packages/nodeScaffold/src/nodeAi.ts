@@ -1,10 +1,13 @@
-import { onScopeDispose } from "vue";
+import { inject, onScopeDispose } from "vue";
+import { ElMessage } from "element-plus";
 import { runAgentLoop, type AgentTool, type AgentToolResult } from "@earendil-works/pi-agent-core";
 import { createAssistantMessageEventStream, type AssistantMessage, type Context, type Message, type Model } from "@earendil-works/pi-ai";
 import { EventSourceParserStream } from "eventsource-parser/stream";
 import type { MediaGenerationRequest, MediaModel } from "@toonflow/tools-scaffold/runtime";
 import type { NodeOutput } from "./values";
 import type { NodeData } from "./connection";
+
+export type NodeGenerationCall = { attemptId: string; startedAt: string };
 
 export type NodeModelCall = {
   id: string;
@@ -13,8 +16,10 @@ export type NodeModelCall = {
   modelId: string;
   startedAt: string;
   durationMs: number;
-  status: "succeeded" | "failed" | "cancelled";
+  status: "preparing" | "running" | "succeeded" | "failed" | "cancelled" | "unknown";
   detail: string;
+  saveError?: string;
+  results?: { path: string; mimeType: string }[];
 };
 
 export type NodeAiModel = {
@@ -152,7 +157,7 @@ function createMediaTasks() {
             const results = await fetch("/api/ai/media/tasks/status", {
               method: "POST", headers: { "Content-Type": "application/json", "x-toonflow-workspace": "1" },
               body: JSON.stringify({ directory, taskIds: batch }), signal: AbortSignal.timeout(10000),
-            }).then(readResult<{ taskId: string; result?: MediaTaskResult }[]>);
+            }).then(readResult<{ taskId: string; result?: MediaTaskResult; saveError?: string }[]>);
             const byId = new Map(results.map(result => [result.taskId, result]));
             for (const id of batch) {
               const task = pending.get(id);
@@ -160,7 +165,10 @@ function createMediaTasks() {
               const item = byId.get(id);
               if (!item) throw new Error("生成任务响应不完整，请重试");
               task.failedAt = undefined;
-              if (item.result) task.finish(item.result);
+              if (item.result) {
+                if (item.saveError) ElMessage.error(item.saveError);
+                task.finish(item.result);
+              }
             }
           } catch (error) {
             for (const id of batch) {
@@ -283,30 +291,33 @@ async function requestModel(input: NodeAiRequest, context: Context, model: Model
   return stream;
 }
 
-export function useNodeAi(nodeData?: NodeData) {
+export function useNodeAi(nodeData?: NodeData, nodeId?: string) {
+  const getCanvas = inject<(() => { id: string } | undefined) | undefined>("canvas", undefined);
   const controller = new AbortController();
   onScopeDispose(() => controller.abort());
   const requestSignal = (signal?: AbortSignal) => signal ? AbortSignal.any([controller.signal, signal]) : controller.signal;
 
-  async function recordCall<T>(type: NodeModelCall["type"], input: { providerId: string; modelId: string }, signal: AbortSignal | undefined, task: () => Promise<T>): Promise<T> {
-    const started = Date.now();
+  async function recordCall<T>(type: NodeModelCall["type"], input: { providerId: string; modelId: string }, signal: AbortSignal | undefined, task: () => Promise<T>, generationCall?: NodeGenerationCall): Promise<T> {
+    const started = generationCall ? Date.parse(generationCall.startedAt) : Date.now();
+    const callId = generationCall?.attemptId ?? crypto.randomUUID();
     const save = (status: NodeModelCall["status"], detail: string) => {
       if (!nodeData) return;
       const call: NodeModelCall = {
-        id: crypto.randomUUID(), type, providerId: input.providerId, modelId: input.modelId,
+        id: callId, type, providerId: input.providerId, modelId: input.modelId,
         startedAt: new Date(started).toISOString(), durationMs: Date.now() - started, status,
         detail: detail.slice(0, 16000),
       };
       // ACT: 每个节点最多保留 100 条，避免画布文件无限增长。
-      nodeData.modelCalls = [call, ...(Array.isArray(nodeData.modelCalls) ? nodeData.modelCalls : [])].slice(0, 100);
+      nodeData.modelCalls = [call, ...(Array.isArray(nodeData.modelCalls) ? nodeData.modelCalls.filter(item => item.id !== callId) : [])].slice(0, 100);
     };
+    if (type === "image" || type === "video") save("running", "模型调用进行中");
     try {
       const result = await task();
       save("succeeded", Array.isArray(result) ? `生成完成，返回 ${result.length} 个结果。` : "模型调用完成。");
       return result;
     } catch (error) {
       const cancelled = signal?.aborted || controller.signal.aborted || error instanceof Error && error.name === "AbortError";
-      save(cancelled ? "cancelled" : "failed", error instanceof Error ? `${error.name}: ${error.message}` : String(error));
+      save(cancelled ? "cancelled" : error instanceof Error && error.name === "SubmissionUnknownError" ? "unknown" : "failed", error instanceof Error ? `${error.name}: ${error.message}` : String(error));
       throw error;
     }
   }
@@ -386,16 +397,22 @@ export function useNodeAi(nodeData?: NodeData) {
     }
   }
 
-  async function generateMedia<T extends "image" | "video" | "audio">(mediaType: T, input: NodeImageRequest | NodeVideoRequest | NodeAudioRequest, signal?: AbortSignal) {
+  async function generateMedia<T extends "image" | "video" | "audio">(mediaType: T, input: NodeImageRequest | NodeVideoRequest | NodeAudioRequest, signal?: AbortSignal, generationCall?: NodeGenerationCall) {
     const waitingSignal = requestSignal(signal);
     waitingSignal.throwIfAborted();
-    const taskId = crypto.randomUUID();
+    const canvasId = getCanvas?.()?.id;
+    if (nodeData && mediaType !== "audio" && (!nodeId || !canvasId)) throw new Error("无法确定画布或节点，未提交生成请求");
+    if (nodeData && mediaType !== "audio" && canvasId) nodeData.modelCallCanvasId ??= canvasId;
+    const call = generationCall ?? { attemptId: crypto.randomUUID(), startedAt: new Date().toISOString() };
+    const taskId = mediaType !== "audio" && nodeData ? call.attemptId : crypto.randomUUID();
+    const callScope = mediaType !== "audio" && nodeData && canvasId && nodeId ? { canvasId: nodeData.modelCallCanvasId!, nodeId, callId: taskId, startedAt: call.startedAt } : undefined;
     // 提交使用独立超时；用户取消立即结束等待，提交收尾后再取消，避免先取消后登记的竞态。
     const submitted = fetch("/api/ai/media/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-toonflow-workspace": "1" },
-      body: JSON.stringify({ ...input, mediaType, taskId }), signal: AbortSignal.timeout(30000),
-    }).then(readResult<{ taskId: string }>);
+      body: JSON.stringify({ ...input, mediaType, taskId, callScope }), signal: AbortSignal.timeout(30000),
+    }).catch(cause => { throw Object.assign(new Error("提交响应未收到，任务状态未知，请查看模型调用记录和供应商记录，勿直接重复提交。", { cause }), { name: "SubmissionUnknownError" }); })
+      .then(readResult<{ taskId: string; recordSaved?: boolean }>);
     let abort = () => {};
     try {
       const started = await Promise.race([submitted, new Promise<never>((_resolve, reject) => {
@@ -404,8 +421,9 @@ export function useNodeAi(nodeData?: NodeData) {
       })]);
       waitingSignal.throwIfAborted();
       if (started.taskId !== taskId) throw new Error("生成任务响应无效，无法确认任务状态，请确认 Toonflow 服务端已更新后重试。");
+      if (callScope && !started.recordSaved) throw Object.assign(new Error("服务端未确认持久化调用记录，远端任务状态未知，请勿重复提交；请更新服务端并查看供应商记录。"), { name: "SubmissionUnknownError" });
     } catch (error) {
-      void submitted.then(() => mediaTasks.cancel(input.directory, taskId), () => mediaTasks.cancel(input.directory, taskId));
+      if (waitingSignal.aborted) void submitted.then(() => mediaTasks.cancel(input.directory, taskId), () => mediaTasks.cancel(input.directory, taskId));
       throw error;
     } finally {
       waitingSignal.removeEventListener("abort", abort);
@@ -413,12 +431,14 @@ export function useNodeAi(nodeData?: NodeData) {
     return await mediaTasks.wait(input.directory, taskId, waitingSignal) as { path: string; mimeType: string; mediaType: T }[];
   }
 
-  function generateImage(input: NodeImageRequest, signal?: AbortSignal) {
-    return recordCall("image", input, signal, () => generateMedia("image", input, signal));
+  function generateImage(input: NodeImageRequest, signal?: AbortSignal, generationCall?: NodeGenerationCall) {
+    const call = generationCall ?? { attemptId: crypto.randomUUID(), startedAt: new Date().toISOString() };
+    return recordCall("image", input, signal, () => generateMedia("image", input, signal, call), call);
   }
 
-  function generateVideo(input: NodeVideoRequest, signal?: AbortSignal) {
-    return recordCall("video", input, signal, () => generateMedia("video", input, signal));
+  function generateVideo(input: NodeVideoRequest, signal?: AbortSignal, generationCall?: NodeGenerationCall) {
+    const call = generationCall ?? { attemptId: crypto.randomUUID(), startedAt: new Date().toISOString() };
+    return recordCall("video", input, signal, () => generateMedia("video", input, signal, call), call);
   }
 
   function generateAudio(input: NodeAudioRequest, signal?: AbortSignal) {

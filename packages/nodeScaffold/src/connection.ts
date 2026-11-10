@@ -22,6 +22,7 @@ export type NodeData = {
   handles?: NodeHandle[];
   outputs?: NodeOutputs;
   modelCalls?: import("./nodeAi").NodeModelCall[];
+  modelCallCanvasId?: string;
 };
 
 function getDataTypes(dataType: NodeHandle["dataType"]) {

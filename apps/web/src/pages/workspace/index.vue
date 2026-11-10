@@ -1,5 +1,5 @@
 <template>
-  <main class="workspacePage" :inert="workspaceStore.projectLoadingVisible" :style="{ '--agentWidth': `${agentVisible ? agentWidth : 0}px` }">
+  <main class="workspacePage" :inert="workspaceStore.projectLoadingVisible || switchingProject" :style="{ '--agentWidth': `${agentVisible ? agentWidth : 0}px` }">
     <canvasPanel
       :key="workspaceStore.project?.directory"
       v-model:selectedTool="selectedTool"
@@ -164,6 +164,7 @@ onScopeDispose(() => {
   for (const eventName of sideButtonEvents) window.removeEventListener(eventName, preventSideButtonNavigation, true);
 });
 const workspaceStore = useWorkspaceStore();
+const switchingProject = ref(false);
 useProviderBalances();
 const panelOptions = [
   { label: "画布", value: "canvas", icon: IconVector },
@@ -270,6 +271,26 @@ async function flushSave() {
   await documentPanelRef.value?.flushSave();
   await canvasPanelRef.value?.flushSave();
 }
+
+provide("switchProject", async (directory: string) => {
+  const currentDirectory = workspaceStore.project?.directory;
+  if (!currentDirectory || currentDirectory === directory || switchingProject.value) return;
+  if (canvasPanelRef.value?.saveBusy) {
+    ElMessage.warning(translate("画布操作尚未完成，请稍后退出"));
+    return;
+  }
+  switchingProject.value = true;
+  try {
+    await nextTick();
+    await flushSave();
+    if (workspaceStore.project?.directory !== currentDirectory) return;
+    await workspaceStore.openProject(directory);
+  } catch (error) {
+    ElMessage.error(axios.isAxiosError<{ message?: string }>(error)
+      ? error.response?.data?.message || error.message
+      : error instanceof Error ? error.message : translate("无法打开项目，请重试"));
+  } finally { switchingProject.value = false; }
+});
 
 onBeforeRouteLeave(async () => {
   if (canvasPanelRef.value?.saveBusy) {

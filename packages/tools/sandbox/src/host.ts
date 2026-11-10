@@ -1,4 +1,5 @@
 import { execFile } from "node:child_process";
+import { posix } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { ToolContext } from "@toonflow/tools-scaffold/runtime";
 import { sandboxRequestSchema } from "./schema";
@@ -30,10 +31,28 @@ export function createSandboxContext({ files, resolvePath }: Pick<ToolContext, "
       }
       const destinations = new Set<string>();
       for (const file of request.exports ?? []) {
-        const target = await resolvePath(file.target);
+        const parent = posix.dirname(file.target);
+        let target: string;
+        try { target = await resolvePath(file.target); }
+        catch (error) {
+          if ((error as NodeJS.ErrnoException).code === "ENOTDIR") throw new Error(`沙盒导出目标 ${file.target} 的父路径不是目录：${parent}`, { cause: error });
+          throw error;
+        }
         const key = process.platform === "win32" ? target.toLowerCase() : target;
         if (destinations.has(key)) throw new Error(`沙盒输出目标重复：${file.target}`);
         destinations.add(key);
+      }
+      for (const file of request.exports ?? []) {
+        signal?.throwIfAborted();
+        const parent = posix.dirname(file.target);
+        let info;
+        try { info = await files.stat(parent); }
+        catch (error) {
+          if ((error as NodeJS.ErrnoException).code === "ENOENT") throw new Error(`沙盒导出目标 ${file.target} 的父目录不存在：${parent}；请先创建目录或选择已有目录`, { cause: error });
+          if ((error as NodeJS.ErrnoException).code === "ENOTDIR") throw new Error(`沙盒导出目标 ${file.target} 的父路径不是目录：${parent}`, { cause: error });
+          throw error;
+        }
+        if (!info.isDirectory()) throw new Error(`沙盒导出目标 ${file.target} 的父路径不是目录：${parent}`);
       }
       signal?.throwIfAborted();
       const processRequest: SandboxProcessRequest = {

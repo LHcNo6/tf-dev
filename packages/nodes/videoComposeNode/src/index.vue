@@ -236,7 +236,7 @@ nodeTools.register({
   },
 });
 nodeTools.register({ name: "cancelCompose", description: "请求取消当前合成；保留上次成功输出", parameters: z.strictObject({}), execute() { const cancellationRequested = processing.value; cancel(); return { ...getComposeState(), cancellationRequested }; } });
-nodeEvent.on("save", async reason => { if (uploading.value) throw new Error("素材上传中，请稍后重试"); if (reason === "reload" && processing.value) throw new Error("视频合成中，请完成或取消后刷新"); await cancelAndWait(); });
+nodeEvent.on("save", reason => { if (uploading.value) throw new Error("素材上传中，请稍后重试"); if (reason === "reload" && processing.value) throw new Error("视频合成中，请完成或取消后刷新"); });
 nodeEvent.on("delete", async () => { if (uploading.value) throw new Error("素材上传中，请稍后删除"); await cancelAndWait(); });
 onScopeDispose(() => { disposed = true; cancel(); for (const stopWait of pendingWaits) stopWait(); });
 </script>

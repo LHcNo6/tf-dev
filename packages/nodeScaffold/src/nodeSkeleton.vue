@@ -175,16 +175,19 @@
   </div>
   </teleport>
   <el-dialog v-model="callsVisible" title="模型调用记录" width="min(720px, 92vw)" appendToBody>
+    <div v-if="callsError" class="callDetail">{{ callsError }} <el-button text @click="loadCalls">重新读取</el-button></div>
     <div v-if="!modelCalls.length" class="callEmpty">暂无模型调用记录</div>
     <div v-else class="callList">
       <div v-for="call in modelCalls" :key="call.id" class="callItem">
         <div class="callHeading">
-          <strong :class="call.status">{{ call.status === 'succeeded' ? '成功' : call.status === 'cancelled' ? '已取消' : '失败' }}</strong>
+          <strong :class="call.status">{{ { preparing: '准备提交', running: '运行中', succeeded: '成功', cancelled: '已取消', failed: '失败', unknown: '状态未知' }[call.status] }}</strong>
           <span>{{ { text: '文本', image: '图片', video: '视频', audio: '音频' }[call.type] }}模型</span>
           <time>{{ new Date(call.startedAt).toLocaleString() }}</time>
         </div>
-        <div class="callMeta">供应商：{{ call.providerId }} · 模型：{{ call.modelId }} · 耗时：{{ (call.durationMs / 1000).toFixed(1) }} 秒</div>
+        <div class="callMeta">供应商：{{ call.providerId }} · 模型：{{ call.modelId }} · 耗时：{{ ((call.status === 'running' ? Math.max(0, callsNow - Date.parse(call.startedAt)) : call.durationMs) / 1000).toFixed(1) }} 秒</div>
         <div class="callDetail" tabindex="0">{{ call.detail }}</div>
+        <div v-for="result in call.results" :key="result.path" class="callDetail">结果：{{ result.path }}</div>
+        <div v-if="call.saveError" class="callDetail">{{ call.saveError }} <el-button text @click="retryCall(call.id)">重试保存</el-button></div>
       </div>
     </div>
   </el-dialog>
@@ -214,6 +217,7 @@ import { useNodeEvent } from "./nodeEvent";
 import type { NodeConnectionFeedback, NodeData, NodeHandle } from "./connection";
 import type { NodeOutput } from "./values";
 import type { NodeDocumentContext } from "./nodeDocument";
+import type { NodeModelCall } from "./nodeAi";
 
 defineOptions({ inheritAttrs: false });
 
@@ -253,7 +257,46 @@ const handleGroups = computed(() => [
 const cardHeight = computed(() => Math.max(100, ...handleGroups.value.map((group) => (group.items.length + 1) * 44)));
 const { id: nodeId, node } = useNode<NodeData>();
 const callsVisible = ref(false);
-const modelCalls = computed(() => Array.isArray(node.data.modelCalls) ? node.data.modelCalls : []);
+const storedCalls = ref<NodeModelCall[]>([]);
+const callsError = ref("");
+const getCanvasForCalls = inject<(() => { id: string } | undefined) | undefined>("canvas", undefined);
+const getCallsDirectory = inject<(() => string) | undefined>("workspaceDirectory", undefined);
+const modelCalls = computed(() => {
+  const merged = new Map<string, NodeModelCall>();
+  for (const call of Array.isArray(node.data.modelCalls) ? node.data.modelCalls : []) merged.set(call.id, call);
+  for (const call of storedCalls.value) merged.set(call.id, call);
+  return [...merged.values()].sort((a, b) => b.startedAt.localeCompare(a.startedAt));
+});
+async function callsRequest(action: "list" | "retry", callId?: string) {
+  const canvasId = node.data.modelCallCanvasId || getCanvasForCalls?.()?.id;
+  const directory = getCallsDirectory?.();
+  if (!canvasId || !directory) throw new Error("无法读取当前画布的模型调用记录");
+  const response = await fetch(`/api/ai/media/calls/${action}`, { method: "POST", headers: { "Content-Type": "application/json", "x-toonflow-workspace": "1" }, body: JSON.stringify({ directory, canvasId, nodeId, callId }) });
+  const result = await response.json();
+  if (!response.ok || result.code !== 200) throw new Error(result.message || "模型调用记录读取失败");
+  return result.data;
+}
+async function loadCalls() {
+  try { storedCalls.value = await callsRequest("list"); callsError.value = ""; }
+  catch (error) { callsError.value = error instanceof Error ? error.message : "模型调用记录读取失败"; }
+}
+async function retryCall(callId: string) {
+  try { await callsRequest("retry", callId); await loadCalls(); }
+  catch (error) { callsError.value = error instanceof Error ? error.message : "重试保存失败"; }
+}
+watch(callsVisible, (visible, _previous, onCleanup) => {
+  if (!visible) return;
+  void loadCalls();
+  const timer = setInterval(() => { void loadCalls(); }, 3000);
+  onCleanup(() => clearInterval(timer));
+});
+const callsNow = ref(Date.now());
+watchEffect(onCleanup => {
+  if (!callsVisible.value || !modelCalls.value.some(call => call.status === "running")) return;
+  callsNow.value = Date.now();
+  const timer = setInterval(() => { callsNow.value = Date.now(); }, 1000);
+  onCleanup(() => clearInterval(timer));
+});
 const documentContext = inject<NodeDocumentContext | undefined>("nodeDocument", undefined);
 const documentTarget = computed(() => props.readOnly ? undefined : documentContext?.targets.get(nodeId));
 const skeletonElement = ref<HTMLElement>();
@@ -695,6 +738,7 @@ watch(
       gap: 8px;
       align-items: center;
       .succeeded { color: var(--el-color-success); }
+      .running { color: var(--el-color-primary); }
       .failed { color: var(--el-color-danger); }
       .cancelled { color: var(--el-text-color-secondary); }
       time { margin-left: auto; color: var(--el-text-color-secondary); }

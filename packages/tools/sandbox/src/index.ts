@@ -17,7 +17,7 @@ const plugin: ToolPlugin = {
       promptGuidelines: [
         "执行技能附带代码前，先读取技能说明，确认需要的脚本、输入文件和依赖。用 imports 导入需要的文件；沙盒不会自动读取脚本相邻文件。",
         "脚本使用 js-exec script.js 或 python3 script.py；JS 含 import/export 时使用 js-exec -m script.js。支持的 fs API 只访问虚拟文件系统。导入和导出文件总大小分别最多 16 MiB，文本输出最多 64 KiB。",
-        "每次调用都是全新的 /workspace；需要保留的结果必须显式指定 exports，后续调用需重新导入。覆盖工作区文件前确认用户意图，并显式设置 overwrite=true。",
+        "每次调用都是全新的 /workspace；需要保留的结果必须显式指定 exports，后续调用需重新导入。导出目标的工作区父目录必须已存在，不自动创建；默认不覆盖，覆盖前确认用户意图并显式设置 overwrite=true。多个文件依次写回，失败时查看已写回文件清单再处理剩余文件。",
         "JavaScript 使用 QuickJS，Python 仅提供随附标准库；不支持完整 Node.js、pip、本机程序或联网。遇到缺失依赖应说明限制，不将沙盒成功运行等同于完整技能验证。",
       ],
       parameters: z.toJSONSchema(sandboxRequestSchema, { io: "input", target: "draft-07" }),

@@ -4,8 +4,8 @@
 
 ## 入口与数据流
 
-- [安泰信适配器](../packages/providers/src/media/antaixin.ts) 的 `modelsUrl` 指向 `https://www.antaixin.ai/v1/models`。媒体模型设置中的“获取模型”调用服务端刷新接口。
-- [媒体供应商管理](../apps/server/src/utils/media/provider.ts) 使用该供应商配置的 API Key 请求列表、校验响应并识别模型类型，保存时只替换供应商文件中的 `models` 字面量。文件版本和 API Key 在保存前会再次检查，避免覆盖并发修改。
+- [安泰信适配器](../../packages/providers/src/media/antaixin.ts) 的 `modelsUrl` 指向 `https://www.antaixin.ai/v1/models`。媒体模型设置中的“获取模型”调用服务端刷新接口。
+- [媒体供应商管理](../../apps/server/src/utils/media/provider.ts) 使用该供应商配置的 API Key 请求列表、校验响应并识别模型类型，保存时只替换供应商文件中的 `models` 字面量。文件版本和 API Key 在保存前会再次检查，避免覆盖并发修改。
 - 对返回的同名模型，已有配置先合并，上游字段和 `modelInfo` 覆盖对应字段；未返回的能力字段沿用已有配置。刷新结果包含的每一种类型，会替换原列表中该类型的模型；其他类型保留。空列表或请求失败时不会保存。
 - 已有数据目录中的 `providers/antaixin.ts` 不会在启动时自动被源码覆盖。此次已单独更新本开发工作区 `data/providers/antaixin.ts` 的列表地址和错误提示，保留原模型配置；其他数据目录或安装版须分别处理，不能直接假定已更新。`data/` 不纳入 Git。
 

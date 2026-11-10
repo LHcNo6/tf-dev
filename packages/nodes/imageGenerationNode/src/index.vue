@@ -178,7 +178,7 @@ const previewVisible = ref(false);
 const inpaintPreviewVisible = ref(false);
 const imageWidth = ref(0);
 let generationController: AbortController | undefined;
-const generationState = useNodeGeneration(outputs, () => generationController?.abort());
+const generationState = useNodeGeneration(outputs, () => generationController?.abort(), { mediaType: "image", getModelCalls: () => node.data.modelCalls });
 const { generating } = generationState;
 let generation: Promise<void> | undefined;
 let modelsRequest: Promise<void> | undefined;
@@ -351,12 +351,12 @@ async function startGeneration() {
   const inpaintData = data.value.inpaint;
   generationController = controller;
   // ACT: 工具立即返回，任务由节点持有，停止或卸载时取消。
-  generation = generationState.run(() => workspace.list()
+  generation = generationState.run(call => workspace.list()
     .then(({ directory }) => {
       controller.signal.throwIfAborted();
       return inpaintData
-        ? generateInpaint({ ...input, directory }, inpaintData, controller.signal)
-        : ai.generateImage({ ...input, directory }, controller.signal);
+        ? generateInpaint({ ...input, directory }, inpaintData, controller.signal, call)
+        : ai.generateImage({ ...input, directory }, controller.signal, call);
     })
     .then(([result]) => {
       controller.signal.throwIfAborted();
@@ -367,7 +367,7 @@ async function startGeneration() {
     .finally(() => {
       generationController = undefined;
     });
-  return { status: "generating" };
+  return { status: "generating", ...generationState.getAttempt() };
 }
 
 nodeEvent.on("save", (reason) => {
@@ -420,7 +420,7 @@ function startEditor(mode: "inpaint" | "mark") {
   editor.value?.start(mode);
 }
 
-function getConfig() {
+function getConfig(includeModels = false) {
   return {
     config: {
       providerId: selectedModel.value?.providerId ?? "",
@@ -429,25 +429,26 @@ function getConfig() {
       ratio: data.value.ratio,
       other: { ...data.value.other },
     },
-    models: models.value,
+    selectedModel: selectedModel.value ?? null,
+    ...(includeModels ? { models: models.value } : {}),
   };
 }
 
 nodeTools.register({
   name: "getConfig",
-  description: "读取此图片生成节点的当前模型、分辨率、比例及可选图片模型能力，不含密钥；未声明分辨率或比例时分别使用 2K、16:9",
-  parameters: z.strictObject({}),
-  async execute(_args, { signal }) {
+  description: "读取此图片生成节点的当前配置和所选模型能力；includeModels 为 true 时返回完整可选模型目录，不含密钥；未声明分辨率或比例时分别使用 2K、16:9",
+  parameters: z.strictObject({ includeModels: z.boolean().optional() }),
+  async execute({ includeModels }, { signal }) {
     signal?.throwIfAborted();
     await loadModels();
     signal?.throwIfAborted();
-    return getConfig();
+    return getConfig(includeModels);
   },
 });
 
 nodeTools.register({
   name: "setConfig",
-  description: "修改此图片生成节点的模型、分辨率或比例；先用 getConfig 查询可选能力，providerId 与 modelId 必须同时提供；不修改提示词、不启动生成",
+  description: "修改此图片生成节点的模型、分辨率或比例；选择模型时先用 getConfig 的 includeModels 查询，providerId 与 modelId 必须同时提供；返回当前配置和所选模型能力，不修改提示词、不启动生成",
   parameters: z.strictObject({
     providerId: z.string().min(1).optional(),
     modelId: z.string().min(1).optional(),
@@ -462,7 +463,7 @@ nodeTools.register({
     if (generating.value || deleting.value) throw new Error("节点正在生成或删除，请稍后修改配置");
     const choice = args.modelId === undefined ? selectedModel.value
       : models.value.find((item) => item.providerId === args.providerId && item.modelId === args.modelId);
-    if (!choice) throw new Error("请选择 getConfig 返回的有效图片模型");
+    if (!choice) throw new Error("请选择 getConfig({includeModels:true}) 返回的有效图片模型");
     const sizes = choice.imageSizes?.length ? choice.imageSizes : ["2K"];
     const ratios = choice.imageRatios?.length ? choice.imageRatios : ["16:9"];
     if (args.size !== undefined && !sizes.includes(args.size)) throw new Error(`当前模型不支持分辨率 ${args.size}，可选：${sizes.join("、")}`);

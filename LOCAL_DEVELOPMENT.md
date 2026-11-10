@@ -9,7 +9,7 @@
 - `apps/server/src/utils/media/generation.ts` 和 `origin.js`：迁入图片、视频、音频来源记录、视频引用 URL 复用及安泰信引用顺序处理。
 - `apps/web/src/lib/canvasShortcuts.ts` 和 `apps/web/src/components/settings/panels/general/keyInput.vue`：迁入 macOS Option 滚轮默认值、显示名称和录制焦点修复。
 - `packages/providers/src/media/antaixin.ts`：安泰信 4.1.1 适配器。应用初始化时仅在数据目录没有同名文件时安装；已有用户供应商不会被覆盖，未来更新需要显式处理现有文件。
-- [安泰信媒体模型维护说明](docs/antaixinModels.md)：模型列表发现、数据目录更新方式、分类规则和未适配的生成能力。
+- [安泰信媒体模型维护说明](docs/knowledgeBase/antaixinModels.md)：模型列表发现、数据目录更新方式、分类规则和未适配的生成能力。
 - `packages/nodes/imageGenerationNode/src` 和 `packages/nodes/videoGenerationNode/src`：图片和视频参数面板的源码实现。`local-patches/nodes/` 保存原安装构建产物和历史脚本；脚本使用原工作区和应用的绝对路径，仅供研究，不应直接运行。
 - `local-patches/web/`：当前已安装快捷键相关构建产物和补丁记录。
 - `local-patches/backend/`：来源模块、后端补丁记录及安装时校验值。`installed.json` 中的路径和备份是原机器的历史记录，不是本仓库的安装指令。

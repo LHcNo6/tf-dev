@@ -39,24 +39,25 @@
 - [多语言维护说明](../packages/i18n/readme.md)：字典抽取、动态文案、前后端接入和语言回退。
 - [多语言回归记录](../packages/i18n/regression.md)：已完成的检查与已知范围。
 - [MCP 接入说明](../packages/mcp/README.md)：外部客户端连接与工具能力。
-- [安泰信媒体模型维护说明](./antaixinModels.md)：模型发现、分类规则与生成能力边界。
-- [生成节点上传素材维护说明](./generationNodeUpload.md)：上传入口、输出引用及验证边界。
-- [宠物短视频工作流维护说明](./petShortVideo.md)：资产节点、生成授权、安装和验证边界。
+- [插件开发指南](./pluginDevelopment.md)：工具、节点和技能的开发与交付。
+- [项目知识库](./knowledgeBase/readme.md)：功能现状、实现位置、验证边界和逐次变更记录。
+- [本地议题](./agents/issueTracker.md)：需求规格、议题与状态的管理约定。
 
 ## 目录约定
 
 ```text
 docs/
   readme.md          文档入口
-  development.md     开发与扩展指南
+  development.md     源码、构建与发布指南
+  developmentRules.md 开发规范
+  pluginDevelopment.md 插件开发指南
+  knowledgeBase/     项目知识库与逐次变更记录
+  localIssues/       本地需求规格与议题
+  agents/            Agent 使用的议题、状态和领域约定
   readme/            各语言项目介绍
   images/            标识、认证与社区图片
     screenshots/     产品截图
     sponsors/        赞助商图片
 ```
 
-各子包的实现与维护说明保留在对应 `packages/` 目录。更新项目介绍时，以根目录 `README.md` 为准同步其余二十份译版；图片统一复用 `images/`，移动文件时同时更新 Markdown 和 HTML 中的相对链接。
-
-## 视频合成维护
-
-- [合成视频节点维护](videoComposition.md)
+各子包的实现与维护说明保留在对应 `packages/` 目录，项目级功能维护入口统一收录于知识库。更新项目介绍时，以根目录 `README.md` 为准同步其余二十份译版；图片统一复用 `images/`，移动文件时同时更新 Markdown 和 HTML 中的相对链接。
