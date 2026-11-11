@@ -78,7 +78,7 @@ export async function createApp({
     const targetRoot = resolve(dataDirectory, "skills");
     await initializePlugins(targetRoot, skillsRoot);
     // 已初始化的数据目录也要发现新内置技能；同名目录存在时保留用户版本。
-    for (const name of ["petShortVideo", "longVideoWorkflow", "petCommercePrompt"]) {
+    for (const name of ["petShortVideo", "longVideoWorkflow", "petCommercePrompt", "petCommercePromptSd25", "videoPromptAdapter", "videoPrompting"]) {
       const source = resolve(skillsRoot, name);
       const available = await stat(source).then(info => info.isDirectory()).catch((error: NodeJS.ErrnoException) => {
         if (error.code === "ENOENT") return false;

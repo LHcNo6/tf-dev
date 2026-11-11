@@ -6,6 +6,9 @@
 
 知识库建立于 2026-11-10；此前已有功能的行为和验证见[主题维护](../readme.md#主题维护)。
 
+- 2026-11-11：[接入第三方视频提示词规则](videoPromptingIntegration20261111.md)
+- 2026-11-11：[多模型视频提示词与宠物长视频规划](videoPromptAdapter20261111.md)
+- 2026-11-11：[Seedance 2.5 宠物带货提示词与工作流接入](petCommercePromptSd2520261111.md)
 - 2026-11-10：[宠物短视频能力未知时继续生成](petShortVideoCapability20261110.md)
 - 2026-11-10：[宠物带货提示词 Skill 与工作流接入](petCommercePrompt20261110.md)
 - 2026-11-10：[长视频跨技能资料读取修复](longVideoSkillReference20261110.md)
