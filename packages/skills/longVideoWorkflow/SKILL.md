@@ -2,7 +2,7 @@
 name: longVideoWorkflow
 description: 在 Toonflow 当前画布制作超过 30 秒的通用长视频，按模型能力分段生成并按顺序合成；用于完整制作、继续或修订多段视频。用户明确指定其他工作流时遵从指定范围。
 metadata:
-  version: "1.2.1"
+  version: "1.3.0"
   displayName: 通用长视频工作流
   author: Toonflow
 ---
@@ -21,9 +21,13 @@ metadata:
 
 先确认已有内容、目标总时长是否严格、风格、画幅和必要资产。保留用户的剧情事实、顺序和明确限制；只询问无法推断且影响结果的缺项。先规划完整剧情，再按自然节拍列出全片分段表：全局段号、剧情范围、预计时长、每段初始和结束状态、所需真实参考、声音及提示词。一个分段可以包含多个镜头，保持跨段人物、场景和道具信息自包含。
 
-宠物带货任务先使用 `skillOperator(action=list)` 查找 `videoPromptAdapter` 的真实 scope，读取其主文件及 `references/petCommercePlanning.md`，形成全片主播、商品事实、逐句口播、逐镜表演及跨段连续性方案；这只是 PART A 或模型适配的创作输入，不调用 30 秒上限的宠物短片技能。普通长视频不强加宠物及带货内容。没有 skillOperator 时从本轮技能目录按实际位置读取；资料确实不可读时说明并暂停依赖的规划。
+宠物带货任务先使用 `skillOperator(action=list)` 查找 `videoPromptAdapter` 的真实 scope，读取其主文件及 `references/petCommercePlanning.md`，形成全片主播、商品事实、逐句口播、逐镜表演及跨段连续性方案。普通长视频不强加宠物及带货内容。没有 skillOperator 时从本轮技能目录按实际位置读取；资料确实不可读时说明并暂停依赖的规划。
 
-若是 Seedance 任务，先用 `skillOperator` 列出并读取实际安装的 `workflow` 技能，将本次模式与已授权范围带入；遵循其中的 Seedance 路由锁存及 PART A 的长视频首尾帧例外，使用开头已确认的模型完成分段提示词规划；不要另写导演规则。第二段起的实际尾帧尚未生成，方案中标明来源为上一段本次尾帧，交互模式提交完整提示词模板和该绑定规则供授权，自动模式记录模板及绑定规则并核对开头范围；不编造参考句柄。真实尾帧就绪后将对应首帧引用按约定填入各段既有提示词字段，保持 A9 外壳和已批准内容。该技能或例外不可读取、模型能力冲突时说明并暂停。其他模型遵守实际能力和用户要求。
+目标为 Seedance 2.5 时，先完成全片脚本、资产清单与分段表，再按节点支持的时长和分辨率生成每段完整提示词。宠物带货逐段使用 `petCommercePromptSd25`（并读取其 `references/shotGuide.md`），先通过 `skillOperator(action=list)` 查找实际 name 和 scope；普通长视频逐段使用全局安装的官方 `sd25-pe`，用 `action=list, scope=global` 查找，再以返回的 name、`scope=global` 读取主文件，避免同名工作区技能覆盖官方版。没有 skillOperator 时按本轮技能目录的实际位置读取对应技能。普通长视频遵循官方技能自身的更新与失败回退规则：本轮没有可用的联网 npx 执行能力时按该技能的更新失败分支提示并继续使用当前版本，不假称已经执行或更新；不自行安装替代品。所需技能确实不可读取时暂停依赖的定稿。每次传入全片背景、当前段剧情和逐字台词、局部时间、起止状态、声音人设及实际资产职责，只优化本段，保持原剧情与对白，不给每段重复添加片头或结尾。不同段的模型参数单列，节点提示词只含可提交内容。此路线不读取或执行 `workflow` PART A、A9 或其提示词限制。
+
+第二段起的尾帧尚未生成：交互模式在授权前展示每段完整提示词模板，说明“上一段本次尾帧”及其他资产的来源、用途和绑定规则；自动模式记录模板并核对开头授权。真实尾帧就绪后仅按已授权绑定规则填入真实引用；不编造参考编号。实际尾帧与计划冲突或用户修改超出授权时停止并按模式处理。
+
+Seedance 2.0 仍按现有 `workflow` PART A 及长视频首尾帧例外定稿；保留其 A9 格式及执行边界。
 
 非 Seedance 任务在选定实际模型、版本和输入模式后，查找并读取 `videoPromptAdapter` 主文件，由其统一选择官方、第三方 `videoPrompting` 或通用规则；使用第三方时按适配器要求读取其真实 scope 与专篇。按已确定的全片和每段方案逐段适配最终提示词，保留剧情、逐字台词、素材身份与原授权；通用回退标明未核实。适配器主文件不可读时暂停依赖的定稿。若模型变化，重新适配受影响段并按本工作流重新核对授权；不改变用户选择的模型或自动增加调用。
 
@@ -33,7 +37,7 @@ metadata:
 
 ## 2. 画布与素材
 
-执行与交付资料属于 **`workflow` 技能**，不属于 `longVideoWorkflow`。先用 `skillOperator(action=list)` 确认实际安装的 `workflow` 及其 scope，然后用 `skillOperator(action=read, name=workflow, scope=<查到的scope>, path=references/stateAndDelivery.md)` 读取。Seedance 任务提示词定稿后，还须以相同 name 和 scope 读取 `path=references/canvasExecution.md`；其他模型不使用该 Seedance 专用执行路由。若读取失败，先核对目标 name、scope 和 path，并以正确参数重试；只有确认目标资料确实不可读取时才说明缺项并暂停受影响阶段。实时工具 schema 优先。先检查当前画布和已有台账；继续任务时复用实际节点、配置和结果，不凭名称推断成功或采用。
+Seedance 2.5 长视频执行与交付直接使用本技能第 2–5 节，不读取 `workflow` 的执行资料或 PART A；实时工具 schema 优先。其他模型仍使用 `workflow` 的 `references/stateAndDelivery.md`，Seedance 2.0 定稿后还读取 `references/canvasExecution.md`：先查找 `workflow` 的真实 name 和 scope，再按相同 scope 读取，缺失时先核对并重试。先检查当前画布和已有台账；继续任务时复用实际节点、配置和结果，不凭名称推断成功或采用。
 
 通过 `getCanvas` 发现节点类型，`getCanvasNodes` 读取端口、输出和必要数据，`getCanvasEdges` 分页读取连接，`getNodeTools` 发现节点函数，再用 `addNode`、`connectNodes` 和 `nodeTools` 按实际 schema 操作。节点 ID、类型和端口以现场返回为准；长结果按游标或截断指示续读。避免覆盖已有节点，不直接修改画布 JSON。
 
@@ -41,7 +45,9 @@ metadata:
 
 在当前画布已有内容之外创建全片及分段表文本节点、每段一个视频生成节点、一个合成视频节点。使用实际返回的节点类型、端口及节点函数；文本内容用文本节点的工具写入，提示词用生成节点的 `node:setPrompt` 写入，不连接文本重复追加提示词。已有素材优先复用；需要新素材时只创建必要的图片生成节点。实际参考就绪后再连接，核对引用类型、顺序与真实文件。没有文件或输出时不能以名称代替素材。
 
-从第二段起，每段都以紧邻上一段本次视频的尾帧作为首帧，顺序生成。先计划各段初始状态和首帧用途；将尾帧图片实际连接到本段后调用 `node:setFirstFrameBinding` 指定其来源、端口和已核实路径。`node:getConfig` 必须读回相同绑定、`endFrameOptional` 模式、相同的 `firstFrame.path` 且没有 `firstFrameError`；提示词明确要求以该首帧画面为起点并执行本段动作。当前显式首帧绑定仅支持所选模型声明 `endFrameOptional`、且没有其他图片、视频或音频参考的情况；不支持或其他必要参考冲突时暂停，请用户选择模型或调整素材，不丢弃参考。不得把 `startFrameOptional` 单图或普通图片参考当成已验证的首帧。
+从第二段起，使用紧邻上一段本次视频的有效尾帧顺序衔接。Seedance 2.5 有本段其他资产时，将真实尾帧及本段需要的角色、宠物、商品等图片连接到本段视频节点；以 `node:waitLastFrame` 返回的节点、端口、路径、视频地址及 attemptId，调用 `node:setContinuityReferenceBinding({binding:{source,sourceHandle,path,videoNodeId,videoUrl,attemptId}})`。`node:getConfig` 必须读回相同来源、视频和 attemptId，所选模式是可接收全部素材的多参考，`continuityReferenceIndex` 为真实引用编号且没有 `continuityReferenceError`；提示词用对应 `{{ref N}}` 明确该尾帧控制起始画面，其他参考分别控制身份、商品或场景。参考式衔接不是硬首帧，第一帧可能不同，方案和交付均如实说明。绑定和生成时节点重新验证尾帧来源与文件；失效时停止，不丢弃其他参考或重用旧尾帧。
+
+Seedance 2.5 无其他参考且支持首帧模式时，以及 Seedance 2.0 和其他模型，沿用 `node:setFirstFrameBinding`：读回相同绑定、`endFrameOptional`、相同 `firstFrame.path` 且没有 `firstFrameError`。Seedance 2.5 无其他参考但只支持多参考模式时也可使用上述参考式绑定，并说明不能保证硬首帧。无法满足必要参考和模型模式时保留素材并说明冲突；不得把 `startFrameOptional` 单图或普通图片参考当成已验证的硬首帧。
 
 ## 3. 方案与授权
 

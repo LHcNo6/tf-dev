@@ -8,11 +8,13 @@
 - 图片节点可连接其他视频生成节点，作为图片参考；是否能用作首帧取决于选择的模型和生成模式。提取不会自动启动下游生成。
 - 视频生成节点的 `node:getLastFrameStatus` / `node:waitLastFrame` 分别查询和等待尾帧；视频生成成功不代表尾帧已成功。状态只在图片节点、尾帧记录和当前视频匹配时返回有效图片。`node:extractLastFrame` 可重试当前视频的提取。
 - `node:setFirstFrameBinding` 将实际连接的一张图片绑定为首帧，保存来源端口和路径，并设置 `endFrameOptional` 模式。模型须声明该模式；其他图片、视频或音频参考与此绑定不能混用，须由用户选择方案。生成前再次核对连接、路径和尾帧所属视频；旧画布未设置绑定时保持原来的模式语义。
+- `node:setContinuityReferenceBinding` 将上一段本次生成视频的尾帧绑定为多参考衔接图，可以与模型支持的其他参考图片、视频或音频同时连接；它不使用硬首帧字段，也不保证输出第一帧与尾帧一致。调用时传入尾帧节点、端口、路径、来源视频节点、视频路径和生成 attemptId；`node:getConfig` 返回 `continuityReferenceBinding`、真实引用编号 `continuityReferenceIndex` 和 `continuityReferenceError`，提示词必须引用该编号。
 
 ## 实现与维护
 
 - `packages/nodes/videoGenerationNode/src/index.vue` 在视频生成成功后独立执行提取；生成节点的 `lastFrameNodeId` 与图片节点的 `lastFrameOwnerId` 记录关联，随画布数据保存。关联输出使用标准 `IMAGE` 值。
 - 每次生成返回 `attemptId`，成功时记录对应视频；成功提取时 `lastFrameRecord` 记录来源视频 URL、媒体类型、图片节点、图片 URL 和匹配的生成 `attemptId`。启动新的视频生成时先清除记录，保留旧图片但不允许将其当作新视频的有效尾帧。等待最多 30 秒，等待取消不取消提取。页面重开后按持久记录与当前输出核验，不恢复后台任务。
+- 新版提取还记录尾帧 SHA-256；绑定时检查提取记录、生成 attemptId、来源视频和连线，并读取文件比对摘要。生成前再次检查来源、连线和文件内容，提示词未引用衔接图时拒绝启动；两种绑定不能同时启用。旧尾帧没有摘要时需要重新提取；不支持 `crypto.subtle` 的环境不能启用参考式绑定，但原有尾帧提取和硬首帧路径仍可用。多参考仍使用当前模型声明的真实模式和已有 `referenceOrder`，不会伪造供应商硬首帧能力。
 - `packages/nodes/videoGenerationNode/src/extractLastFrame.ts` 使用浏览器视频解码、结束前定位和 Canvas 生成 PNG。输出保存在图片节点自己的 `assets/<节点 ID>/` 目录；更新保留旧文件，避免破坏撤销记录或其他引用。
 - 操作锁定工作区和画布，校验来源视频与目标节点；取消或失败时清理未提交图片。提取失败保留视频和原尾帧，界面提示可手动重试。自动处理依赖画布页面保持打开及浏览器支持视频解码。
 - 普通视频节点入口位于 `packages/nodes/videoNode/src/index.vue`，调用 `components/videoPlayer.vue` 的现有 `captureFrame("last")`。

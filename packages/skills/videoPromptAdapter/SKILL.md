@@ -2,7 +2,7 @@
 name: videoPromptAdapter
 description: 将已有视频创作或分段方案按确切模型版本和输入模式整理为视频生成提示词；适用于 Toonflow 短视频和长视频，包含宠物带货规划参考，不调用生成。
 metadata:
-  version: "1.1.0"
+  version: "1.1.1"
   displayName: 视频模型提示词适配
   author: Toonflow
 ---
@@ -37,7 +37,7 @@ metadata:
 
 第三方规则只负责组织对应模型的 prompt；本技能、调用方和用户的已确认剧情、逐字台词、实际引用及声音、时长、授权和参数约束优先。上游的只输出单行、默认时长、音频或引用标记等要求与上述约束冲突时，保留用户目标和工作流要求，不静默删除台词、引用、镜头或改模型。真实引用由工作流映射，第三方样例中的 `<Picture 1>` 等不能当作已经绑定。
 
-Seedance 2.5 宠物短片由 `petCommercePromptSd25` 直接定稿；Seedance 长视频由调用方的 `workflow` PART A 定稿，不使用本技能重写最终 prompt。模型变化时由调用工作流重新适配受影响段并核对授权。
+Seedance 2.5 宠物短片和长视频由 `petCommercePromptSd25` 定稿，普通 Seedance 2.5 长视频由 `sd25-pe` 定稿；Seedance 2.0 长视频由调用方的 `workflow` PART A 定稿。本技能均不重写这些最终 prompt。模型变化时由调用工作流重新适配受影响段并核对授权。
 
 ## 通用方法
 
@@ -45,4 +45,4 @@ Seedance 2.5 宠物短片由 `petCommercePromptSd25` 直接定稿；Seedance 长
 
 输出创作目标、参考来源和职责、每段完整可复制提示词、实际参数与待验证项。引用按调用方真实连接映射，例如 `{{ref N}}`；未就绪时写素材身份和绑定规则，不编造编号。模式或能力明确不支持必要输入时交回工作流，不擅自删除输入、切模型或改成无声。中文语音、口型及时间服从等质量未知时保留目标并标明未验证，由调用方在授权范围内尝试。
 
-宠物带货的全片及长视频规划读取 `references/petCommercePlanning.md`；它是创作输入，不替代 Seedance PART A 或重新运行短视频技能的 30 秒限制。资料来源、许可证及验证边界见各参考文件和项目知识库。
+宠物带货的全片及长视频规划读取 `references/petCommercePlanning.md`；它是创作输入，Seedance 2.5 每段再由宠物专版完成提示词，单段时长以模型实际能力及专版范围为准。资料来源、许可证及验证边界见各参考文件和项目知识库。
