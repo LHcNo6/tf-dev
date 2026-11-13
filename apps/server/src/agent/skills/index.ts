@@ -5,6 +5,7 @@ import { loadSkills, parseFrontmatter } from "@earendil-works/pi-coding-agent";
 import type { SkillContext, SkillLocation, SkillScope } from "@toonflow/tools-scaffold/runtime";
 import conf from "@/utils/conf";
 import { directory, isEnabled } from "@/utils/skills/files";
+import { localizeSkill } from "@/utils/skills/localize";
 import { isWithin, lockWorkspaceFiles, resolveWorkspacePath, writeWorkspaceFile } from "@/utils/workspace/files";
 
 export function loadAgentSkills(cwd: string, scope?: SkillScope) {
@@ -19,8 +20,7 @@ export function loadAgentSkills(cwd: string, scope?: SkillScope) {
       ...(scope !== "workspace" ? [join(dirname(conf.path), "skills")] : []),
     ].filter(existsSync),
   });
-  result.skills = result.skills.filter(skill => !isWithin(directory(), skill.filePath) || isEnabled(skill.name));
-  return result;
+  return { ...result, skills: result.skills.filter(skill => !isWithin(directory(), skill.filePath) || isEnabled(skill.name)).map(localizeSkill) };
 }
 
 export function createSkillContext(cwd: string): SkillContext {
@@ -37,11 +37,11 @@ export function createSkillContext(cwd: string): SkillContext {
     const baseDirectory = skill?.baseDir ?? join(scopeDirectory, request.name);
     if (!isWithin(scopeDirectory, baseDirectory)) throw new Error("技能目录超出指定范围");
     const { path: skillDirectory } = await resolveWorkspacePath(scopeDirectory, relative(scopeDirectory, baseDirectory), true);
-    const path = request.path ?? (skill ? basename(skill.filePath) : "SKILL.md");
+    const path = request.path === "SKILL.md" && skill ? basename(skill.filePath) : request.path ?? (skill ? basename(skill.filePath) : "SKILL.md");
     const { path: target } = await resolveWorkspacePath(skillDirectory, path, true);
     const filePath = relative(skillDirectory, target).split(sep).join("/");
     if (!skill && filePath !== "SKILL.md") throw new Error("请先创建技能的 SKILL.md，再添加参考资料");
-    return { name: request.name, scope: targetScope, path: filePath, target, manifest: basename(target).toLowerCase() === "skill.md" || target === skill?.filePath };
+    return { name: request.name, scope: targetScope, path: filePath, target, manifest: basename(target).toLowerCase() === "skill.md" || Boolean(skill?.manifestPaths.includes(target)) };
   }
 
   async function write(request: SkillLocation & { content: string }, create: boolean, signal?: AbortSignal) {

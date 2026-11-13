@@ -25,6 +25,10 @@ await copySandboxPackages(resolve(projectDir, "build/server/node_modules"));
 const skillsOutput = resolve(projectDir, "build/skills");
 await rm(skillsOutput, { recursive: true, force: true });
 await cp(resolve(projectDir, "packages/skills"), skillsOutput, { recursive: true });
+// 已安装第三方技能的入口译本单独随服务交付，部署时合并到对应原包，保留其参考资料与许可证。
+const skillLocalesOutput = resolve(projectDir, "build/skillLocales");
+await rm(skillLocalesOutput, { recursive: true, force: true });
+await cp(resolve(projectDir, "packages/skillLocales"), skillLocalesOutput, { recursive: true });
 const providersOutput = resolve(projectDir, "build/providers");
 await rm(providersOutput, { recursive: true, force: true });
 await cp(resolve(projectDir, "packages/providers/src"), providersOutput, { recursive: true });

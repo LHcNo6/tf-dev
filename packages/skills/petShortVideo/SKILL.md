@@ -1,10 +1,12 @@
 ---
 name: petShortVideo
-description: 在 Toonflow 画布制作 30 秒以内的宠物带货视频，自动准备宠物、可选商品和场景资产及单条视频；用户明确指定本工作流时也用于不带商品的宠物短片。
+description: 在 无限画布的画布制作 30 秒以内的宠物带货视频，自动准备宠物、可选商品和场景资产及单条视频；用户明确指定本工作流时也用于不带商品的宠物短片。
 metadata:
-  version: "1.3.1"
+  locales:
+    en: en.md
+  version: "1.3.2"
   displayName: 宠物短视频工作流
-  author: Toonflow
+  author: 无限画布
 ---
 
 # 宠物短视频工作流

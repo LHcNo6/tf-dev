@@ -171,7 +171,7 @@ async function selectFile(path: string) {
   controller = requestController;
   try {
     const { data } = await axios.get("/api/skills/read", {
-      params: path === mainPath.value ? { name: skill.name } : { name: skill.name, path },
+      params: { name: skill.name, path },
       headers,
       signal: requestController.signal,
     });
@@ -298,7 +298,7 @@ async function save() {
   const path = selectedPath.value;
   const content = draft.value;
   try {
-    const { data } = await axios.put("/api/skills/save", { name: skill.name, ...(path === mainPath.value ? {} : { path }), content }, { headers });
+    const { data } = await axios.put("/api/skills/save", { name: skill.name, path, content }, { headers });
     if (data.code !== 200) throw new Error(data.message || "保存文件失败");
     if (selectedPath.value === path) original.value = content;
     drafts.delete(path);

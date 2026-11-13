@@ -1,10 +1,12 @@
 ---
 name: longVideoWorkflow
-description: 在 Toonflow 当前画布制作超过 30 秒的通用长视频，按模型能力分段生成并按顺序合成；用于完整制作、继续或修订多段视频。用户明确指定其他工作流时遵从指定范围。
+description: 在无限画布当前画布制作超过 30 秒的通用长视频，按模型能力分段生成并按顺序合成；用于完整制作、继续或修订多段视频。用户明确指定其他工作流时遵从指定范围。
 metadata:
-  version: "1.3.0"
+  locales:
+    en: en.md
+  version: "1.3.1"
   displayName: 通用长视频工作流
-  author: Toonflow
+  author: 无限画布
 ---
 
 # 通用长视频工作流

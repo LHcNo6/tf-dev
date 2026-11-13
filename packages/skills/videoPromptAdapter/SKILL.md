@@ -1,10 +1,12 @@
 ---
 name: videoPromptAdapter
-description: 将已有视频创作或分段方案按确切模型版本和输入模式整理为视频生成提示词；适用于 Toonflow 短视频和长视频，包含宠物带货规划参考，不调用生成。
+description: 将已有视频创作或分段方案按确切模型版本和输入模式整理为视频生成提示词；适用于 无限画布 短视频和长视频，包含宠物带货规划参考，不调用生成。
 metadata:
-  version: "1.1.1"
+  locales:
+    en: en.md
+  version: "1.1.2"
   displayName: 视频模型提示词适配
-  author: Toonflow
+  author: 无限画布
 ---
 
 # 视频模型提示词适配
@@ -33,7 +35,7 @@ metadata:
 | MiniMax H3 | `references/models/minimaxH3/prompting.md` |
 | LTX-2、LTX-2.3、LTX-2.5 | 分别为 `references/models/ltx2/prompting.md`、`references/models/ltx23/prompting.md`、`references/models/ltx25/prompting.md` |
 
-第三方路由：先用 `skillOperator(action=list, scope=global)` 查找实际 `videoPrompting`，然后用返回的 name 和 `scope=global` 读取主文件、`sourceInfo.md` 和上表对应 path，确认来源及版本；无 skillOperator 时按本轮技能目录中的全局实际位置读取。专篇引用的示例仍以同一 name、scope 和相对路径读取。第三方技能、来源、专篇或匹配模式不可用时说明来源缺失，使用本文件通用方法并标记未核实；不擅自借用相邻版本。第三方写法是作者建议，不代表供应商或 Toonflow 的执行能力。将来源和未验证项随方案交付。
+第三方路由：先用 `skillOperator(action=list, scope=global)` 查找实际 `videoPrompting`，然后用返回的 name 和 `scope=global` 读取主文件、`sourceInfo.md` 和上表对应 path，确认来源及版本；无 skillOperator 时按本轮技能目录中的全局实际位置读取。专篇引用的示例仍以同一 name、scope 和相对路径读取。第三方技能、来源、专篇或匹配模式不可用时说明来源缺失，使用本文件通用方法并标记未核实；不擅自借用相邻版本。第三方写法是作者建议，不代表供应商或 无限画布 的执行能力。将来源和未验证项随方案交付。
 
 第三方规则只负责组织对应模型的 prompt；本技能、调用方和用户的已确认剧情、逐字台词、实际引用及声音、时长、授权和参数约束优先。上游的只输出单行、默认时长、音频或引用标记等要求与上述约束冲突时，保留用户目标和工作流要求，不静默删除台词、引用、镜头或改模型。真实引用由工作流映射，第三方样例中的 `<Picture 1>` 等不能当作已经绑定。
 

@@ -3,6 +3,7 @@ import { lstat, readdir, readFile, realpath, rm } from "@toonflow/file";
 import { basename, dirname, relative, resolve, sep } from "node:path";
 import conf from "@/utils/conf";
 import { isWithin, writeWorkspaceFile } from "@/utils/workspace/files";
+import { localizeSkill } from "./localize";
 
 export const maxBytes = 20 * 1024 * 1024;
 // 记录附属文件的手动排序；不改动真实文件名，避免影响 SKILL.md 内部的相对链接。
@@ -68,20 +69,21 @@ async function resolveSkill(name: string) {
   const { root, actualRoot } = await verifyRoot();
   const skill = loadSkillsFromDir({ dir: root, source: "user" }).skills.find(skill => skill.name === name);
   if (!skill) throw Object.assign(new Error("技能不存在"), { status: 404 });
-  const mainTarget = resolve(skill.filePath);
+  const localized = localizeSkill(skill);
+  const mainTarget = resolve(localized.filePath);
   if (mainTarget === root || !isWithin(root, mainTarget)) throw Object.assign(new Error("技能文件超出目录范围"), { status: 403 });
   await verifyChain(actualRoot, root, mainTarget);
   const baseDir = dirname(mainTarget);
   // 仅当技能是 skills 根目录下一级的独占文件夹（安装流程始终如此创建）时，才浏览/编辑该目录内的附属文件；避免暴露根目录或其他技能。
-  const isDirectorySkill = basename(mainTarget) === "SKILL.md" && dirname(baseDir) === root;
-  return { root, actualRoot, mainTarget, baseDir, isDirectorySkill };
+  const isDirectorySkill = basename(skill.filePath) === "SKILL.md" && dirname(baseDir) === root;
+  return { root, actualRoot, mainTarget, baseDir, isDirectorySkill, manifestPaths: localized.manifestPaths };
 }
 
 export async function uninstall(name: string) {
   const { mainTarget, baseDir, isDirectorySkill } = await resolveSkill(name);
   if (isDirectorySkill) {
     const entries = await readdir(baseDir, { recursive: true, withFileTypes: true });
-    if (entries.some(entry => entry.name.toLowerCase() === "skill.md" && resolve(entry.parentPath, entry.name) !== mainTarget)) {
+    if (entries.some(entry => entry.name.toLowerCase() === "skill.md" && resolve(entry.parentPath, entry.name) !== resolve(baseDir, "SKILL.md"))) {
       throw Object.assign(new Error("目录中包含其他技能，不能整体卸载"), { status: 409 });
     }
   }
@@ -91,8 +93,9 @@ export async function uninstall(name: string) {
 }
 
 export async function locate(name: string, path?: string) {
-  const { actualRoot, mainTarget, baseDir, isDirectorySkill } = await resolveSkill(name);
+  const { root, actualRoot, mainTarget, baseDir, isDirectorySkill, manifestPaths } = await resolveSkill(name);
   if (!path) return { target: mainTarget, isMain: true };
+  if (!isDirectorySkill && path === relative(root, mainTarget).split(sep).join("/")) return { target: mainTarget, isMain: true };
   if (!isDirectorySkill) throw Object.assign(new Error("该技能没有可编辑的附属文件"), { status: 400 });
   const parts = validatePath(path);
   if (parts.length === 1 && parts[0]!.toLowerCase() === orderFileName.toLowerCase()) {
@@ -101,12 +104,12 @@ export async function locate(name: string, path?: string) {
   const target = resolve(baseDir, path);
   if (!isWithin(baseDir, target)) throw Object.assign(new Error("文件路径超出技能目录"), { status: 403 });
   await verifyChain(actualRoot, baseDir, target);
-  return { target, isMain: target === mainTarget };
+  return { target, isMain: manifestPaths.includes(target) };
 }
 
 // 供新增文件与移动的目标路径复用：父目录须已存在，目标本身不能已存在。
 export async function resolveNewFile(name: string, path: string) {
-  const { actualRoot, baseDir, isDirectorySkill } = await resolveSkill(name);
+  const { actualRoot, baseDir, isDirectorySkill, manifestPaths } = await resolveSkill(name);
   if (!isDirectorySkill) throw Object.assign(new Error("该技能没有可编辑的附属文件"), { status: 400 });
   const parts = validatePath(path);
   const leaf = parts.at(-1)!.toLowerCase();
@@ -114,6 +117,7 @@ export async function resolveNewFile(name: string, path: string) {
     throw Object.assign(new Error("不能创建或移动为该保留文件名"), { status: 400 });
   }
   const target = resolve(baseDir, path);
+  if (manifestPaths.includes(target)) throw Object.assign(new Error("不能创建或移动为该保留文件名"), { status: 400 });
   if (!isWithin(baseDir, target)) throw Object.assign(new Error("文件路径超出技能目录"), { status: 403 });
   const parent = dirname(target);
   if (parent !== baseDir) await verifyChain(actualRoot, baseDir, parent, "directory");
@@ -137,7 +141,8 @@ async function readOrder(baseDir: string) {
 }
 
 export async function list(name: string) {
-  const { root, actualRoot, mainTarget, baseDir, isDirectorySkill } = await resolveSkill(name);
+  const { root, actualRoot, mainTarget, baseDir, isDirectorySkill, manifestPaths } = await resolveSkill(name);
+  const manifest = basename(mainTarget);
   const mainPath = relative(root, mainTarget).split(sep).join("/");
   if (!isDirectorySkill) return { mainPath, files: [mainPath] };
   const files: string[] = [];
@@ -149,26 +154,26 @@ export async function list(name: string) {
       const relPath = prefix ? `${prefix}/${entry.name}` : entry.name;
       if (entry.isDirectory()) {
         if (isWithin(actualRoot, await realpath(entryPath))) await walk(entryPath, relPath);
-      } else if (entry.isFile() && isWithin(actualRoot, await realpath(entryPath))) {
+      } else if (entry.isFile() && (!manifestPaths.includes(entryPath) || entryPath === mainTarget) && isWithin(actualRoot, await realpath(entryPath))) {
         files.push(relPath);
       }
     }
   }
   await walk(baseDir, "");
   const known = new Set(files);
-  const order = (await readOrder(baseDir)).filter(path => path !== "SKILL.md" && known.has(path));
+  const order = (await readOrder(baseDir)).filter(path => path !== manifest && known.has(path));
   const ordered = new Set(order);
-  const remaining = files.filter(path => path !== "SKILL.md" && !ordered.has(path)).sort((left, right) => left.localeCompare(right));
-  return { mainPath: "SKILL.md", files: ["SKILL.md", ...order, ...remaining] };
+  const remaining = files.filter(path => path !== manifest && !ordered.has(path)).sort((left, right) => left.localeCompare(right));
+  return { mainPath: manifest, files: [manifest, ...order, ...remaining] };
 }
 
 export async function saveOrder(name: string, order: string[]) {
   const { baseDir, isDirectorySkill } = await resolveSkill(name);
   if (!isDirectorySkill) throw Object.assign(new Error("该技能没有可编辑的附属文件"), { status: 400 });
   if (new Set(order).size !== order.length) throw Object.assign(new Error("顺序列表包含重复路径"), { status: 400 });
-  const { files } = await list(name);
+  const { mainPath, files } = await list(name);
   const known = new Set(files);
-  if (order.some(path => path === "SKILL.md" || !known.has(path))) {
+  if (order.some(path => path === mainPath || !known.has(path))) {
     throw Object.assign(new Error("顺序列表包含无效或不存在的文件"), { status: 400 });
   }
   await writeWorkspaceFile(resolve(baseDir, orderFileName), JSON.stringify(order));

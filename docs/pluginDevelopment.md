@@ -709,7 +709,8 @@ Agent 扫描工作区 skill/ 与数据目录 skills/，同名时工作区优先�
 |disable\-model\-invocation|可选布尔值。true 表示用户明确指定时使用；省略/false 可自动匹配。|
 |metadata\.displayName|插件市场显示名，缺省使用 name。|
 |metadata\.version|展示和更新比较，发布用完整 SemVer，例如 "1\.0\.0"。|
-|metadata\.author|作者；Toonflow 被卸载逻辑作为内置标记，自定义技能不要使用该值。|
+|metadata\.author|作者显示文案；内置身份由发行包目录确认，不依赖作者名称。|
+|metadata\.locales\.en|可选，同目录英文入口文件名，例如 `en.md`；中文使用 `SKILL.md`，其他界面语言使用英文入口，两个入口保持相同 name。|
 |metadata\.github|可选、无账号密码的 [https://github\.com](https://github.com) 链接。|
 
 disable\-model\-invocation 是 SDK 固定协议字段，保留短横线；SDK 列表中的 disableModelInvocation 是解析后的属性，不可混写。其他字段如 allowed\-tools、model 不会开通授权或模型能力。

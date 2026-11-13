@@ -265,7 +265,7 @@
 </template>
 
 <script setup lang="ts">
-import { translate } from "@toonflow/i18n/vue";
+import { locale, translate } from "@toonflow/i18n/vue";
 import axios from "axios";
 import parse from "semver/functions/parse";
 import { computed, defineAsyncComponent, markRaw, onMounted, onBeforeUnmount, ref, watch } from "vue";
@@ -509,7 +509,7 @@ watch(
   { immediate: true }
 );
 watch(
-  () => [visible, activeTab.value, refreshKey.value],
+  () => [visible, activeTab.value, refreshKey.value, locale.value],
   async (_value, _previous, onCleanup) => {
     if (!visible || (activeTab.value !== "discover" && activeTab.value !== "installed")) return;
     const controller = new AbortController();

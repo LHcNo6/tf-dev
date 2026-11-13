@@ -2,9 +2,11 @@
 name: petCommercePrompt
 description: 为宠物带货短视频编写和修订脚本、资产图提示词与完整视频提示词，重点处理宠物拟人主播表演、逐镜动作、商品展示和口播；仅负责创作，不执行媒体生成。
 metadata:
-  version: "1.0.1"
+  locales:
+    en: en.md
+  version: "1.0.2"
   displayName: 宠物带货提示词
-  author: Toonflow
+  author: 无限画布
 ---
 
 # 宠物带货提示词

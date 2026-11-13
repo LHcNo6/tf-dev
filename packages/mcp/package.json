@@ -9,6 +9,10 @@
     "./skill": {
       "types": "./src/skill.d.ts",
       "default": "./skills/toonflow/SKILL.md"
+    },
+    "./skill/en": {
+      "types": "./src/skill.d.ts",
+      "default": "./skills/toonflow/en.md"
     }
   },
   "bin": {

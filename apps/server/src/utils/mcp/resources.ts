@@ -4,12 +4,13 @@ import { readFile } from "@toonflow/file";
 import { file } from "@toonflow/file/bun";
 import { resolve } from "node:path";
 import * as skillFile from "@/utils/skills/files";
+import { localizeSkill } from "@/utils/skills/localize";
 
 export const skillResources: NonNullable<McpOptions["resources"]> = {
   async list(signal) {
     const { skills } = loadSkillsFromDir({ dir: skillFile.directory(), source: "user" });
     const resources = [];
-    for (const skill of skills) {
+    for (const skill of skills.map(localizeSkill)) {
       signal.throwIfAborted();
       if (!skillFile.isEnabled(skill.name)) continue;
       const { mainPath, files } = await skillFile.list(skill.name);

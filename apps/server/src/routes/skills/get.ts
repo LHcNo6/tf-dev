@@ -4,13 +4,14 @@ import { dirname, relative, resolve, sep } from "node:path";
 import { Router } from "express";
 import { success } from "@/lib/responseFormat";
 import u from "@/utils";
+import { localizeSkill } from "@/utils/skills/localize";
 
 const router = Router();
 
 export default router.get("/", async (req, res) => {
   const skillsDirectory = resolve(dirname(u.conf.path), "skills");
   const { skills } = loadSkillsFromDir({ dir: skillsDirectory, source: "user" });
-  const items = await Promise.all(skills.map(async (skill) => {
+  const items = await Promise.all(skills.map(localizeSkill).map(async (skill) => {
     const { frontmatter } = parseFrontmatter(await readFile(skill.filePath, "utf8"));
     // ACT: 旧技能没有安装记录，用独占目录创建时间兜底，避免编辑 SKILL.md 后重新排序。
     const baseDir = dirname(skill.filePath);
@@ -27,12 +28,12 @@ export default router.get("/", async (req, res) => {
       installedAt: u.conf.get("pluginInstalledAt", {})[`skill:${skill.name}`] ?? (info.birthtimeMs || info.mtimeMs),
       builtin: req.app.locals.builtinPlugins.skill.has(relative(skillsDirectory, skill.filePath).split(sep)[0]),
       version: typeof metadata.version === "string" ? metadata.version.trim() : "",
-      displayName: typeof metadata.displayName === "string" && metadata.displayName.trim() ? metadata.displayName : skill.name,
+      displayName: skill.displayName,
       description: skill.description,
       author: typeof metadata.author === "string" ? metadata.author : "",
       github,
       enabled: u.skillFile.isEnabled(skill.name),
     };
   }));
-  res.json(success(items.sort((left, right) => left.name.localeCompare(right.name))));
+  res.set("Cache-Control", "no-store").json(success(items.sort((left, right) => left.name.localeCompare(right.name))));
 });

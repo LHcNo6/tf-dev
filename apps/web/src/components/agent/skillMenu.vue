@@ -6,7 +6,7 @@
         <div :id="listId" role="listbox" aria-label="技能指令" :aria-busy="loading">
           <div v-if="loading || loadError || !filteredSkills.length" class="skillStatus" role="status">{{ loading ? "正在加载技能…" : loadError || (skills.length ? "没有匹配的技能" : "暂无可用技能") }}</div>
           <button v-for="(skill, index) in filteredSkills" v-else :id="`${listId}-${index}`" :key="skill.name" class="skillItem" :class="{ active: index === activeIndex }" type="button" role="option" :aria-selected="index === activeIndex" @mouseenter="activeIndex = index" @mousedown.prevent @click="selectSkill(skill.name)">
-            <span class="skillName"><icon-book :size="15" />/skill:{{ skill.name }}</span>
+            <span class="skillName" :title="`/skill:${skill.name}`"><icon-book :size="15" />{{ skill.displayName || skill.name }}</span>
             <span class="skillDescription">{{ skill.description }}</span>
           </button>
         </div>
@@ -20,19 +20,20 @@ import { computed, nextTick, ref, useId, watch } from "vue";
 import axios from "axios";
 import { IconBook } from "@tabler/icons-vue";
 import { ClickOutside as vClickOutside } from "element-plus";
+import { locale } from "@toonflow/i18n/vue";
 
 const props = defineProps<{ directory?: string; active: boolean; disabled: boolean; query?: string; editor?: HTMLElement }>();
 const emit = defineEmits<{ select: [name: string]; dismiss: [] }>();
 const listId = useId();
 const buttonVisible = ref(false);
 const visible = computed(() => props.active && !props.disabled && (buttonVisible.value || props.query !== undefined));
-const skills = ref<{ name: string; description: string }[]>([]);
+const skills = ref<{ name: string; displayName?: string; description: string }[]>([]);
 const loading = ref(false);
 const loadError = ref("");
 const activeIndex = ref(0);
 const filteredSkills = computed(() => {
   const query = (props.query ?? "").toLowerCase();
-  return skills.value.filter(skill => `skill:${skill.name} ${skill.description}`.toLowerCase().includes(query));
+  return skills.value.filter(skill => `skill:${skill.name} ${skill.displayName ?? ""} ${skill.description}`.toLowerCase().includes(query));
 });
 
 function closeMenu() {
@@ -73,19 +74,20 @@ watch([visible, activeIndex, filteredSkills, loading, loadError], async () => {
   } else editor?.removeAttribute("aria-activedescendant");
 });
 
-watch(visible, async (open, _previous, onCleanup) => {
+watch([visible, locale, () => props.directory], async ([open], _previous, onCleanup) => {
   if (!open) return closeMenu();
   const controller = new AbortController();
   onCleanup(() => controller.abort());
   loading.value = true;
   loadError.value = "";
+  skills.value = [];
   try {
     const { data } = await axios.get("/api/agent/skills", {
       params: { directory: props.directory }, signal: controller.signal,
       headers: { "x-toonflow-workspace": "1" },
     });
     if (data.code !== 200) throw new Error(data.message || "加载技能失败");
-    skills.value = data.data;
+    if (!controller.signal.aborted) skills.value = data.data;
   } catch (error) {
     if (!axios.isCancel(error)) loadError.value = "加载技能失败，请重新打开重试";
   } finally {

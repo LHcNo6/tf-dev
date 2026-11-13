@@ -1,10 +1,12 @@
 ---
 name: canvas
-description: Toonflow 画布操作手册。使用画布工具创建、切换和重命名画布，添加、移动、重命名、连接和删除节点，自动整理整幅画布、调整视口，以及调用节点注册的函数。用户要求操作当前画布或搭建节点流程时使用。
+description: 无限画布的画布操作手册。使用画布工具创建、切换和重命名画布，添加、移动、重命名、连接和删除节点，自动整理整幅画布、调整视口，以及调用节点注册的函数。用户要求操作当前画布或搭建节点流程时使用。
 metadata:
-  version: "2.1.1"
+  locales:
+    en: en.md
+  version: "2.1.2"
   displayName: 画布操作手册
-  author: Toonflow
+  author: 无限画布
   github: https://github.com/HBAI-Ltd/Toonflow-app
 ---
 

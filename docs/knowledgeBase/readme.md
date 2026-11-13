@@ -14,6 +14,7 @@
 | 生成节点 | [配置回执](compactNodeConfig.md)、[上传素材](generationNodeUpload.md)、[生成等待](generationWaiting.md)、[模型调用记录](nodeModelCalls.md) |
 | 视频制作 | [宠物短视频与带货提示词](petShortVideo.md)、[视频尾帧](videoLastFrame.md)、[视频合成](videoComposition.md) |
 | Agent 工具 | [回复与工具活动](agentReplies.md)、[沙盒导出](sandboxExports.md) |
+| Skill | [中英文与语言选择](skillLanguages.md) |
 
 子包专属说明仍保留在对应包内，例如 [MCP](../../packages/mcp/README.md)、[多语言](../../packages/i18n/readme.md)；需要作为项目入口时在本表链接，不复制全文。
 
