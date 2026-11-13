@@ -1311,6 +1311,7 @@ const defaultEdgeOptions = markRaw({
 .canvas {
   width: 100%;
   height: 100%;
+  background: color-mix(in srgb, var(--el-color-primary) 3%, var(--el-bg-color));
 
   &.canvasUnselected :deep(.vue-flow__viewport) {
     visibility: hidden;
@@ -1324,7 +1325,7 @@ const defaultEdgeOptions = markRaw({
     display: grid;
     place-items: center;
     padding: 24px;
-    background: var(--el-bg-color);
+    background: color-mix(in srgb, var(--el-color-primary) 3%, var(--el-bg-color));
     color: var(--el-text-color-secondary);
     font-size: 14px;
     line-height: 1.6;
@@ -1365,7 +1366,7 @@ const defaultEdgeOptions = markRaw({
     box-sizing: content-box;
     padding: 8px;
     margin: -8px;
-    border-radius: 4px;
+    border-radius: var(--ui-radius-large, 12px);
   }
 
   &.multiSelectionMode :deep(.vue-flow__nodesselection-rect) {

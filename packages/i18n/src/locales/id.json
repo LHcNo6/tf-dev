@@ -3270,5 +3270,10 @@
   "当前移动端浏览器内核缺少无限画布所需能力。请更新无限画布和系统浏览器内核；部分系统需要通过系统更新升级。更新完成后，请完全退出并重新打开无限画布。": "Mesin browser seluler ini tidak memiliki kemampuan yang dibutuhkan 无限画布. Perbarui 无限画布 dan mesin browser sistem; beberapa sistem memerlukan pembaruan sistem. Setelah selesai, keluar sepenuhnya lalu buka kembali 无限画布.",
   "雾蓝": "Biru kabut",
   "检测到旧版无限画布供应商 TS，无法在无限画布 2.0 中使用。请在「添加自定义媒体供应商」中点击「一键复制提示词」，结合旧代码和接口资料重新生成新版代码后再导入。": "Vendor 无限画布 lama TS terdeteksi dan tidak dapat digunakan di 无限画布 2.0. Silakan klik \"Salin prompt sekali klik\" di \"Tambahkan Pemasok Media Khusus\", gabungkan kode lama dan data antarmuka untuk membuat ulang versi kode baru, lalu impor.",
-  "无限画布 Android": "无限画布 Android"
+  "无限画布 Android": "无限画布 Android",
+  "工具活动 · {0}": "Aktivitas alat · {0}",
+  "正在调用 {0}": "Memanggil {0}",
+  "调用已结束": "Panggilan berakhir",
+  "{0} 次失败": "{0} gagal",
+  "{0} 次中断": "{0} terhenti"
 }

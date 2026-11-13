@@ -3272,5 +3272,10 @@
   "当前移动端浏览器内核缺少无限画布所需能力。请更新无限画布和系统浏览器内核；部分系统需要通过系统更新升级。更新完成后，请完全退出并重新打开无限画布。": "Bộ máy trình duyệt di động hiện thiếu khả năng mà 无限画布 cần. Hãy cập nhật 无限画布 và bộ máy trình duyệt hệ thống; một số hệ thống cần nâng cấp qua bản cập nhật hệ thống. Sau đó, thoát hoàn toàn và mở lại 无限画布.",
   "雾蓝": "Xanh sương",
   "检测到旧版无限画布供应商 TS，无法在无限画布 2.0 中使用。请在「添加自定义媒体供应商」中点击「一键复制提示词」，结合旧代码和接口资料重新生成新版代码后再导入。": "Đã phát hiện thấy TS cũ của nhà cung cấp 无限画布 và không thể sử dụng được trong 无限画布 2.0. Vui lòng nhấp vào \"Lời nhắc sao chép bằng một cú nhấp chuột\" trong \"Thêm nhà cung cấp phương tiện tùy chỉnh\", kết hợp mã cũ và dữ liệu giao diện để tạo lại phiên bản mã mới, sau đó nhập mã đó.",
-  "无限画布 Android": "无限画布 Android"
+  "无限画布 Android": "无限画布 Android",
+  "工具活动 · {0}": "Hoạt động công cụ · {0}",
+  "正在调用 {0}": "Đang gọi {0}",
+  "调用已结束": "Đã kết thúc gọi",
+  "{0} 次失败": "{0} lần thất bại",
+  "{0} 次中断": "{0} lần bị gián đoạn"
 }

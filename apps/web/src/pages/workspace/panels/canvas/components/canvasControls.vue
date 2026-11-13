@@ -18,7 +18,7 @@
             :aria-pressed="assetsVisible"
             aria-label="素材库"
             @click="assetsVisible = !assetsVisible">
-            <icon-folders :size="18" />
+            <icon-library-photo :size="18" stroke="1.75" aria-hidden="true" />
           </el-button>
         </el-tooltip>
         <!-- trigger 用 contextmenu 是为了让整理按钮只由 arrangeNodes 控制显隐，同时仍保留点击外部自动关闭 -->
@@ -27,7 +27,7 @@
             <el-popover trigger="contextmenu" placement="top-start" :width="180" v-model:visible="undoPopoverVisible">
               <template #reference>
                 <el-button class="toolButton" text :disabled="!canArrange" aria-label="整理画布" @click="arrangeNodes">
-                  <icon-sitemap :size="18" />
+                  <icon-layout-grid :size="18" stroke="1.75" aria-hidden="true" />
                 </el-button>
               </template>
               <div class="zoomMenu">
@@ -44,7 +44,7 @@
             :aria-pressed="showMap"
             aria-label="显示或隐藏地图"
             @click="showMap = !showMap">
-            <icon-map :size="18" />
+            <icon-map-2 :size="18" stroke="1.75" aria-hidden="true" />
           </el-button>
         </el-tooltip>
         <el-tooltip :showArrow="false" :content="snapEnabled ? '关闭网格吸附' : '开启网格吸附'" placement="top" :hideAfter="0" :enterable="false" :triggerKeys="[]">
@@ -55,7 +55,7 @@
             :aria-pressed="snapEnabled"
             aria-label="网格吸附"
             @click="snapEnabled = !snapEnabled">
-            <icon-magnet :size="18" />
+            <icon-magnetic :size="18" stroke="1.75" aria-hidden="true" />
           </el-button>
         </el-tooltip>
         <el-tooltip :showArrow="false" :content="showEdges ? '隐藏连线' : '显示连线'" placement="top" :hideAfter="0" :enterable="false" :triggerKeys="[]">
@@ -66,12 +66,12 @@
             :aria-pressed="showEdges"
             aria-label="显示或隐藏连线"
             @click="showEdges = !showEdges">
-            <icon-arrow-guide :size="18" />
+            <icon-vector-bezier :size="18" stroke="1.75" aria-hidden="true" />
           </el-button>
         </el-tooltip>
         <el-tooltip :showArrow="false" content="适应视图" placement="top" :hideAfter="0" :enterable="false" :triggerKeys="[]">
           <el-button class="toolButton" text aria-label="适应视图" @click="fitView()">
-            <icon-focus-centered :size="18" />
+            <icon-zoom-scan :size="18" stroke="1.75" aria-hidden="true" />
           </el-button>
         </el-tooltip>
         <el-tooltip :showArrow="false"
@@ -88,6 +88,7 @@
                   class="toolButton"
                   text
                   aria-label="缩放菜单"
+                  :aria-expanded="zoomMenuVisible"
                   @wheel.stop.prevent="$event.deltaY && applyZoom(Math.min(800, Math.max(20, zoomPercent - Math.sign($event.deltaY))))">
                   {{ zoomPercent }}%
                 </el-button>
@@ -119,7 +120,7 @@
 import { computed, onBeforeUnmount, ref, watch } from "vue";
 import { Panel, useVueFlow, type XYPosition } from "@vue-flow/core";
 import { MiniMap } from "@vue-flow/minimap";
-import { IconMap, IconMagnet, IconFocusCentered } from "@tabler/icons-vue";
+import { IconLayoutGrid, IconLibraryPhoto, IconMagnetic, IconMap2, IconVectorBezier, IconZoomScan } from "@tabler/icons-vue";
 import { ElMessage } from "element-plus";
 import { arrangeCanvas } from "../arrangeCanvas";
 
@@ -233,6 +234,13 @@ async function undoArrange() {
     padding: 0;
     font-size: 12px;
     font-variant-numeric: tabular-nums;
+
+    &[aria-pressed="true"],
+    &[aria-expanded="true"] {
+      color: var(--el-color-primary);
+      background: color-mix(in srgb, var(--el-color-primary) 18%, var(--el-bg-color-overlay));
+      box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--el-color-primary) 30%, transparent);
+    }
   }
 }
 

@@ -40,7 +40,7 @@
                 <span v-if="item.role === 'user' && item.delivery?.mode === 'steer'" class="steeringLabel" title="当前任务的补充引导，已完成的操作不会撤销"><icon-corner-down-right :size="14" aria-hidden="true" />引导</span>
                 <div v-if="item.report" class="reportHeader"><icon-users-group :size="14" />{{ item.report.name }} 上报</div>
                 <div v-if="item.agentMessage" class="reportHeader"><icon-users-group :size="14" />来自 {{ item.agentMessage.fromName }} 的消息</div>
-                <template v-for="part in item.parts" :key="part.id">
+                <template v-for="part in messageParts.get(item.id)" :key="part.id">
                   <chat-reasoning v-if="part.type === 'thinking' && part.content" class="messageReasoning" :collapsed="part.collapsed ?? true" expandIconPlacement="left" @update:collapsed="part.collapsed = $event">
                     <template #expandIcon><component :is="(part.collapsed ?? true) ? IconChevronRight : IconChevronDown" :size="14" aria-hidden="true" /></template>
                     <template #header>
@@ -52,7 +52,8 @@
                     </template>
                     <messageMarkdown v-if="!(part.collapsed ?? true)" :content="part.content" :streaming="!!item.streaming" :directory="directory" />
                   </chat-reasoning>
-                  <toolMessage v-else-if="part.type === 'tool' && !isBrowserTool(part.tool)" v-model:collapsed="part.collapsed" :tool="part.tool" :directory="directory" @copy="emit('copy', $event)" />
+                  <toolActivity v-else-if="part.type === 'toolGroup'" :parts="part.parts" :directory="directory" @copy="emit('copy', $event)" />
+                  <toolMessage v-else-if="part.type === 'tool'" v-model:collapsed="part.collapsed" :tool="part.tool" :directory="directory" @copy="emit('copy', $event)" />
                   <messageMarkdown v-else-if="part.type === 'text' && part.content" :content="part.content" :streaming="!!item.streaming" :directory="directory" />
                 </template>
                 <attachmentList v-if="item.attachments?.length" :attachments="item.attachments" :directory="directory" />
@@ -97,12 +98,33 @@ import attachmentList from "../attachmentList.vue";
 import mentionContent from "../mentionContent.vue";
 import { mentionPlainText } from "../mentionText";
 import toolMessage from "../toolMessage.vue";
-import type { AgentMessage } from "../types";
+import toolActivity from "../toolActivity.vue";
+import type { AgentMessage, AgentMessagePart } from "../types";
 import "tdesign-vue-next/es/style/index.css";
 import "@tdesign-vue-next/chat/es/style/index.css";
 
 const props = defineProps<{ messages: AgentMessage[]; directory?: string; active: boolean; disabled: boolean; locked: boolean; busy: boolean; remoteRunning: boolean; compacting: boolean; editingId?: string; deletingId?: string; voiceActive: boolean }>();
 const emit = defineEmits<{ fillPrompt: [prompt: string]; copy: [content: string]; edit: [message: AgentMessage]; delete: [message: AgentMessage]; cancelEdit: [] }>();
+type ToolGroup = { id: string; type: "toolGroup"; parts: Extract<AgentMessagePart, { type: "tool" }>[] };
+const messageParts = computed(() => new Map(props.messages.map(message => {
+  const parts: (AgentMessagePart | ToolGroup)[] = [];
+  for (const part of message.parts ?? []) {
+    if (part.type === "tool" && isBrowserTool(part.tool)) continue;
+    if (part.type !== "tool") {
+      if (part.content.trim()) parts.push(part);
+      continue;
+    }
+    // 交互表单保持可见，不能因为过程收起而阻塞用户回答。
+    if (part.tool.name === "askUser" || part.tool.question) {
+      parts.push(part);
+      continue;
+    }
+    const previous = parts.at(-1);
+    if (previous?.type === "toolGroup") previous.parts.push(part);
+    else parts.push({ id: `tools:${part.id}`, type: "toolGroup", parts: [part] });
+  }
+  return [message.id, parts] as const;
+})));
 const browserMessages = computed(() => {
   const groups = new Map<string, { id: string; tools: AgentToolCall[] }>();
   const taskIds = new Map<string, string>();
@@ -376,10 +398,12 @@ const welcomeSuggestions = [
     .messageContent {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
       min-width: 0;
       overflow-wrap: anywhere;
       color: var(--el-text-color-primary);
+      font-family: var(--el-font-family);
+      -webkit-font-smoothing: auto;
 
       .steeringLabel {
         display: inline-flex;
@@ -416,7 +440,7 @@ const welcomeSuggestions = [
             .t-collapse-panel__content {
               padding: 4px 0 4px 22px;
               background: transparent;
-              color: var(--el-text-color-secondary);
+              color: var(--el-text-color-regular);
             }
           }
         }
@@ -426,7 +450,7 @@ const welcomeSuggestions = [
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        color: var(--el-text-color-secondary);
+        color: var(--el-text-color-regular);
 
         .thinkingDuration {
           font-variant-numeric: tabular-nums;
@@ -435,8 +459,8 @@ const welcomeSuggestions = [
 
       .messageText {
         white-space: pre-wrap;
-        font-size: 13px;
-        line-height: 1.6;
+        font-size: 14px;
+        line-height: 1.75;
       }
 
       .messageError {
@@ -456,8 +480,8 @@ const welcomeSuggestions = [
         display: block;
         min-width: 0;
         max-width: 100%;
-        font-size: 13px;
-        line-height: 1.6;
+        font-size: 14px;
+        line-height: 1.75;
       }
     }
   }

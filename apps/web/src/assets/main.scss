@@ -46,6 +46,26 @@ html:not(.dark) {
   --el-bg-color-page: #f0f3f8;
 }
 
+html.dark {
+  --el-bg-color-page: #111318;
+  --el-bg-color: #1b1e24;
+  --el-bg-color-overlay: #252932;
+  --el-fill-color: #30343d;
+  --el-fill-color-light: #282c34;
+  --el-fill-color-lighter: #242830;
+  --el-fill-color-extra-light: #20242b;
+  --el-fill-color-dark: #383d47;
+  --el-fill-color-darker: #424854;
+  --el-border-color: #454b57;
+  --el-border-color-light: #3b414c;
+  --el-border-color-lighter: #343944;
+  --el-border-color-extra-light: #2d323b;
+  --el-text-color-primary: #f1f3f7;
+  --el-text-color-regular: #d1d6df;
+  --el-text-color-secondary: #aeb6c3;
+  --el-text-color-placeholder: #8993a2;
+}
+
 html.dark.defaultDarkPrimary .el-button--primary:not(.is-plain) {
   --el-button-text-color: #152333;
   --el-button-hover-text-color: #152333;

@@ -10,7 +10,7 @@
           :title="item.label"
           @mouseenter="focusItem($event, item)"
           @click="emit('select', item.type)">
-          <component :is="nodeByType.get(item.type)?.icon ?? IconBox" class="menuIcon" :size="14" />
+          <component :is="menuIcons[item.type] ?? nodeByType.get(item.type)?.icon ?? IconBox" class="menuIcon" :size="18" stroke="1.75" aria-hidden="true" />
           <span class="menuLabel">{{ item.label }}</span>
         </button>
         <el-popover
@@ -42,7 +42,7 @@
               :title="item.label"
               @mouseenter="focusItem($event, item)"
               @click="openGroup(item.id)">
-              <component :is="openGroupId === item.id ? IconFolderOpen : IconFolder" class="menuIcon" :size="14" aria-hidden="true" />
+              <component :is="openGroupId === item.id ? IconFolderOpen : IconFolder" class="menuIcon" :size="18" aria-hidden="true" />
               <span class="menuLabel">{{ item.label }}</span>
               <icon-chevron-right class="nextIcon" :size="14" />
             </button>
@@ -61,7 +61,7 @@
       <template v-if="uploadDisabled !== undefined">
         <el-divider />
         <button type="button" class="menuButton" role="menuitem" :disabled="uploadDisabled" @mouseenter="focusItem($event)" @click="emit('upload')">
-          <icon-upload class="menuIcon" :size="14" />
+          <icon-cloud-upload class="menuIcon" :size="18" stroke="1.75" aria-hidden="true" />
           <span class="menuLabel">上传</span>
         </button>
       </template>
@@ -71,7 +71,11 @@
 
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref, shallowRef, type Component, type ComponentPublicInstance } from "vue";
-import { IconBox, IconChevronRight, IconFolder, IconFolderOpen, IconUpload } from "@tabler/icons-vue";
+import {
+  IconBox, IconChevronRight, IconCloudUpload, IconCube, IconFolder, IconFolderOpen,
+  IconMovie, IconMusicStar, IconNotes, IconPhotoScan, IconPhotoSpark, IconPhotoSquareRounded,
+  IconStack2, IconVideoPlus, IconVinyl,
+} from "@tabler/icons-vue";
 import type { NodeMenuItem } from "@toonflow/server/nodeMenu";
 
 const props = withDefaults(defineProps<{
@@ -87,6 +91,18 @@ const openGroupId = ref<string>();
 const childMenus = new Map<string, { focusFirst: (keyboard?: boolean) => void; hasKeyboardFocus: () => boolean }>();
 let keyboardNavigation = false;
 const nodeByType = computed(() => new Map(props.nodes.map(node => [node.type, node])));
+const menuIcons: Record<string, Component> = {
+  "remote-textNode": IconNotes,
+  "remote-imageNode": IconPhotoSquareRounded,
+  "remote-videoNode": IconMovie,
+  "remote-audioNode": IconVinyl,
+  "remote-audioGenerationNode": IconMusicStar,
+  "remote-director3dNode": IconCube,
+  "remote-frameAnalysisNode": IconPhotoScan,
+  "remote-imageGenerationNode": IconPhotoSpark,
+  "remote-videoComposeNode": IconStack2,
+  "remote-videoGenerationNode": IconVideoPlus,
+};
 
 onMounted(() => {
   // ACT: 挂到直接父浮层，避开列表滚动裁剪，也让三级菜单保持父层的悬浮状态。
@@ -193,14 +209,14 @@ defineExpose({ focusFirst, hasKeyboardFocus });
     .menuButton {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 10px;
       width: 100%;
       min-width: 180px;
       max-width: 300px;
       margin: 0;
       border: 0;
-      border-radius: 0;
-      padding: 5px 16px;
+      border-radius: var(--el-border-radius-base);
+      padding: 6px 12px;
       background: transparent;
       color: var(--el-text-color-regular);
       font: inherit;
@@ -212,9 +228,13 @@ defineExpose({ focusFirst, hasKeyboardFocus });
       &:hover,
       &:focus-visible,
       &.expanded {
-        outline: none;
         background: var(--el-color-primary-light-9);
         color: var(--el-color-primary);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--el-color-primary);
+        outline-offset: -2px;
       }
 
       &:disabled {
@@ -227,6 +247,9 @@ defineExpose({ focusFirst, hasKeyboardFocus });
       .nextIcon {
         flex-shrink: 0;
       }
+
+      .menuIcon { color: var(--el-text-color-secondary); }
+      &:hover .menuIcon, &:focus-visible .menuIcon, &.expanded .menuIcon { color: inherit; }
 
       .menuLabel {
         flex: 1;

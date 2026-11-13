@@ -82,12 +82,17 @@ const actions = [
       text-align: left;
       cursor: pointer;
       pointer-events: auto;
-      transition: background-color 0.15s, border-color 0.15s;
+      transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 120ms ease;
 
       &:hover:not(:disabled) {
         background: var(--el-fill-color);
-        border-color: var(--el-border-color-darker);
+        border-color: color-mix(in srgb, var(--el-color-primary) 35%, var(--el-border-color-light));
+        box-shadow: 0 6px 18px color-mix(in srgb, var(--el-color-primary) 12%, transparent);
       }
+
+      &:active:not(:disabled) { transform: scale(0.98); }
+
+      @media (prefers-reduced-motion: reduce) { transition: none; }
 
       &:focus-visible {
         outline: 2px solid var(--el-color-primary);

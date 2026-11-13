@@ -27,24 +27,24 @@
   ],
   "预览 {0}": [
     "apps/web/src/components/agent/attachmentPreview.vue",
-    "apps/web/src/components/agent/conversation/messageInput.vue",
     "apps/web/src/components/agent/mentionContent.vue",
+    "apps/web/src/components/agent/conversation/messageInput.vue",
     "apps/web/src/pages/workspace/panels/canvas/components/assetLibrary.vue"
   ],
   "还原到输入框": [
     "apps/web/src/components/agent/attachmentPreview.vue"
   ],
   "移除 {0}": [
-    "apps/web/src/components/agent/attachmentPreview.vue",
-    "apps/web/src/components/settings/panels/developer/providerDebugDialog.vue"
+    "apps/web/src/components/settings/panels/developer/providerDebugDialog.vue",
+    "apps/web/src/components/agent/attachmentPreview.vue"
   ],
   "移除附件": [
     "apps/web/src/components/agent/attachmentPreview.vue"
   ],
   "正在读取…": [
+    "apps/web/src/components/settings/panels/personalization.vue",
     "apps/web/src/components/agent/attachmentPreview.vue",
-    "apps/web/src/components/agent/mentionContent.vue",
-    "apps/web/src/components/settings/panels/personalization.vue"
+    "apps/web/src/components/agent/mentionContent.vue"
   ],
   "无法读取文本附件，请重试": [
     "apps/web/src/components/agent/attachmentPreview.vue"
@@ -158,8 +158,8 @@
     "apps/web/src/components/agent/conversation/messageInput.vue"
   ],
   "停止生成": [
-    "apps/web/src/components/agent/conversation/messageInput.vue",
-    "apps/web/src/components/singleAgentDialog.vue"
+    "apps/web/src/components/singleAgentDialog.vue",
+    "apps/web/src/components/agent/conversation/messageInput.vue"
   ],
   "排队发送": [
     "apps/web/src/components/agent/conversation/messageInput.vue"
@@ -168,8 +168,8 @@
     "apps/web/src/components/agent/conversation/messageInput.vue"
   ],
   "发送消息": [
-    "apps/web/src/components/agent/conversation/messageInput.vue",
-    "apps/web/src/components/singleAgentDialog.vue"
+    "apps/web/src/components/singleAgentDialog.vue",
+    "apps/web/src/components/agent/conversation/messageInput.vue"
   ],
   "排队发送，本轮完成后处理（Enter）；Ctrl/Cmd + Enter 引导当前任务": [
     "apps/web/src/components/agent/conversation/messageInput.vue"
@@ -216,8 +216,8 @@
     "apps/web/src/pages/home/index.vue"
   ],
   "文本附件不能超过 400 KB（400000 字节），请缩减内容后重试。": [
-    "apps/web/src/components/agent/conversation/messageInput.vue",
     "apps/web/src/components/agent/textAttachments.ts",
+    "apps/web/src/components/agent/conversation/messageInput.vue",
     "apps/web/src/pages/home/index.vue"
   ],
   "每条消息最多添加 20 个附件": [
@@ -225,8 +225,8 @@
     "apps/web/src/pages/home/index.vue"
   ],
   "对话消息": [
-    "apps/web/src/components/agent/conversation/messageList.vue",
-    "apps/web/src/components/singleAgentDialog.vue"
+    "apps/web/src/components/singleAgentDialog.vue",
+    "apps/web/src/components/agent/conversation/messageList.vue"
   ],
   "开始新对话": [
     "apps/web/src/components/agent/conversation/messageList.vue"
@@ -247,8 +247,8 @@
     "apps/web/src/components/agent/conversation/messageList.vue"
   ],
   "思考": [
-    "apps/web/src/components/agent/conversation/messageList.vue",
-    "apps/web/src/components/singleAgentDialog.vue"
+    "apps/web/src/components/singleAgentDialog.vue",
+    "apps/web/src/components/agent/conversation/messageList.vue"
   ],
   "{0} 秒": [
     "apps/web/src/components/agent/conversation/messageList.vue"
@@ -339,18 +339,18 @@
     "apps/web/src/components/agent/conversation.vue"
   ],
   "删除": [
-    "apps/web/src/components/agent/conversation.vue",
     "apps/web/src/components/settings/panels/developer/index.vue",
-    "apps/web/src/components/settings/panels/languageModel/index.vue",
-    "apps/web/src/components/settings/panels/mediaModel/editProviderDialog.vue",
-    "apps/web/src/components/settings/panels/mediaModel/index.vue",
-    "apps/web/src/components/settings/panels/personalization.vue",
     "apps/web/src/components/settings/panels/pluginMarket/mcpServers.vue",
+    "apps/web/src/components/settings/panels/languageModel/index.vue",
+    "apps/web/src/components/settings/panels/mediaModel/index.vue",
+    "apps/web/src/components/settings/panels/mediaModel/editProviderDialog.vue",
+    "apps/web/src/components/settings/panels/personalization.vue",
+    "apps/web/src/components/agent/conversation.vue",
     "apps/web/src/lib/canvasShortcuts.ts",
     "apps/web/src/pages/home/workspacePicker.vue",
+    "apps/web/src/pages/workspace/panels/document/components/fileTree.vue",
     "apps/web/src/pages/workspace/panels/canvas/components/assetMenu.vue",
-    "apps/web/src/pages/workspace/panels/canvas/components/canvasMenu.vue",
-    "apps/web/src/pages/workspace/panels/document/components/fileTree.vue"
+    "apps/web/src/pages/workspace/panels/canvas/components/canvasMenu.vue"
   ],
   "编辑排队消息": [
     "apps/web/src/components/agent/conversation.vue"
@@ -374,8 +374,8 @@
     "apps/web/src/components/agent/conversation.vue"
   ],
   "已复制": [
-    "apps/web/src/components/agent/conversation.vue",
     "apps/web/src/components/settings/panels/deviceLink.vue",
+    "apps/web/src/components/agent/conversation.vue",
     "apps/web/src/lib/i18n.ts"
   ],
   "复制失败，请重试": [
@@ -400,8 +400,8 @@
     "apps/web/src/components/agent/conversation.vue"
   ],
   "停止生成失败，请重试": [
-    "apps/web/src/components/agent/conversation.vue",
     "apps/web/src/components/agent/index.vue",
+    "apps/web/src/components/agent/conversation.vue",
     "apps/web/src/lib/agentControl.ts"
   ],
   "当前页面没有激活的画布": [
@@ -421,14 +421,14 @@
     "apps/web/src/components/agent/conversation.vue"
   ],
   "请先打开项目": [
-    "apps/web/src/components/agent/conversation.vue",
     "apps/web/src/components/agent/index.vue",
     "apps/web/src/components/agent/textAttachments.ts",
+    "apps/web/src/components/agent/conversation.vue",
     "apps/web/src/pages/workspace/panels/canvas/nodeClipboard.ts"
   ],
   "工具正在等待你的确认": [
-    "apps/web/src/components/agent/conversation.vue",
-    "apps/web/src/components/singleAgentDialog.vue"
+    "apps/web/src/components/singleAgentDialog.vue",
+    "apps/web/src/components/agent/conversation.vue"
   ],
   "收到重复的画布调用": [
     "apps/web/src/components/agent/conversation.vue"
@@ -437,8 +437,8 @@
     "apps/web/src/components/agent/conversation.vue"
   ],
   "Agent 已完成回复": [
-    "apps/web/src/components/agent/conversation.vue",
-    "apps/web/src/components/singleAgentDialog.vue"
+    "apps/web/src/components/singleAgentDialog.vue",
+    "apps/web/src/components/agent/conversation.vue"
   ],
   "已停止生成": [
     "apps/web/src/components/agent/conversation.vue",
@@ -529,16 +529,16 @@
     "apps/web/src/components/agent/mentionMenu.vue"
   ],
   "重试": [
-    "apps/web/src/components/agent/mentionMenu.vue",
+    "apps/web/src/main.ts",
+    "apps/web/src/components/settings/tfRechargeDialog.vue",
     "apps/web/src/components/settings/panels/developer/systemPromptDialog.vue",
     "apps/web/src/components/settings/panels/general/nodeMenuSettings.vue",
-    "apps/web/src/components/settings/panels/languageModel/addProviderDialog.vue",
-    "apps/web/src/components/settings/panels/personalization.vue",
     "apps/web/src/components/settings/panels/pluginMarket/index.vue",
     "apps/web/src/components/settings/panels/pluginMarket/mcpServers.vue",
+    "apps/web/src/components/settings/panels/languageModel/addProviderDialog.vue",
+    "apps/web/src/components/settings/panels/personalization.vue",
     "apps/web/src/components/settings/tfAccount.vue",
-    "apps/web/src/components/settings/tfRechargeDialog.vue",
-    "apps/web/src/main.ts",
+    "apps/web/src/components/agent/mentionMenu.vue",
     "apps/web/src/pages/home/explore.vue",
     "apps/web/src/pages/home/exploreDetail.vue",
     "apps/web/src/pages/workspace/panels/document/components/extView.vue",
@@ -574,12 +574,12 @@
     "apps/web/src/components/agent/mentionMenu.vue"
   ],
   "全局素材": [
-    "apps/web/src/components/agent/mentionMenu.vue",
-    "apps/web/src/components/agent/mentionText.ts"
+    "apps/web/src/components/agent/mentionText.ts",
+    "apps/web/src/components/agent/mentionMenu.vue"
   ],
   "文本": [
-    "apps/web/src/components/agent/mentionMenu.vue",
     "apps/web/src/components/settings/panels/mediaModel/editProviderDialog.vue",
+    "apps/web/src/components/agent/mentionMenu.vue",
     "apps/server/src/utils/ai/initialize.ts"
   ],
   "整数": [
@@ -592,9 +592,9 @@
     "apps/web/src/components/agent/mentionMenu.vue"
   ],
   "图片": [
-    "apps/web/src/components/agent/mentionMenu.vue",
     "apps/web/src/components/settings/panels/mediaModel/editProviderDialog.vue",
     "apps/web/src/components/settings/panels/mediaModel/modelEditorDialog.vue",
+    "apps/web/src/components/agent/mentionMenu.vue",
     "apps/web/src/pages/workspace/panels/canvas/components/assetBrowser.vue",
     "apps/server/src/utils/ai/initialize.ts",
     "apps/server/src/utils/media/generation.ts"
@@ -603,29 +603,29 @@
     "apps/web/src/components/agent/mentionMenu.vue"
   ],
   "视频": [
-    "apps/web/src/components/agent/mentionMenu.vue",
     "apps/web/src/components/settings/panels/mediaModel/editProviderDialog.vue",
     "apps/web/src/components/settings/panels/mediaModel/modelEditorDialog.vue",
+    "apps/web/src/components/agent/mentionMenu.vue",
     "apps/web/src/pages/workspace/panels/canvas/components/assetBrowser.vue",
     "apps/server/src/utils/ai/initialize.ts",
     "apps/server/src/utils/media/generation.ts"
   ],
   "音频": [
-    "apps/web/src/components/agent/mentionMenu.vue",
     "apps/web/src/components/settings/panels/mediaModel/editProviderDialog.vue",
     "apps/web/src/components/settings/panels/mediaModel/modelEditorDialog.vue",
+    "apps/web/src/components/agent/mentionMenu.vue",
     "apps/web/src/pages/workspace/panels/canvas/components/assetBrowser.vue",
     "apps/server/src/utils/ai/initialize.ts",
     "apps/server/src/utils/media/generation.ts"
   ],
   "文件": [
     "apps/web/src/components/agent/mentionMenu.vue",
-    "apps/web/src/pages/workspace/panels/canvas/components/assetBrowser.vue",
-    "apps/web/src/pages/workspace/panels/document/components/fileTree.vue"
+    "apps/web/src/pages/workspace/panels/document/components/fileTree.vue",
+    "apps/web/src/pages/workspace/panels/canvas/components/assetBrowser.vue"
   ],
   "画布": [
-    "apps/web/src/components/agent/mentionMenu.vue",
     "apps/web/src/components/settings/panels/mcp/index.vue",
+    "apps/web/src/components/agent/mentionMenu.vue",
     "apps/web/src/pages/workspace/index.vue"
   ],
   "数据": [
@@ -633,13 +633,13 @@
   ],
   "文件夹": [
     "apps/web/src/components/agent/mentionMenu.vue",
-    "apps/web/src/pages/workspace/panels/canvas/components/assetBrowser.vue",
-    "apps/web/src/pages/workspace/panels/document/components/fileTree.vue"
+    "apps/web/src/pages/workspace/panels/document/components/fileTree.vue",
+    "apps/web/src/pages/workspace/panels/canvas/components/assetBrowser.vue"
   ],
   "节点": [
-    "apps/web/src/components/agent/mentionMenu.vue",
     "apps/web/src/components/settings/panels/developer/index.vue",
     "apps/web/src/components/settings/panels/pluginMarket/index.vue",
+    "apps/web/src/components/agent/mentionMenu.vue",
     "apps/web/src/lib/desktopProtocol.ts",
     "apps/server/src/utils/plugins/install.ts"
   ],
@@ -743,16 +743,16 @@
     "apps/web/src/components/agent/menu.vue"
   ],
   "关闭": [
-    "apps/web/src/components/agent/menu.vue",
-    "apps/web/src/components/languageSelect.vue",
-    "apps/web/src/components/modelPopover.vue",
-    "apps/web/src/components/settings/panels/about.vue",
-    "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue",
+    "apps/web/src/components/settings/tfRechargeDialog.vue",
+    "apps/web/src/components/settings/panels/pluginMarket/index.vue",
     "apps/web/src/components/settings/panels/pluginMarket/a2aSettingsDialog.vue",
     "apps/web/src/components/settings/panels/pluginMarket/agentEditorDialog.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/index.vue",
     "apps/web/src/components/settings/panels/pluginMarket/skillEditorDialog.vue",
-    "apps/web/src/components/settings/tfRechargeDialog.vue",
+    "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue",
+    "apps/web/src/components/settings/panels/about.vue",
+    "apps/web/src/components/languageSelect.vue",
+    "apps/web/src/components/agent/menu.vue",
+    "apps/web/src/components/modelPopover.vue",
     "apps/web/src/components/videoPlayer.vue",
     "apps/web/src/pages/workspace/panels/document/components/editorTab.vue",
     "apps/web/src/pages/workspace/panels/document/components/workspaceSearch.vue"
@@ -761,24 +761,24 @@
     "apps/web/src/components/agent/menu.vue"
   ],
   "执行中": [
-    "apps/web/src/components/agent/menu.vue",
-    "apps/web/src/components/singleAgentDialog.vue"
+    "apps/web/src/components/singleAgentDialog.vue",
+    "apps/web/src/components/agent/menu.vue"
   ],
   "已完成": [
-    "apps/web/src/components/agent/menu.vue",
+    "apps/web/src/components/settings/panels/developer/index.vue",
     "apps/web/src/components/agent/toolMessage.vue",
-    "apps/web/src/components/settings/panels/developer/index.vue"
+    "apps/web/src/components/agent/menu.vue"
   ],
   "失败": [
-    "apps/web/src/components/agent/menu.vue",
-    "apps/web/src/components/settings/panels/developer/providerDebugDialog.vue"
+    "apps/web/src/components/settings/panels/developer/providerDebugDialog.vue",
+    "apps/web/src/components/agent/menu.vue"
   ],
   "达到限制": [
     "apps/web/src/components/agent/menu.vue"
   ],
   "已取消": [
-    "apps/web/src/components/agent/menu.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/ffmpeg.vue"
+    "apps/web/src/components/settings/panels/pluginMarket/ffmpeg.vue",
+    "apps/web/src/components/agent/menu.vue"
   ],
   "等待补充": [
     "apps/web/src/components/agent/menu.vue",
@@ -794,24 +794,24 @@
     "apps/web/src/components/agent/menu.vue"
   ],
   "保存": [
-    "apps/web/src/components/agent/menu.vue",
     "apps/web/src/components/settings/panels/developer/index.vue",
     "apps/web/src/components/settings/panels/developer/systemPromptDialog.vue",
+    "apps/web/src/components/settings/panels/pluginMarket/mcpServers.vue",
+    "apps/web/src/components/settings/panels/pluginMarket/a2aSettingsDialog.vue",
+    "apps/web/src/components/settings/panels/pluginMarket/pluginConfigDialog.vue",
+    "apps/web/src/components/settings/panels/pluginMarket/skillEditorDialog.vue",
     "apps/web/src/components/settings/panels/mcp/index.vue",
     "apps/web/src/components/settings/panels/mediaModel/editProviderDialog.vue",
     "apps/web/src/components/settings/panels/personalization.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/a2aSettingsDialog.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/mcpServers.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/pluginConfigDialog.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/skillEditorDialog.vue",
     "apps/web/src/components/settings/tfAccount.vue",
+    "apps/web/src/components/agent/menu.vue",
     "apps/web/src/pages/home/index.vue",
     "apps/web/src/pages/home/workspacePicker.vue",
-    "apps/web/src/pages/workspace/panels/canvas/components/assetLibrary.vue",
+    "apps/web/src/pages/workspace/panels/document/components/fileTree.vue",
+    "apps/web/src/pages/workspace/panels/document/components/extView.vue",
     "apps/web/src/pages/workspace/panels/canvas/components/assetMenu.vue",
     "apps/web/src/pages/workspace/panels/canvas/components/canvasMenu.vue",
-    "apps/web/src/pages/workspace/panels/document/components/extView.vue",
-    "apps/web/src/pages/workspace/panels/document/components/fileTree.vue"
+    "apps/web/src/pages/workspace/panels/canvas/components/assetLibrary.vue"
   ],
   "请求失败（{0}）": [
     "apps/web/src/components/agent/replyStream.ts"
@@ -855,9 +855,6 @@
   "工具界面加载失败，请停止后重试：{0}": [
     "apps/web/src/components/agent/toolMessage.vue"
   ],
-  "操作工具": [
-    "apps/web/src/components/agent/toolMessage.vue"
-  ],
   "工具调用": [
     "apps/web/src/components/agent/toolMessage.vue"
   ],
@@ -886,16 +883,16 @@
     "apps/web/src/components/agent/toolMessage.vue"
   ],
   "已中断": [
-    "apps/web/src/components/agent/toolMessage.vue",
-    "apps/web/src/components/settings/panels/mediaModel/providerAgentDialog.vue"
+    "apps/web/src/components/settings/panels/mediaModel/providerAgentDialog.vue",
+    "apps/web/src/components/agent/toolMessage.vue"
   ],
   "语言": [
-    "apps/web/src/components/languageSelect.vue",
-    "apps/web/src/components/settings/panels/ui.vue"
+    "apps/web/src/components/settings/panels/ui.vue",
+    "apps/web/src/components/languageSelect.vue"
   ],
   "跟随系统": [
-    "apps/web/src/components/languageSelect.vue",
-    "apps/web/src/components/settings/panels/ui.vue"
+    "apps/web/src/components/settings/panels/ui.vue",
+    "apps/web/src/components/languageSelect.vue"
   ],
   "正在加载项目": [
     "apps/web/src/components/loadingPage.vue"
@@ -907,14 +904,14 @@
     "apps/web/src/components/messageMarkdown.vue"
   ],
   "设备互联": [
-    "apps/web/src/components/mobileConnect.vue",
     "apps/web/src/components/settings/index.vue",
+    "apps/web/src/components/mobileConnect.vue",
     "apps/web/src/lib/mobile.ts"
   ],
   "连接方式": [
-    "apps/web/src/components/mobileConnect.vue",
     "apps/web/src/components/settings/panels/deviceLink.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/mcpServers.vue"
+    "apps/web/src/components/settings/panels/pluginMarket/mcpServers.vue",
+    "apps/web/src/components/mobileConnect.vue"
   ],
   "本机共享状态": [
     "apps/web/src/components/mobileConnect.vue"
@@ -953,9 +950,9 @@
     "apps/web/src/components/mobileConnect.vue"
   ],
   "断开并独立运行": [
-    "apps/web/src/components/mobileConnect.vue",
-    "apps/web/src/components/settings/panels/deviceLink.vue",
     "apps/web/src/main.ts",
+    "apps/web/src/components/settings/panels/deviceLink.vue",
+    "apps/web/src/components/mobileConnect.vue",
     "apps/server/src/remoteConnection.ts"
   ],
   "连接目标": [
@@ -986,15 +983,15 @@
     "apps/web/src/components/mobileConnect.vue"
   ],
   "12 位配对码": [
-    "apps/web/src/components/mobileConnect.vue",
-    "apps/web/src/components/settings/panels/deviceLink.vue"
+    "apps/web/src/components/settings/panels/deviceLink.vue",
+    "apps/web/src/components/mobileConnect.vue"
   ],
   "连接后使用对方的项目与配置。": [
     "apps/web/src/components/mobileConnect.vue"
   ],
   "连接": [
-    "apps/web/src/components/mobileConnect.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/agentConnectDialog.vue"
+    "apps/web/src/components/settings/panels/pluginMarket/agentConnectDialog.vue",
+    "apps/web/src/components/mobileConnect.vue"
   ],
   "返回当前连接": [
     "apps/web/src/components/mobileConnect.vue"
@@ -1039,9 +1036,9 @@
     "apps/web/src/components/mobileConnect.vue"
   ],
   "操作失败，请重试": [
-    "apps/web/src/components/mobileConnect.vue",
     "apps/web/src/components/settings/panels/deviceLink.vue",
     "apps/web/src/components/settings/panels/personalization.vue",
+    "apps/web/src/components/mobileConnect.vue",
     "apps/web/src/pages/home/workspacePicker.vue"
   ],
   "请输入局域网地址或公网 HTTPS 地址，不能包含路径、账号或参数": [
@@ -1072,13 +1069,13 @@
     "apps/web/src/components/modelPopover.vue"
   ],
   "选择模型": [
-    "apps/web/src/components/modelPopover.vue",
-    "apps/web/src/components/settings/panels/developer/providerDebugDialog.vue"
+    "apps/web/src/components/settings/panels/developer/providerDebugDialog.vue",
+    "apps/web/src/components/modelPopover.vue"
   ],
   "模型": [
-    "apps/web/src/components/modelPopover.vue",
     "apps/web/src/components/settings/index.vue",
-    "apps/web/src/components/settings/panels/developer/providerDebugDialog.vue"
+    "apps/web/src/components/settings/panels/developer/providerDebugDialog.vue",
+    "apps/web/src/components/modelPopover.vue"
   ],
   "请先在设置中添加模型": [
     "apps/web/src/components/modelPopover.vue"
@@ -1090,32 +1087,32 @@
     "apps/web/src/components/modelPopover.vue"
   ],
   "最小": [
-    "apps/web/src/components/modelPopover.vue",
-    "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue"
+    "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue",
+    "apps/web/src/components/modelPopover.vue"
   ],
   "低": [
-    "apps/web/src/components/modelPopover.vue",
-    "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue"
+    "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue",
+    "apps/web/src/components/modelPopover.vue"
   ],
   "中": [
-    "apps/web/src/components/modelPopover.vue",
-    "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue"
+    "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue",
+    "apps/web/src/components/modelPopover.vue"
   ],
   "高": [
-    "apps/web/src/components/modelPopover.vue",
-    "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue"
+    "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue",
+    "apps/web/src/components/modelPopover.vue"
   ],
   "极高": [
-    "apps/web/src/components/modelPopover.vue",
-    "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue"
+    "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue",
+    "apps/web/src/components/modelPopover.vue"
   ],
   "最高": [
-    "apps/web/src/components/modelPopover.vue",
-    "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue"
+    "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue",
+    "apps/web/src/components/modelPopover.vue"
   ],
   "默认": [
-    "apps/web/src/components/modelPopover.vue",
     "apps/web/src/components/settings/panels/ui.vue",
+    "apps/web/src/components/modelPopover.vue",
     "apps/web/src/components/videoPlayer.vue"
   ],
   "安装完成后，请重新发起刚才的操作。": [
@@ -1131,8 +1128,8 @@
     "apps/web/src/components/settings/ffmpegRequired.vue"
   ],
   "下载并安装": [
-    "apps/web/src/components/settings/ffmpegRequired.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/ffmpeg.vue"
+    "apps/web/src/components/settings/panels/pluginMarket/ffmpeg.vue",
+    "apps/web/src/components/settings/ffmpegRequired.vue"
   ],
   "暂不下载": [
     "apps/web/src/components/settings/ffmpegRequired.vue"
@@ -1193,8 +1190,8 @@
     "apps/web/src/components/settings/installPluginFile.ts"
   ],
   "安装插件失败": [
-    "apps/web/src/components/settings/installPluginFile.ts",
     "apps/web/src/components/settings/panels/pluginMarket/index.vue",
+    "apps/web/src/components/settings/installPluginFile.ts",
     "apps/web/src/lib/desktopProtocol.ts"
   ],
   "安装接口未返回有效的插件名称": [
@@ -1596,8 +1593,8 @@
   ],
   "选择文件": [
     "apps/web/src/components/settings/panels/developer/providerDebugDialog.vue",
-    "apps/web/src/components/settings/panels/mediaModel/addCustomProviderDialog.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/mcpImportForm.vue"
+    "apps/web/src/components/settings/panels/pluginMarket/mcpImportForm.vue",
+    "apps/web/src/components/settings/panels/mediaModel/addCustomProviderDialog.vue"
   ],
   "调试参数": [
     "apps/web/src/components/settings/panels/developer/providerDebugDialog.vue"
@@ -1769,8 +1766,8 @@
   ],
   "恢复默认": [
     "apps/web/src/components/settings/panels/developer/systemPromptDialog.vue",
-    "apps/web/src/components/settings/panels/general/canvasShortcuts.vue",
-    "apps/web/src/components/settings/panels/general/nodeMenuSettings.vue"
+    "apps/web/src/components/settings/panels/general/nodeMenuSettings.vue",
+    "apps/web/src/components/settings/panels/general/canvasShortcuts.vue"
   ],
   "读取系统提示词失败": [
     "apps/web/src/components/settings/panels/developer/systemPromptDialog.vue"
@@ -2151,11 +2148,11 @@
   ],
   "编辑": [
     "apps/web/src/components/settings/panels/general/nodeMenuSettings.vue",
+    "apps/web/src/components/settings/panels/pluginMarket/index.vue",
+    "apps/web/src/components/settings/panels/pluginMarket/mcpServers.vue",
     "apps/web/src/components/settings/panels/languageModel/index.vue",
     "apps/web/src/components/settings/panels/mediaModel/editProviderDialog.vue",
     "apps/web/src/components/settings/panels/personalization.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/index.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/mcpServers.vue",
     "apps/desktop/src/index.ts"
   ],
   "编辑菜单": [
@@ -2229,8 +2226,8 @@
     "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue"
   ],
   "添加自定义供应商": [
-    "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue",
     "apps/web/src/components/settings/panels/languageModel/index.vue",
+    "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue",
     "apps/web/src/components/settings/panels/mediaModel/index.vue"
   ],
   "例如 myProvider": [
@@ -2361,13 +2358,13 @@
     "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue"
   ],
   "获取模型列表失败": [
+    "apps/web/src/components/settings/panels/languageModel/index.vue",
     "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue",
-    "apps/web/src/components/settings/panels/languageModel/addProviderDialog.vue",
-    "apps/web/src/components/settings/panels/languageModel/index.vue"
+    "apps/web/src/components/settings/panels/languageModel/addProviderDialog.vue"
   ],
   "未获取到可用模型，请检查 API Key 后重试": [
-    "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue",
-    "apps/web/src/components/settings/panels/languageModel/index.vue"
+    "apps/web/src/components/settings/panels/languageModel/index.vue",
+    "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue"
   ],
   "获取模型列表失败，请检查连接配置": [
     "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue"
@@ -2392,18 +2389,18 @@
     "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue"
   ],
   "供应商已不存在": [
-    "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue",
     "apps/web/src/components/settings/panels/languageModel/index.vue",
+    "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue",
     "apps/web/src/components/settings/panels/mediaModel/editProviderDialog.vue"
   ],
   "保存失败，请重试；当前填写的内容已保留": [
+    "apps/web/src/components/settings/panels/pluginMarket/pluginConfigDialog.vue",
     "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue",
-    "apps/web/src/components/settings/panels/languageModel/addProviderDialog.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/pluginConfigDialog.vue"
+    "apps/web/src/components/settings/panels/languageModel/addProviderDialog.vue"
   ],
   "添加供应商": [
-    "apps/web/src/components/settings/panels/languageModel/addProviderDialog.vue",
     "apps/web/src/components/settings/panels/languageModel/index.vue",
+    "apps/web/src/components/settings/panels/languageModel/addProviderDialog.vue",
     "apps/web/src/components/settings/panels/mediaModel/index.vue"
   ],
   "选择厂商": [
@@ -2490,9 +2487,9 @@
     "apps/web/src/pages/workspace/index.vue"
   ],
   "服务地址": [
-    "apps/web/src/components/settings/panels/mcp/index.vue",
+    "apps/web/src/components/settings/panels/pluginMarket/mcpServers.vue",
     "apps/web/src/components/settings/panels/pluginMarket/a2aSettingsDialog.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/mcpServers.vue"
+    "apps/web/src/components/settings/panels/mcp/index.vue"
   ],
   "首选本地端口": [
     "apps/web/src/components/settings/panels/mcp/index.vue"
@@ -2534,12 +2531,12 @@
     "apps/web/src/components/settings/panels/mcp/index.vue"
   ],
   "操作失败": [
+    "apps/web/src/components/settings/panels/pluginMarket/mcpServers.vue",
+    "apps/web/src/components/settings/panels/pluginMarket/a2aSettingsDialog.vue",
+    "apps/web/src/components/settings/panels/pluginMarket/ffmpeg.vue",
+    "apps/web/src/components/settings/panels/pluginMarket/agentEditorDialog.vue",
     "apps/web/src/components/settings/panels/mcp/index.vue",
     "apps/web/src/components/settings/panels/mediaModel/providerAgentDialog.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/a2aSettingsDialog.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/agentEditorDialog.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/ffmpeg.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/mcpServers.vue",
     "apps/web/src/pages/workspace/panels/document/components/workspaceSearch.vue"
   ],
   "读取 MCP 状态失败": [
@@ -2561,16 +2558,16 @@
     "apps/web/src/components/settings/panels/mediaModel/addCustomProviderDialog.vue"
   ],
   "添加方式": [
-    "apps/web/src/components/settings/panels/mediaModel/addCustomProviderDialog.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/mcpServers.vue"
+    "apps/web/src/components/settings/panels/pluginMarket/mcpServers.vue",
+    "apps/web/src/components/settings/panels/mediaModel/addCustomProviderDialog.vue"
   ],
   "供应商文件": [
     "apps/web/src/components/settings/panels/mediaModel/addCustomProviderDialog.vue",
     "apps/web/src/components/settings/panels/mediaModel/providerAgentDialog.vue"
   ],
   "尚未选择文件": [
-    "apps/web/src/components/settings/panels/mediaModel/addCustomProviderDialog.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/mcpImportForm.vue"
+    "apps/web/src/components/settings/panels/pluginMarket/mcpImportForm.vue",
+    "apps/web/src/components/settings/panels/mediaModel/addCustomProviderDialog.vue"
   ],
   "已选择的供应商文件": [
     "apps/web/src/components/settings/panels/mediaModel/addCustomProviderDialog.vue"
@@ -2631,9 +2628,9 @@
     "apps/web/src/components/settings/panels/mediaModel/editProviderDialog.vue"
   ],
   "媒体供应商配置格式无效": [
+    "apps/web/src/components/settings/panels/pluginMarket/index.vue",
     "apps/web/src/components/settings/panels/mediaModel/addCustomProviderDialog.vue",
     "apps/web/src/components/settings/panels/mediaModel/editProviderDialog.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/index.vue",
     "apps/web/src/pages/hello/index.vue"
   ],
   "当前供应商配置格式无效": [
@@ -2724,9 +2721,9 @@
     "apps/web/src/components/settings/panels/mediaModel/editProviderDialog.vue"
   ],
   "保存失败，请重试": [
+    "apps/web/src/components/settings/panels/pluginMarket/pluginConfigDialog.vue",
     "apps/web/src/components/settings/panels/mediaModel/editProviderDialog.vue",
     "apps/web/src/components/settings/panels/personalization.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/pluginConfigDialog.vue",
     "apps/web/src/components/settings/tfAccount.vue"
   ],
   "模型与连接配置已保存，读取最新模型失败：{0}。请重新打开编辑。": [
@@ -2895,11 +2892,11 @@
     "apps/web/src/components/settings/panels/mediaModel/providerAgentDialog.vue"
   ],
   "名称": [
-    "apps/web/src/components/settings/panels/mediaModel/providerAgentDialog.vue",
     "apps/web/src/components/settings/panels/pluginMarket/mcpServers.vue",
+    "apps/web/src/components/settings/panels/mediaModel/providerAgentDialog.vue",
     "apps/web/src/pages/home/workspacePicker.vue",
-    "apps/web/src/pages/workspace/panels/canvas/components/assetMenu.vue",
-    "apps/web/src/pages/workspace/panels/document/components/fileTree.vue"
+    "apps/web/src/pages/workspace/panels/document/components/fileTree.vue",
+    "apps/web/src/pages/workspace/panels/canvas/components/assetMenu.vue"
   ],
   "生成的供应商代码": [
     "apps/web/src/components/settings/panels/mediaModel/providerAgentDialog.vue"
@@ -3069,9 +3066,9 @@
     "apps/web/src/components/settings/panels/personalization.vue"
   ],
   "继续编辑": [
-    "apps/web/src/components/settings/panels/personalization.vue",
     "apps/web/src/components/settings/panels/pluginMarket/agentEditorDialog.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/skillEditorDialog.vue"
+    "apps/web/src/components/settings/panels/pluginMarket/skillEditorDialog.vue",
+    "apps/web/src/components/settings/panels/personalization.vue"
   ],
   "内容不能超过 {0} 个字符": [
     "apps/web/src/components/settings/panels/personalization.vue"
@@ -3095,8 +3092,8 @@
     "apps/web/src/components/settings/panels/personalization.vue"
   ],
   "A2A 服务": [
-    "apps/web/src/components/settings/panels/pluginMarket/a2aSettingsDialog.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/index.vue"
+    "apps/web/src/components/settings/panels/pluginMarket/index.vue",
+    "apps/web/src/components/settings/panels/pluginMarket/a2aSettingsDialog.vue"
   ],
   "允许外部 Agent 调用本地团队": [
     "apps/web/src/components/settings/panels/pluginMarket/a2aSettingsDialog.vue"
@@ -3132,8 +3129,8 @@
     "apps/web/src/components/settings/panels/pluginMarket/a2aSettingsDialog.vue"
   ],
   "连接远程 Agent": [
-    "apps/web/src/components/settings/panels/pluginMarket/agentConnectDialog.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/index.vue"
+    "apps/web/src/components/settings/panels/pluginMarket/index.vue",
+    "apps/web/src/components/settings/panels/pluginMarket/agentConnectDialog.vue"
   ],
   "标识": [
     "apps/web/src/components/settings/panels/pluginMarket/agentConnectDialog.vue"
@@ -3186,13 +3183,13 @@
   "已保存": [
     "apps/web/src/components/settings/panels/pluginMarket/agentEditorDialog.vue",
     "apps/web/src/components/settings/panels/pluginMarket/skillEditorDialog.vue",
-    "apps/server/src/routes/agents/save.ts",
     "apps/server/src/routes/settings/personalization/save.ts",
+    "apps/server/src/routes/agents/save.ts",
     "apps/server/src/routes/skills/save.ts"
   ],
   "默认打开方式": [
-    "apps/web/src/components/settings/panels/pluginMarket/extensionAssociationsDialog.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/index.vue"
+    "apps/web/src/components/settings/panels/pluginMarket/index.vue",
+    "apps/web/src/components/settings/panels/pluginMarket/extensionAssociationsDialog.vue"
   ],
   "按文件类型选择默认扩展。清除后，有多个可用扩展时会再次询问打开方式。": [
     "apps/web/src/components/settings/panels/pluginMarket/extensionAssociationsDialog.vue"
@@ -3842,9 +3839,9 @@
   "创建": [
     "apps/web/src/components/settings/panels/pluginMarket/skillEditorDialog.vue",
     "apps/web/src/pages/home/workspacePicker.vue",
+    "apps/web/src/pages/workspace/panels/document/components/fileTree.vue",
     "apps/web/src/pages/workspace/panels/canvas/components/assetBrowser.vue",
-    "apps/web/src/pages/workspace/panels/canvas/components/assetLibrary.vue",
-    "apps/web/src/pages/workspace/panels/document/components/fileTree.vue"
+    "apps/web/src/pages/workspace/panels/canvas/components/assetLibrary.vue"
   ],
   "创建文件失败": [
     "apps/web/src/components/settings/panels/pluginMarket/skillEditorDialog.vue",
@@ -3979,7 +3976,8 @@
     "apps/web/src/components/settings/panels/ui.vue"
   ],
   "深色": [
-    "apps/web/src/components/settings/panels/ui.vue"
+    "apps/web/src/components/settings/panels/ui.vue",
+    "apps/web/src/components/themeToggle.vue"
   ],
   "沉浸创作": [
     "apps/web/src/components/settings/panels/ui.vue"
@@ -4291,8 +4289,8 @@
   ],
   "创建副本": [
     "apps/web/src/lib/canvasShortcuts.ts",
-    "apps/web/src/pages/workspace/panels/canvas/components/nodeMenu.vue",
-    "apps/web/src/pages/workspace/panels/canvas/components/selectionToolbar.vue"
+    "apps/web/src/pages/workspace/panels/canvas/components/selectionToolbar.vue",
+    "apps/web/src/pages/workspace/panels/canvas/components/nodeMenu.vue"
   ],
   "放大": [
     "apps/web/src/lib/canvasShortcuts.ts",
@@ -4344,8 +4342,8 @@
   ],
   "粘贴": [
     "apps/web/src/lib/canvasShortcuts.ts",
-    "apps/web/src/pages/workspace/panels/canvas/components/nodeMenu.vue",
     "apps/web/src/pages/workspace/panels/document/components/fileTree.vue",
+    "apps/web/src/pages/workspace/panels/canvas/components/nodeMenu.vue",
     "apps/desktop/src/index.ts"
   ],
   "小键盘 +": [
@@ -4778,10 +4776,10 @@
   ],
   "请先选择工作目录": [
     "apps/web/src/lib/workspaceFiles.ts",
-    "apps/web/src/pages/workspace/panels/canvas/canvasHost.vue",
-    "apps/web/src/pages/workspace/panels/canvas/components/canvasMenu.vue",
     "apps/web/src/pages/workspace/panels/canvas/index.vue",
-    "apps/web/src/pages/workspace/panels/canvas/useCanvasTools.ts"
+    "apps/web/src/pages/workspace/panels/canvas/components/canvasMenu.vue",
+    "apps/web/src/pages/workspace/panels/canvas/useCanvasTools.ts",
+    "apps/web/src/pages/workspace/panels/canvas/canvasHost.vue"
   ],
   "读取字节数必须为正整数": [
     "apps/web/src/lib/workspaceFiles.ts"
@@ -4874,15 +4872,15 @@
     "apps/web/src/pages/hello/index.vue"
   ],
   "素材库": [
-    "apps/web/src/pages/home/assetLibraryDialog.vue",
     "apps/web/src/pages/home/index.vue",
+    "apps/web/src/pages/home/assetLibraryDialog.vue",
+    "apps/web/src/pages/workspace/panels/canvas/components/canvasControls.vue",
     "apps/web/src/pages/workspace/panels/canvas/components/assetBrowser.vue",
-    "apps/web/src/pages/workspace/panels/canvas/components/assetLibrary.vue",
-    "apps/web/src/pages/workspace/panels/canvas/components/canvasControls.vue"
+    "apps/web/src/pages/workspace/panels/canvas/components/assetLibrary.vue"
   ],
   "探索": [
-    "apps/web/src/pages/home/explore.vue",
-    "apps/web/src/pages/home/index.vue"
+    "apps/web/src/pages/home/index.vue",
+    "apps/web/src/pages/home/explore.vue"
   ],
   "搜索项目": [
     "apps/web/src/pages/home/explore.vue"
@@ -5065,9 +5063,9 @@
   "重命名": [
     "apps/web/src/pages/home/index.vue",
     "apps/web/src/pages/home/workspacePicker.vue",
+    "apps/web/src/pages/workspace/panels/document/components/fileTree.vue",
     "apps/web/src/pages/workspace/panels/canvas/components/assetMenu.vue",
-    "apps/web/src/pages/workspace/panels/canvas/components/canvasMenu.vue",
-    "apps/web/src/pages/workspace/panels/document/components/fileTree.vue"
+    "apps/web/src/pages/workspace/panels/canvas/components/canvasMenu.vue"
   ],
   "移除项目 {0}": [
     "apps/web/src/pages/home/index.vue"
@@ -5162,11 +5160,11 @@
   ],
   "新建文件夹": [
     "apps/web/src/pages/home/workspacePicker.vue",
-    "apps/web/src/pages/workspace/panels/canvas/components/assetBrowser.vue",
-    "apps/web/src/pages/workspace/panels/canvas/components/assetLibrary.vue",
+    "apps/web/src/pages/workspace/panels/document/components/fileTree.vue",
     "apps/web/src/pages/workspace/panels/canvas/components/assetMenu.vue",
+    "apps/web/src/pages/workspace/panels/canvas/components/assetBrowser.vue",
     "apps/web/src/pages/workspace/panels/canvas/components/canvasMenu.vue",
-    "apps/web/src/pages/workspace/panels/document/components/fileTree.vue"
+    "apps/web/src/pages/workspace/panels/canvas/components/assetLibrary.vue"
   ],
   "当前目录为空": [
     "apps/web/src/pages/home/workspacePicker.vue"
@@ -5267,8 +5265,8 @@
   ],
   "工作区已关闭": [
     "apps/web/src/pages/workspace/index.vue",
-    "apps/web/src/pages/workspace/panels/canvas/canvasHost.vue",
-    "apps/web/src/pages/workspace/panels/canvas/index.vue"
+    "apps/web/src/pages/workspace/panels/canvas/index.vue",
+    "apps/web/src/pages/workspace/panels/canvas/canvasHost.vue"
   ],
   "未知面板": [
     "apps/web/src/pages/workspace/index.vue"
@@ -5305,28 +5303,28 @@
   ],
   "画布尚未就绪": [
     "apps/web/src/pages/workspace/index.vue",
-    "apps/web/src/pages/workspace/panels/canvas/canvasHost.vue",
+    "apps/web/src/pages/workspace/panels/document/components/fileTree.vue",
     "apps/web/src/pages/workspace/panels/canvas/useCanvasHistory.ts",
-    "apps/web/src/pages/workspace/panels/document/components/fileTree.vue"
+    "apps/web/src/pages/workspace/panels/canvas/canvasHost.vue"
   ],
   "工作目录已切换，请重新选择节点": [
     "apps/web/src/pages/workspace/index.vue"
   ],
   "节点 {0} 不允许移动": [
-    "apps/web/src/pages/workspace/panels/canvas/arrangeCanvas.ts",
-    "apps/web/src/pages/workspace/panels/canvas/arrangeSelection.ts"
+    "apps/web/src/pages/workspace/panels/canvas/arrangeSelection.ts",
+    "apps/web/src/pages/workspace/panels/canvas/arrangeCanvas.ts"
   ],
   "节点 {0} 尚未完成尺寸测量，请等待节点显示后重试": [
-    "apps/web/src/pages/workspace/panels/canvas/arrangeCanvas.ts",
-    "apps/web/src/pages/workspace/panels/canvas/arrangeSelection.ts"
+    "apps/web/src/pages/workspace/panels/canvas/arrangeSelection.ts",
+    "apps/web/src/pages/workspace/panels/canvas/arrangeCanvas.ts"
   ],
   "节点 {0} 的位置无效": [
-    "apps/web/src/pages/workspace/panels/canvas/arrangeCanvas.ts",
-    "apps/web/src/pages/workspace/panels/canvas/arrangeSelection.ts"
+    "apps/web/src/pages/workspace/panels/canvas/arrangeSelection.ts",
+    "apps/web/src/pages/workspace/panels/canvas/arrangeCanvas.ts"
   ],
   "节点 {0} 的排列位置无效": [
-    "apps/web/src/pages/workspace/panels/canvas/arrangeCanvas.ts",
-    "apps/web/src/pages/workspace/panels/canvas/arrangeSelection.ts"
+    "apps/web/src/pages/workspace/panels/canvas/arrangeSelection.ts",
+    "apps/web/src/pages/workspace/panels/canvas/arrangeCanvas.ts"
   ],
   "节点已变化，请重新选择后整理": [
     "apps/web/src/pages/workspace/panels/canvas/arrangeSelection.ts"
@@ -5341,8 +5339,8 @@
     "apps/web/src/pages/workspace/panels/canvas/canvasDrop.ts"
   ],
   "文件导入失败": [
-    "apps/web/src/pages/workspace/panels/canvas/canvasDrop.ts",
-    "apps/web/src/pages/workspace/panels/canvas/index.vue"
+    "apps/web/src/pages/workspace/panels/canvas/index.vue",
+    "apps/web/src/pages/workspace/panels/canvas/canvasDrop.ts"
   ],
   "文件或目录不存在": [
     "apps/web/src/pages/workspace/panels/canvas/canvasFiles.ts"
@@ -5354,22 +5352,22 @@
     "apps/web/src/pages/workspace/panels/canvas/canvasFiles.ts"
   ],
   "文件操作失败": [
-    "apps/web/src/pages/workspace/panels/canvas/canvasFiles.ts",
-    "apps/web/src/pages/workspace/panels/document/components/fileTree.vue"
+    "apps/web/src/pages/workspace/panels/document/components/fileTree.vue",
+    "apps/web/src/pages/workspace/panels/canvas/canvasFiles.ts"
   ],
   "复制失败且部分副本未能清理，请检查“{0}”：{1}": [
     "apps/web/src/pages/workspace/panels/canvas/canvasFiles.ts"
   ],
   "画布文件格式无效": [
-    "apps/web/src/pages/workspace/panels/canvas/canvasHost.vue",
-    "apps/web/src/pages/workspace/panels/canvas/components/canvasMenu.vue"
+    "apps/web/src/pages/workspace/panels/canvas/components/canvasMenu.vue",
+    "apps/web/src/pages/workspace/panels/canvas/canvasHost.vue"
   ],
   "工作区文件正在操作，请稍后重试": [
     "apps/web/src/pages/workspace/panels/canvas/canvasHost.vue"
   ],
   "节点已删除，请刷新文件树": [
-    "apps/web/src/pages/workspace/panels/canvas/canvasHost.vue",
-    "apps/web/src/pages/workspace/panels/canvas/index.vue"
+    "apps/web/src/pages/workspace/panels/canvas/index.vue",
+    "apps/web/src/pages/workspace/panels/canvas/canvasHost.vue"
   ],
   "节点已隐藏，无法在画布上聚焦": [
     "apps/web/src/pages/workspace/panels/canvas/canvasHost.vue"
@@ -5378,15 +5376,15 @@
     "apps/web/src/pages/workspace/panels/canvas/canvasHost.vue"
   ],
   "工作目录已切换，请重新打开节点": [
-    "apps/web/src/pages/workspace/panels/canvas/canvasHost.vue",
-    "apps/web/src/pages/workspace/panels/canvas/index.vue"
+    "apps/web/src/pages/workspace/panels/canvas/index.vue",
+    "apps/web/src/pages/workspace/panels/canvas/canvasHost.vue"
   ],
   "多个画布共用此节点正文，请先创建独立画布副本，再从对应节点编辑": [
     "apps/web/src/pages/workspace/panels/canvas/canvasHost.vue"
   ],
   "请选择工作区内的文件或目录": [
-    "apps/web/src/pages/workspace/panels/canvas/canvasHost.vue",
-    "apps/web/src/pages/workspace/panels/document/index.vue"
+    "apps/web/src/pages/workspace/panels/document/index.vue",
+    "apps/web/src/pages/workspace/panels/canvas/canvasHost.vue"
   ],
   "工作目录已切换，本次文件操作已停止": [
     "apps/web/src/pages/workspace/panels/canvas/canvasHost.vue"
@@ -5404,8 +5402,8 @@
     "apps/web/src/pages/workspace/panels/canvas/canvasHost.vue"
   ],
   "项目里需要保留至少一个画布。你可以先新建一个，再删除这个画布。": [
-    "apps/web/src/pages/workspace/panels/canvas/canvasHost.vue",
     "apps/web/src/pages/workspace/panels/canvas/components/canvasMenu.vue",
+    "apps/web/src/pages/workspace/panels/canvas/canvasHost.vue",
     "apps/server/src/utils/workspace/files.ts"
   ],
   "节点已删除，请重新选择": [
@@ -5414,8 +5412,8 @@
   ],
   "文本引用最多支持 100000 个字符，请缩小内容后重试": [
     "apps/web/src/pages/workspace/panels/canvas/canvasHost.vue",
-    "apps/server/src/agent/mentionFiles.ts",
-    "apps/server/src/agent/mentionSources.ts"
+    "apps/server/src/agent/mentionSources.ts",
+    "apps/server/src/agent/mentionFiles.ts"
   ],
   "节点不存在：{0}": [
     "apps/web/src/pages/workspace/panels/canvas/canvasQueries.ts",
@@ -5459,8 +5457,8 @@
   ],
   "更多 {0}": [
     "apps/web/src/pages/workspace/panels/canvas/components/assetBrowser.vue",
-    "apps/web/src/pages/workspace/panels/canvas/components/assetLibrary.vue",
-    "apps/web/src/pages/workspace/panels/canvas/components/canvasMenu.vue"
+    "apps/web/src/pages/workspace/panels/canvas/components/canvasMenu.vue",
+    "apps/web/src/pages/workspace/panels/canvas/components/assetLibrary.vue"
   ],
   "目录操作": [
     "apps/web/src/pages/workspace/panels/canvas/components/assetBrowser.vue"
@@ -5506,19 +5504,19 @@
     "apps/web/src/pages/workspace/panels/canvas/components/assetBrowser.vue"
   ],
   "关闭素材库": [
-    "apps/web/src/pages/workspace/panels/canvas/components/assetLibrary.vue",
-    "apps/web/src/pages/workspace/panels/canvas/components/canvasControls.vue"
+    "apps/web/src/pages/workspace/panels/canvas/components/canvasControls.vue",
+    "apps/web/src/pages/workspace/panels/canvas/components/assetLibrary.vue"
   ],
   "文件夹名称": [
-    "apps/web/src/pages/workspace/panels/canvas/components/assetLibrary.vue",
-    "apps/web/src/pages/workspace/panels/canvas/components/canvasMenu.vue"
+    "apps/web/src/pages/workspace/panels/canvas/components/canvasMenu.vue",
+    "apps/web/src/pages/workspace/panels/canvas/components/assetLibrary.vue"
   ],
   "预览（也可双击素材）": [
     "apps/web/src/pages/workspace/panels/canvas/components/assetLibrary.vue"
   ],
   "更多": [
-    "apps/web/src/pages/workspace/panels/canvas/components/assetLibrary.vue",
-    "apps/web/src/pages/workspace/panels/canvas/components/canvasMenu.vue"
+    "apps/web/src/pages/workspace/panels/canvas/components/canvasMenu.vue",
+    "apps/web/src/pages/workspace/panels/canvas/components/assetLibrary.vue"
   ],
   "关闭音频预览": [
     "apps/web/src/pages/workspace/panels/canvas/components/assetLibrary.vue"
@@ -5825,20 +5823,20 @@
     "apps/web/src/pages/workspace/panels/canvas/components/nodeMenu.vue"
   ],
   "水平排列": [
-    "apps/web/src/pages/workspace/panels/canvas/components/nodeMenu.vue",
-    "apps/web/src/pages/workspace/panels/canvas/components/selectionToolbar.vue"
+    "apps/web/src/pages/workspace/panels/canvas/components/selectionToolbar.vue",
+    "apps/web/src/pages/workspace/panels/canvas/components/nodeMenu.vue"
   ],
   "垂直排列": [
-    "apps/web/src/pages/workspace/panels/canvas/components/nodeMenu.vue",
-    "apps/web/src/pages/workspace/panels/canvas/components/selectionToolbar.vue"
+    "apps/web/src/pages/workspace/panels/canvas/components/selectionToolbar.vue",
+    "apps/web/src/pages/workspace/panels/canvas/components/nodeMenu.vue"
   ],
   "宫格排列": [
-    "apps/web/src/pages/workspace/panels/canvas/components/nodeMenu.vue",
-    "apps/web/src/pages/workspace/panels/canvas/components/selectionToolbar.vue"
+    "apps/web/src/pages/workspace/panels/canvas/components/selectionToolbar.vue",
+    "apps/web/src/pages/workspace/panels/canvas/components/nodeMenu.vue"
   ],
   "上传": [
-    "apps/web/src/pages/workspace/panels/canvas/components/nodeMenu.vue",
-    "apps/web/src/pages/workspace/panels/canvas/components/nodeMenuItems.vue"
+    "apps/web/src/pages/workspace/panels/canvas/components/nodeMenuItems.vue",
+    "apps/web/src/pages/workspace/panels/canvas/components/nodeMenu.vue"
   ],
   "粘贴中…": [
     "apps/web/src/pages/workspace/panels/canvas/components/nodeMenu.vue"
@@ -5995,8 +5993,8 @@
     "apps/web/src/pages/workspace/panels/canvas/index.vue"
   ],
   "文档内容已变化，请重新读取后编辑": [
-    "apps/web/src/pages/workspace/panels/canvas/index.vue",
-    "apps/web/src/pages/workspace/panels/document/index.vue"
+    "apps/web/src/pages/workspace/panels/document/index.vue",
+    "apps/web/src/pages/workspace/panels/canvas/index.vue"
   ],
   "恢复画布失败": [
     "apps/web/src/pages/workspace/panels/canvas/index.vue"
@@ -6280,8 +6278,8 @@
     "apps/web/src/pages/workspace/panels/document/components/fileTree.vue"
   ],
   "工作目录已切换": [
-    "apps/web/src/pages/workspace/panels/document/components/fileTree.vue",
-    "apps/web/src/pages/workspace/panels/document/index.vue"
+    "apps/web/src/pages/workspace/panels/document/index.vue",
+    "apps/web/src/pages/workspace/panels/document/components/fileTree.vue"
   ],
   "不能将文件夹粘贴到自身或其子目录": [
     "apps/web/src/pages/workspace/panels/document/components/fileTree.vue"
@@ -6507,8 +6505,8 @@
     "apps/web/src/pages/workspace/panels/document/extensions.ts"
   ],
   "尚未启用支持此文件的扩展，请到插件市场安装或启用：{0}": [
-    "apps/web/src/pages/workspace/panels/document/extensions.ts",
-    "apps/web/src/pages/workspace/panels/document/index.vue"
+    "apps/web/src/pages/workspace/panels/document/index.vue",
+    "apps/web/src/pages/workspace/panels/document/extensions.ts"
   ],
   "文档工作区": [
     "apps/web/src/pages/workspace/panels/document/index.vue"
@@ -6652,8 +6650,8 @@
     "apps/server/src/agent/a2a/settings.ts"
   ],
   "服务器部署只能使用服务器工作区": [
-    "apps/server/src/agent/a2a/settings.ts",
-    "apps/server/src/utils/workspace/index.ts"
+    "apps/server/src/utils/workspace/index.ts",
+    "apps/server/src/agent/a2a/settings.ts"
   ],
   "A2A 设置已修改，当前任务已取消": [
     "apps/server/src/agent/a2a/settings.ts"
@@ -6662,8 +6660,8 @@
     "apps/server/src/agent/assets.ts"
   ],
   "素材文件不能超过 100 MB": [
-    "apps/server/src/agent/assets.ts",
-    "apps/server/src/utils/assets/index.ts"
+    "apps/server/src/utils/assets/index.ts",
+    "apps/server/src/agent/assets.ts"
   ],
   "只能读取本次已授权的素材快照": [
     "apps/server/src/agent/assets.ts"
@@ -6708,8 +6706,8 @@
     "apps/server/src/agent/mentionSources.ts"
   ],
   "分页已失效，请重新搜索": [
-    "apps/server/src/agent/mentionSources.ts",
-    "apps/server/src/utils/assets/index.ts"
+    "apps/server/src/utils/assets/index.ts",
+    "apps/server/src/agent/mentionSources.ts"
   ],
   "这个输出暂无内容，请重新选择": [
     "apps/server/src/agent/mentionSources.ts"
@@ -6726,8 +6724,8 @@
     "apps/server/src/agent/runtime/imageAttachments.ts"
   ],
   "图片附件引用无效": [
-    "apps/server/src/agent/runtime/imageAttachments.ts",
-    "apps/server/src/agent/runtime/requests.ts"
+    "apps/server/src/agent/runtime/requests.ts",
+    "apps/server/src/agent/runtime/imageAttachments.ts"
   ],
   "图片附件须为有效的 base64 内容": [
     "apps/server/src/agent/runtime/imageAttachments.ts"
@@ -6793,13 +6791,13 @@
     "apps/server/src/agent/runtime/index.ts"
   ],
   "模型请求失败": [
+    "apps/server/src/utils/singleAgent/index.ts",
     "apps/server/src/agent/runtime/index.ts",
-    "apps/server/src/routes/ai/generate.ts",
-    "apps/server/src/utils/singleAgent/index.ts"
+    "apps/server/src/routes/ai/generate.ts"
   ],
   "模型回复因长度限制被截断，未能完整生成回答。": [
-    "apps/server/src/agent/runtime/index.ts",
-    "apps/server/src/utils/singleAgent/index.ts"
+    "apps/server/src/utils/singleAgent/index.ts",
+    "apps/server/src/agent/runtime/index.ts"
   ],
   "引用内容须为深度不超过 32、长度不超过 100000 的 JSON 值": [
     "apps/server/src/agent/runtime/mentions.ts"
@@ -7036,8 +7034,8 @@
     "apps/server/src/agent/tools/index.ts"
   ],
   "工具名称重复：{0}": [
-    "apps/server/src/agent/tools/index.ts",
-    "apps/server/src/utils/singleAgent/index.ts"
+    "apps/server/src/utils/singleAgent/index.ts",
+    "apps/server/src/agent/tools/index.ts"
   ],
   "启动时刷新供应商模型失败：": [
     "apps/server/src/app.ts"
@@ -7064,8 +7062,8 @@
   "参数错误": [
     "apps/server/src/lib/middleware.ts",
     "apps/server/src/lib/responseFormat.ts",
-    "apps/server/src/routes/ai/media/generate.ts",
-    "apps/server/src/routes/ai/media/price.ts"
+    "apps/server/src/routes/ai/media/price.ts",
+    "apps/server/src/routes/ai/media/generate.ts"
   ],
   "找不到这个文件或文件夹，可能已被移动、删除，或者位置选错了。": [
     "apps/server/src/lib/responseFormat.ts"
@@ -7170,11 +7168,11 @@
     "apps/server/src/routes/agents/install.ts"
   ],
   "请选择文件或填写远端地址": [
-    "apps/server/src/routes/agents/install.ts",
-    "apps/server/src/routes/ext/install.ts",
+    "apps/server/src/routes/tools/install.ts",
     "apps/server/src/routes/nodes/install.ts",
-    "apps/server/src/routes/skills/install.ts",
-    "apps/server/src/routes/tools/install.ts"
+    "apps/server/src/routes/ext/install.ts",
+    "apps/server/src/routes/agents/install.ts",
+    "apps/server/src/routes/skills/install.ts"
   ],
   "团队已安装": [
     "apps/server/src/routes/agents/install.ts"
@@ -7195,23 +7193,23 @@
     "apps/server/src/routes/agents/uninstall.ts"
   ],
   "工具参数必须是 JSON 对象结构，且不超过 100 KB": [
-    "apps/server/src/routes/ai/generate.ts",
-    "apps/server/src/routes/singleAgent/create.ts"
+    "apps/server/src/routes/singleAgent/create.ts",
+    "apps/server/src/routes/ai/generate.ts"
   ],
   "工具名称不能重复": [
-    "apps/server/src/routes/ai/generate.ts",
-    "apps/server/src/routes/singleAgent/create.ts"
+    "apps/server/src/routes/singleAgent/create.ts",
+    "apps/server/src/routes/ai/generate.ts"
   ],
   "模型上下文不能超过 8 MB": [
     "apps/server/src/routes/ai/generate.ts"
   ],
   "只能读取文件": [
-    "apps/server/src/routes/assets/read.ts",
-    "apps/server/src/routes/workspaces/files/read.ts"
+    "apps/server/src/routes/workspaces/files/read.ts",
+    "apps/server/src/routes/assets/read.ts"
   ],
   "请发送文件原始内容": [
-    "apps/server/src/routes/assets/save.ts",
-    "apps/server/src/routes/workspaces/files/write.ts"
+    "apps/server/src/routes/workspaces/files/write.ts",
+    "apps/server/src/routes/assets/save.ts"
   ],
   "剪贴板文件“{0}”超过 100 MB": [
     "apps/server/src/routes/desktop/clipboard/read.ts"
@@ -7281,17 +7279,17 @@
     "apps/server/src/routes/ffmpeg/execute.ts"
   ],
   "请在桌面端或服务器本机导入 MCP": [
-    "apps/server/src/routes/mcp/servers/importDxt.ts",
-    "apps/server/src/routes/mcp/servers/inspectDxt.ts"
+    "apps/server/src/routes/mcp/servers/inspectDxt.ts",
+    "apps/server/src/routes/mcp/servers/importDxt.ts"
   ],
   "DXT 已导入": [
     "apps/server/src/routes/mcp/servers/importDxt.ts"
   ],
   "请在桌面端或服务器本机管理 MCP": [
+    "apps/server/src/routes/mcp/servers/setEnabled.ts",
     "apps/server/src/routes/mcp/servers/importJson.ts",
     "apps/server/src/routes/mcp/servers/remove.ts",
-    "apps/server/src/routes/mcp/servers/save.ts",
-    "apps/server/src/routes/mcp/servers/setEnabled.ts"
+    "apps/server/src/routes/mcp/servers/save.ts"
   ],
   "MCP 配置已导入": [
     "apps/server/src/routes/mcp/servers/importJson.ts"
@@ -7312,10 +7310,10 @@
     "apps/server/src/routes/mobileLink/heartbeat.ts"
   ],
   "节点不存在": [
-    "apps/server/src/routes/nodes/files.ts",
+    "apps/server/src/utils/plugins/nodes.ts",
     "apps/server/src/routes/nodes/setEnabled.ts",
     "apps/server/src/routes/nodes/uninstall.ts",
-    "apps/server/src/utils/plugins/nodes.ts"
+    "apps/server/src/routes/nodes/files.ts"
   ],
   "节点已禁用": [
     "apps/server/src/routes/nodes/files.ts"
@@ -7364,8 +7362,8 @@
     "apps/server/src/routes/plugins/export.ts"
   ],
   "技能不存在": [
-    "apps/server/src/routes/plugins/export.ts",
-    "apps/server/src/utils/skills/files.ts"
+    "apps/server/src/utils/skills/files.ts",
+    "apps/server/src/routes/plugins/export.ts"
   ],
   "技能最多包含 2000 个文件和目录": [
     "apps/server/src/routes/plugins/export.ts"
@@ -7404,10 +7402,10 @@
     "apps/server/src/routes/skills/create.ts"
   ],
   "已存在同名文件或目录": [
-    "apps/server/src/routes/skills/create.ts",
-    "apps/server/src/routes/skills/move.ts",
+    "apps/server/src/utils/workspace/files.ts",
     "apps/server/src/utils/skills/files.ts",
-    "apps/server/src/utils/workspace/files.ts"
+    "apps/server/src/routes/skills/move.ts",
+    "apps/server/src/routes/skills/create.ts"
   ],
   "文件已创建": [
     "apps/server/src/routes/skills/create.ts"
@@ -7437,11 +7435,11 @@
     "apps/server/src/routes/skills/read.ts"
   ],
   "技能文件不能超过 20 MB": [
-    "apps/server/src/routes/skills/read.ts",
-    "apps/server/src/routes/skills/save.ts",
-    "apps/server/src/utils/mcp/resources.ts",
     "apps/server/src/utils/plugins/install.ts",
-    "apps/server/src/utils/skills/files.ts"
+    "apps/server/src/utils/mcp/resources.ts",
+    "apps/server/src/utils/skills/files.ts",
+    "apps/server/src/routes/skills/read.ts",
+    "apps/server/src/routes/skills/save.ts"
   ],
   "该文件不是文本内容，无法在编辑器中打开": [
     "apps/server/src/routes/skills/read.ts"
@@ -7453,8 +7451,8 @@
     "apps/server/src/routes/skills/save.ts"
   ],
   "内容不能包含空字符": [
-    "apps/server/src/routes/skills/save.ts",
-    "apps/server/src/utils/mcp/dxt.ts"
+    "apps/server/src/utils/mcp/dxt.ts",
+    "apps/server/src/routes/skills/save.ts"
   ],
   "SKILL.md 必须包含合法 YAML、与原技能相同的字符串 name，以及非空且不超过 1024 字符的 description": [
     "apps/server/src/routes/skills/save.ts"
@@ -7478,10 +7476,10 @@
     "apps/server/src/routes/tools/client.ts"
   ],
   "请在桌面端或服务器本机管理工具": [
-    "apps/server/src/routes/tools/install.ts",
-    "apps/server/src/routes/tools/save.ts",
     "apps/server/src/routes/tools/setEnabled.ts",
-    "apps/server/src/routes/tools/uninstall.ts"
+    "apps/server/src/routes/tools/install.ts",
+    "apps/server/src/routes/tools/uninstall.ts",
+    "apps/server/src/routes/tools/save.ts"
   ],
   "工具已安装": [
     "apps/server/src/routes/tools/install.ts"
@@ -7490,9 +7488,9 @@
     "apps/server/src/routes/tools/save.ts"
   ],
   "工具文件无效": [
+    "apps/server/src/utils/plugins/tools.ts",
     "apps/server/src/routes/tools/setEnabled.ts",
-    "apps/server/src/routes/tools/uninstall.ts",
-    "apps/server/src/utils/plugins/tools.ts"
+    "apps/server/src/routes/tools/uninstall.ts"
   ],
   "工具状态文件无效": [
     "apps/server/src/routes/tools/setEnabled.ts"
@@ -8545,8 +8543,8 @@
     "apps/server/src/utils/plugins/ext.ts"
   ],
   "文件扩展目录不能是符号链接": [
-    "apps/server/src/utils/plugins/initializeExt.ts",
-    "apps/server/src/utils/plugins/install.ts"
+    "apps/server/src/utils/plugins/install.ts",
+    "apps/server/src/utils/plugins/initializeExt.ts"
   ],
   "{0}已安装，但现有或待安装版本缺失或无效，无法判断更新顺序；请在开发者设置中使用强制安装": [
     "apps/server/src/utils/plugins/install.ts"
@@ -8919,8 +8917,8 @@
     "apps/server/src/utils/skills/files.ts"
   ],
   "文件路径无效": [
-    "apps/server/src/utils/skills/files.ts",
-    "apps/server/src/utils/workspace/files.ts"
+    "apps/server/src/utils/workspace/files.ts",
+    "apps/server/src/utils/skills/files.ts"
   ],
   "技能文件超出目录范围": [
     "apps/server/src/utils/skills/files.ts"
@@ -8977,8 +8975,8 @@
     "apps/server/src/utils/teams/files.ts"
   ],
   "团队目录必须是普通目录": [
-    "apps/server/src/utils/teams/files.ts",
-    "apps/server/src/utils/teams/install.ts"
+    "apps/server/src/utils/teams/install.ts",
+    "apps/server/src/utils/teams/files.ts"
   ],
   "团队目录超出范围": [
     "apps/server/src/utils/teams/files.ts"
@@ -9138,8 +9136,8 @@
     "apps/desktop/src/index.ts"
   ],
   "安装链接无效": [
-    "apps/desktop/src/index.ts",
-    "apps/desktop/src/protocol.ts"
+    "apps/desktop/src/protocol.ts",
+    "apps/desktop/src/index.ts"
   ],
   "无法打开安装链接": [
     "apps/desktop/src/index.ts"
@@ -9852,5 +9850,20 @@
   ],
   "无限画布 Android": [
     "apps/mobile/src/server.ts"
+  ],
+  "工具活动 · {0}": [
+    "apps/web/src/components/agent/toolActivity.vue"
+  ],
+  "{0} 次失败": [
+    "apps/web/src/components/agent/toolActivity.vue"
+  ],
+  "{0} 次中断": [
+    "apps/web/src/components/agent/toolActivity.vue"
+  ],
+  "正在调用 {0}": [
+    "apps/web/src/components/agent/toolActivity.vue"
+  ],
+  "调用已结束": [
+    "apps/web/src/components/agent/toolActivity.vue"
   ]
 }

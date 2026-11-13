@@ -6,7 +6,7 @@
     <template #header>
       <span class="toolHeader" :data-status="tool.status">
         <icon-tool :size="14" />
-        <span class="toolName">{{ renderer ? "操作工具" : tool.name || "工具调用" }}</span>
+        <span class="toolName" :title="tool.name === 'nodeTools' && typeof tool.args?.name === 'string' ? `${tool.name} · ${tool.args.name}` : tool.name">{{ tool.name || "工具调用" }}<template v-if="tool.name === 'nodeTools' && typeof tool.args?.name === 'string'"> · {{ tool.args.name }}</template></span>
         <span class="toolState">{{ tool.name === 'subAgent' && tool.status === 'success' ? '调用已返回' : toolStatusLabels[tool.status] }}</span>
       </span>
     </template>
@@ -85,27 +85,48 @@ function formatToolData(value: unknown) {
 <style scoped lang="scss">
 .toolCall {
   min-width: 0;
-  :deep(.t-collapse-panel__icon) { color: var(--el-text-color-secondary); }
+  :deep(.t-collapse-panel__icon) { color: var(--el-text-color-regular); }
+  :deep(.t-collapse-panel__header--blank) { display: none; }
 
   .toolHeader {
     display: flex;
     align-items: center;
     gap: 6px;
+    flex: 1;
+    width: 100%;
     min-width: 0;
-    color: var(--el-text-color-secondary);
+    color: var(--el-text-color-primary);
+
+    > svg { flex-shrink: 0; color: var(--el-color-primary); }
 
     .toolName {
+      flex: 1;
+      min-width: 0;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+      font-size: 13px;
+      font-weight: 500;
     }
 
     .toolState {
       flex-shrink: 0;
+      padding: 1px 6px;
+      border: 1px solid var(--el-border-color-light);
+      border-radius: var(--ui-radius);
+      color: var(--el-text-color-regular);
+      background: var(--el-fill-color-light);
       font-size: 12px;
+      line-height: 18px;
     }
 
-    &[data-status="error"] .toolState { color: var(--el-color-danger); }
+    &[data-status="error"] .toolState {
+      color: var(--el-text-color-primary);
+      border-color: color-mix(in srgb, var(--el-color-danger) 40%, var(--el-border-color-light));
+      background: color-mix(in srgb, var(--el-color-danger) 12%, var(--el-bg-color));
+    }
+    &[data-status="running"] .toolState { border-color: var(--el-color-primary); }
   }
 
   .toolDetails {
@@ -113,19 +134,20 @@ function formatToolData(value: unknown) {
     flex-direction: column;
     gap: 4px;
     min-width: 0;
-    font-size: 12px;
+    font-size: 13px;
 
     .toolLabel {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      color: var(--el-text-color-secondary);
+      color: var(--el-text-color-primary);
+      font-weight: 600;
     }
 
     .toolData {
       margin: 0 0 6px;
-      font-size: 12px;
-      line-height: 1.5;
+      font-size: 13px;
+      line-height: 1.65;
 
       :deep([data-stream-markdown="code-block"]) {
         margin: 0;

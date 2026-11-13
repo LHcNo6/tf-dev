@@ -3270,5 +3270,10 @@
   "当前移动端浏览器内核缺少无限画布所需能力。请更新无限画布和系统浏览器内核；部分系统需要通过系统更新升级。更新完成后，请完全退出并重新打开无限画布。": "Kulang ang browser engine ng mobile sa mga kakayahang kailangan ng 无限画布. I-update ang 无限画布 at browser engine ng system; maaaring kailangan ang system update. Pagkatapos, ganap na isara at buksan muli ang 无限画布.",
   "雾蓝": "Asul na hamog",
   "检测到旧版无限画布供应商 TS，无法在无限画布 2.0 中使用。请在「添加自定义媒体供应商」中点击「一键复制提示词」，结合旧代码和接口资料重新生成新版代码后再导入。": "Natukoy ang TS file ng lumang 无限画布 provider at hindi ito magagamit sa 无限画布 2.0. Sa «Magdagdag ng custom na media provider», i-click ang «Kopyahin ang prompt sa isang click». Gamitin ang lumang code at dokumentasyon ng interface upang bumuo ng bagong bersyon ng code bago ito i-import.",
-  "无限画布 Android": "无限画布 Android"
+  "无限画布 Android": "无限画布 Android",
+  "工具活动 · {0}": "Aktibidad ng tool · {0}",
+  "正在调用 {0}": "Tinatawag ang {0}",
+  "调用已结束": "Tapos na ang mga tawag",
+  "{0} 次失败": "{0} nabigo",
+  "{0} 次中断": "{0} naantala"
 }

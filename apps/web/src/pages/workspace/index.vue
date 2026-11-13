@@ -36,8 +36,12 @@
         </template>
       </el-segmented>
       <div class="bottomTools">
+        <el-card v-if="activePanel !== 'canvas'" class="toolMenu" shadow="never" :bodyStyle="{ padding: '2px 4px' }">
+          <div class="toolMenuContent"><themeToggle class="toolButton themeButton" :compact="true" /></div>
+        </el-card>
         <el-card v-if="activePanel === 'canvas'" class="toolMenu" shadow="never" :bodyStyle="{ padding: '2px 4px' }">
           <div class="toolMenuContent" role="toolbar" aria-label="画布工具">
+            <themeToggle class="toolButton themeButton" :compact="true" />
             <el-tooltip content="添加节点" placement="top" :showArrow="false" :hideAfter="0" :enterable="false" :triggerKeys="[]">
               <el-button class="toolButton addNodeButton" :disabled="!canvasPanelRef?.canvasReady || settingsVisible" aria-label="添加节点" aria-haspopup="menu" @click="canvasPanelRef?.addNodeAtPointer()">
                 <icon-plus :size="18" aria-hidden="true" />
@@ -138,6 +142,7 @@ import { IconVector, IconFileText, IconPointer, IconHandStop, IconPlus, IconSear
 import { ElMessage, ElMessageBox } from "element-plus";
 import { QRCode } from "tdesign-vue-next";
 import settings from "@/components/settings/index.vue";
+import themeToggle from "@/components/themeToggle.vue";
 import { useWorkspaceStore } from "@/stores/workspace";
 import { registerWorkspaceControl, waitForControlValue } from "@/lib/mcpControl";
 import anonymousData from "@/lib/anonymousData";
@@ -399,10 +404,36 @@ function saveDocumentNode(directory: string, canvasPath: string, nodeId: string,
   :deep(.canvasControlsCard),
   .panelSwitcher,
   .toolMenu {
-    background: color-mix(in srgb, var(--el-bg-color-overlay) 70%, transparent);
-    backdrop-filter: blur(6px);
-    border-color: var(--el-border-color-light);
-    box-shadow: var(--el-box-shadow-light);
+    background: color-mix(in srgb, var(--el-bg-color-overlay) 88%, transparent);
+    backdrop-filter: blur(12px);
+    border-color: color-mix(in srgb, var(--el-color-primary) 12%, var(--el-border-color-light));
+    box-shadow: 0 4px 16px color-mix(in srgb, var(--el-text-color-primary) 9%, transparent), inset 0 1px 0 color-mix(in srgb, white 35%, transparent);
+  }
+
+  :deep(.workspaceMenu > .el-card),
+  :deep(.canvasMenu),
+  :deep(.balanceCard),
+  :deep(.canvasControlsCard),
+  .toolMenu { border-radius: var(--ui-radius-large, 12px); }
+
+  :deep(.workspaceMenu .el-button),
+  :deep(.canvasMenu .el-button),
+  :deep(.balanceCard .el-button),
+  :deep(.canvasControlsCard .el-button),
+  .toolMenu .toolButton {
+    border-radius: var(--el-border-radius-base);
+    transition: background-color 160ms ease, color 160ms ease, box-shadow 160ms ease, transform 120ms ease;
+
+    &:active:not(.is-disabled) { transform: scale(0.94); }
+    &:focus-visible { outline: 2px solid var(--el-color-primary); outline-offset: 2px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :deep(.workspaceMenu .el-button),
+    :deep(.canvasMenu .el-button),
+    :deep(.balanceCard .el-button),
+    :deep(.canvasControlsCard .el-button),
+    .toolMenu .toolButton { transition: none; }
   }
 
   .canvasPanel {
@@ -458,6 +489,10 @@ function saveDocumentNode(directory: string, canvasPath: string, nodeId: string,
         line-height: 22px;
         font-weight: 500;
       }
+
+      :deep(.el-segmented__item-selected) {
+        box-shadow: 0 2px 5px color-mix(in srgb, var(--el-color-primary) 28%, transparent);
+      }
     }
 
     .bottomTools {
@@ -485,6 +520,17 @@ function saveDocumentNode(directory: string, canvasPath: string, nodeId: string,
             height: 28px;
             margin: 0;
             padding: 0;
+
+            &.themeButton {
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              border: 0;
+              background: transparent;
+              color: var(--el-text-color-regular);
+              cursor: pointer;
+              &:hover { background: var(--el-fill-color); color: var(--el-text-color-primary); }
+            }
 
             &.addNodeButton {
               margin-right: 6px;
