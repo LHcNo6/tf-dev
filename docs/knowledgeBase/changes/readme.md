@@ -6,6 +6,8 @@
 
 知识库建立于 2026-11-10；此前已有功能的行为和验证见[主题维护](../readme.md#主题维护)。
 
+- 2026-11-13：[画布网格点与品牌底纹](canvasBackground20261113.md)
+
 - 2026-11-13：[Skill 中英文入口与品牌统一](skillLanguages20261113.md)
 - 2026-11-13：[Agent 回复对比度与字体层级](agentReplyContrast20261113.md)
 - 2026-11-13：[Agent 工具活动收起展示](agentToolActivity20261113.md)

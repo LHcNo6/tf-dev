@@ -62,7 +62,7 @@
           :error="nodeErrors[type]"
           :loading="nodeLoads.has(type) || (nodeListLoading && !nodeTypes[type] && !nodeErrors[type])" />
       </template>
-      <background v-if="canvasId" :gap="16" patternColor="var(--el-border-color)" />
+      <background :gap="16" :size="1.5" patternColor="var(--el-text-color-placeholder)" />
       <div v-if="!canvasId" class="canvasOverlay" role="status" @contextmenu.prevent @dragover.prevent @drop.prevent>
         从左上角打开一个画布，就可以开始创作啦
       </div>
@@ -1309,9 +1309,20 @@ const defaultEdgeOptions = markRaw({
 }
 
 .canvas {
+  position: relative;
   width: 100%;
   height: 100%;
   background: color-mix(in srgb, var(--el-color-primary) 3%, var(--el-bg-color));
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: var(--el-text-color-primary);
+    opacity: 0.045;
+    mask: url("@toonflow/assets/logoMark.svg") center / min(60%, 560px) no-repeat;
+  }
 
   &.canvasUnselected :deep(.vue-flow__viewport) {
     visibility: hidden;
@@ -1325,7 +1336,7 @@ const defaultEdgeOptions = markRaw({
     display: grid;
     place-items: center;
     padding: 24px;
-    background: color-mix(in srgb, var(--el-color-primary) 3%, var(--el-bg-color));
+    background: transparent;
     color: var(--el-text-color-secondary);
     font-size: 14px;
     line-height: 1.6;
