@@ -1,5 +1,6 @@
 # 开发文档索引
 
+- 当前开发以 Web 端为主，按需求处理 Web 所需的服务端和共享代码；除非用户明确要求，暂不修改、构建、打包、安装或启动桌面端和移动端。
 - 所有仓库工作：先阅读并遵守 [开发规范](docs/developmentRules.md)。
 - 开发 Tools、Nodes、Skill 插件及交付发布：阅读 [插件开发指南](docs/pluginDevelopment.md)。
 - 源码运行、构建与桌面打包：阅读 [开发与构建文档](docs/development.md)；本机环境参见 [本地开发说明](LOCAL_DEVELOPMENT.md)。

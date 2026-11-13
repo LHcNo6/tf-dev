@@ -23,8 +23,8 @@ writeAtomicSync(join(installDirectory, ".electrobun-uninstall.json"), JSON.strin
   identifier,
   name,
   channel,
-  desktop_shortcut: join(desktopDirectory, `${name}.lnk`),
-  start_menu_shortcut: join(programsDirectory, `${name}.lnk`),
+  desktop_shortcut: join(desktopDirectory, "无限画布.lnk"),
+  start_menu_shortcut: join(programsDirectory, "无限画布.lnk"),
   install_root_name: basename(installDirectory),
   data_path_versions: [1],
 }, null, 2));

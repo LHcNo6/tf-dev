@@ -98,40 +98,42 @@
     "apps/web/src/components/agent/conversation/messageList.vue"
   ],
   "取消": [
-    "apps/web/src/components/agent/conversation/messageInput.vue",
-    "apps/web/src/components/agent/conversation/messageList.vue",
-    "apps/web/src/components/agent/menu.vue",
+    "apps/web/src/components/settings/tfRechargeDialog.vue",
     "apps/web/src/components/settings/panels/developer/index.vue",
     "apps/web/src/components/settings/panels/developer/systemPromptDialog.vue",
     "apps/web/src/components/settings/panels/deviceLink.vue",
-    "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue",
-    "apps/web/src/components/settings/panels/languageModel/addProviderDialog.vue",
-    "apps/web/src/components/settings/panels/languageModel/index.vue",
-    "apps/web/src/components/settings/panels/mediaModel/addCustomProviderDialog.vue",
-    "apps/web/src/components/settings/panels/mediaModel/editProviderDialog.vue",
-    "apps/web/src/components/settings/panels/mediaModel/index.vue",
-    "apps/web/src/components/settings/panels/mediaModel/modelEditorDialog.vue",
-    "apps/web/src/components/settings/panels/personalization.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/agentConnectDialog.vue",
-    "apps/web/src/components/settings/panels/pluginMarket/ffmpeg.vue",
     "apps/web/src/components/settings/panels/pluginMarket/index.vue",
+    "apps/web/src/components/settings/panels/pluginMarket/agentConnectDialog.vue",
     "apps/web/src/components/settings/panels/pluginMarket/mcpServers.vue",
+    "apps/web/src/components/settings/panels/pluginMarket/ffmpeg.vue",
     "apps/web/src/components/settings/panels/pluginMarket/pluginConfigDialog.vue",
     "apps/web/src/components/settings/panels/pluginMarket/skillEditorDialog.vue",
-    "apps/web/src/components/settings/tfRechargeDialog.vue",
+    "apps/web/src/components/settings/panels/languageModel/index.vue",
+    "apps/web/src/components/settings/panels/languageModel/addCustomProviderDialog.vue",
+    "apps/web/src/components/settings/panels/languageModel/addProviderDialog.vue",
+    "apps/web/src/components/settings/panels/mediaModel/index.vue",
+    "apps/web/src/components/settings/panels/mediaModel/addCustomProviderDialog.vue",
+    "apps/web/src/components/settings/panels/mediaModel/editProviderDialog.vue",
+    "apps/web/src/components/settings/panels/mediaModel/modelEditorDialog.vue",
+    "apps/web/src/components/settings/panels/personalization.vue",
+    "apps/web/src/components/agent/menu.vue",
+    "apps/web/src/components/agent/conversation/messageInput.vue",
+    "apps/web/src/components/agent/conversation/messageList.vue",
+    "apps/web/src/components/desktopQuit.vue",
     "apps/web/src/lib/desktopProtocol.ts",
     "apps/web/src/lib/i18n.ts",
     "apps/web/src/pages/home/index.vue",
     "apps/web/src/pages/home/workspacePicker.vue",
-    "apps/web/src/pages/workspace/components/workspaceMenu.vue",
-    "apps/web/src/pages/workspace/panels/canvas/components/assetBrowser.vue",
-    "apps/web/src/pages/workspace/panels/canvas/components/assetLibrary.vue",
-    "apps/web/src/pages/workspace/panels/canvas/components/assetMenu.vue",
-    "apps/web/src/pages/workspace/panels/canvas/components/canvasMenu.vue",
-    "apps/web/src/pages/workspace/panels/document/components/extView.vue",
     "apps/web/src/pages/workspace/panels/document/components/fileTree.vue",
     "apps/web/src/pages/workspace/panels/document/components/openWithDialog.vue",
-    "apps/web/src/pages/workspace/panels/document/components/workspaceSearch.vue"
+    "apps/web/src/pages/workspace/panels/document/components/workspaceSearch.vue",
+    "apps/web/src/pages/workspace/panels/document/components/extView.vue",
+    "apps/web/src/pages/workspace/panels/canvas/components/assetMenu.vue",
+    "apps/web/src/pages/workspace/panels/canvas/components/assetBrowser.vue",
+    "apps/web/src/pages/workspace/panels/canvas/components/canvasMenu.vue",
+    "apps/web/src/pages/workspace/panels/canvas/components/assetLibrary.vue",
+    "apps/web/src/pages/workspace/components/workspaceMenu.vue",
+    "apps/desktop/src/index.ts"
   ],
   "调整输入框高度": [
     "apps/web/src/components/agent/conversation/messageInput.vue"
@@ -227,9 +229,6 @@
     "apps/web/src/components/singleAgentDialog.vue"
   ],
   "开始新对话": [
-    "apps/web/src/components/agent/conversation/messageList.vue"
-  ],
-  "你好，我是 Toonflow 助手": [
     "apps/web/src/components/agent/conversation/messageList.vue"
   ],
   "从一个想法开始": [
@@ -332,20 +331,9 @@
   "正在压缩上下文…": [
     "apps/web/src/components/agent/conversation.vue"
   ],
-  "待处理消息": [
-    "apps/web/src/components/agent/conversation.vue"
-  ],
-  "当前操作结束后插话": [
-    "apps/web/src/components/agent/conversation.vue"
-  ],
-  "插话并按这条消息继续": [
-    "apps/web/src/components/agent/conversation.vue"
-  ],
-  "待引导": [
-    "apps/web/src/components/agent/conversation.vue"
-  ],
   "引导": [
-    "apps/web/src/components/agent/conversation.vue"
+    "apps/web/src/components/agent/conversation.vue",
+    "apps/web/src/components/agent/conversation/messageList.vue"
   ],
   "删除排队消息": [
     "apps/web/src/components/agent/conversation.vue"
@@ -453,7 +441,10 @@
     "apps/web/src/components/singleAgentDialog.vue"
   ],
   "已停止生成": [
-    "apps/web/src/components/agent/conversation.vue"
+    "apps/web/src/components/agent/conversation.vue",
+    "apps/server/src/agent/runtime/index.ts",
+    "apps/server/src/agent/runtime/sessions.ts",
+    "apps/server/src/routes/agent.ts"
   ],
   "新对话": [
     "apps/web/src/components/agent/index.vue",
@@ -464,7 +455,8 @@
     "apps/web/src/components/agent/index.vue"
   ],
   "读取对话失败": [
-    "apps/web/src/components/agent/index.vue"
+    "apps/web/src/components/agent/index.vue",
+    "apps/web/src/components/agent/conversation.vue"
   ],
   "读取历史对话失败": [
     "apps/web/src/components/agent/index.vue"
@@ -942,9 +934,6 @@
   "设备互联说明": [
     "apps/web/src/components/mobileConnect.vue"
   ],
-  "请使用 Toonflow 桌面端或 Android 客户端连接其他设备。": [
-    "apps/web/src/components/mobileConnect.vue"
-  ],
   "本机共享可在“设置 → 设备互联”中管理。": [
     "apps/web/src/components/mobileConnect.vue"
   ],
@@ -1054,9 +1043,6 @@
     "apps/web/src/components/settings/panels/deviceLink.vue",
     "apps/web/src/components/settings/panels/personalization.vue",
     "apps/web/src/pages/home/workspacePicker.vue"
-  ],
-  "请扫描 Toonflow 的设备互联二维码": [
-    "apps/web/src/components/mobileConnect.vue"
   ],
   "请输入局域网地址或公网 HTTPS 地址，不能包含路径、账号或参数": [
     "apps/web/src/components/mobileConnect.vue"
@@ -1268,13 +1254,6 @@
   "展示二维码": [
     "apps/web/src/components/settings/panels/about.vue"
   ],
-  "Toonflow 交流群二维码": [
-    "apps/web/src/components/settings/panels/about.vue"
-  ],
-  "Toonflow 是为爱发电的开源项目。欢迎文明交流、友善反馈；回复可能需要一些时间，请避免责问或命令式沟通，感谢你的理解与尊重。": [
-    "apps/web/src/components/settings/panels/about.vue",
-    "apps/web/src/pages/workspace/index.vue"
-  ],
   "赞助商": [
     "apps/web/src/components/settings/panels/about.vue"
   ],
@@ -1285,9 +1264,6 @@
     "apps/web/src/components/settings/panels/about.vue"
   ],
   "成为赞助商": [
-    "apps/web/src/components/settings/panels/about.vue"
-  ],
-  "Toonflow 商务合作二维码": [
     "apps/web/src/components/settings/panels/about.vue"
   ],
   "查看 {0} 详情": [
@@ -1820,9 +1796,6 @@
   "允许其他设备连接": [
     "apps/web/src/components/settings/panels/deviceLink.vue"
   ],
-  "其他电脑、安卓设备可使用这里的项目与配置。连接时请保持 Toonflow 运行。": [
-    "apps/web/src/components/settings/panels/deviceLink.vue"
-  ],
   "连接新设备": [
     "apps/web/src/components/settings/panels/deviceLink.vue"
   ],
@@ -1913,9 +1886,6 @@
   "局域网地址": [
     "apps/web/src/components/settings/panels/deviceLink.vue"
   ],
-  "无法连接时可尝试其他地址，并检查电脑防火墙是否允许 Toonflow 联网。": [
-    "apps/web/src/components/settings/panels/deviceLink.vue"
-  ],
   "公网 HTTPS 地址": [
     "apps/web/src/components/settings/panels/deviceLink.vue"
   ],
@@ -1972,9 +1942,6 @@
     "apps/web/src/components/settings/panels/deviceLink.vue"
   ],
   "生成二维码失败": [
-    "apps/web/src/components/settings/panels/deviceLink.vue"
-  ],
-  "撤销后，这个设备将无法继续访问当前 Toonflow。": [
     "apps/web/src/components/settings/panels/deviceLink.vue"
   ],
   "撤销设备授权": [
@@ -2502,9 +2469,6 @@
   "开启 MCP": [
     "apps/web/src/components/settings/panels/mcp/index.vue"
   ],
-  "允许外部 Coding 工具和 Agent 操作 Toonflow。开启后，将客户端配置添加到对应工具中。": [
-    "apps/web/src/components/settings/panels/mcp/index.vue"
-  ],
   "连接状态": [
     "apps/web/src/components/settings/panels/mcp/index.vue"
   ],
@@ -2524,9 +2488,6 @@
   "文档": [
     "apps/web/src/components/settings/panels/mcp/index.vue",
     "apps/web/src/pages/workspace/index.vue"
-  ],
-  "画布与节点操作需要 Toonflow 界面保持打开。": [
-    "apps/web/src/components/settings/panels/mcp/index.vue"
   ],
   "服务地址": [
     "apps/web/src/components/settings/panels/mcp/index.vue",
@@ -2555,9 +2516,6 @@
     "apps/web/src/components/settings/panels/mcp/index.vue"
   ],
   "HTTP 配置包含访问凭证，请仅提供给可信的客户端。": [
-    "apps/web/src/components/settings/panels/mcp/index.vue"
-  ],
-  "教外部 Agent 组合使用 Toonflow 工具。将 SKILL.md 安装到对应 Coding 工具的技能目录。": [
     "apps/web/src/components/settings/panels/mcp/index.vue"
   ],
   "查看 Skill": [
@@ -3059,22 +3017,10 @@
   "网络设置已保存": [
     "apps/web/src/components/settings/panels/network.vue"
   ],
-  "Toonflow 说明": [
-    "apps/web/src/components/settings/panels/personalization.vue"
-  ],
   "为所有聊天提供额外说明和上下文。支持 Markdown，保存后下一次发送消息时生效。": [
     "apps/web/src/components/settings/panels/personalization.vue"
   ],
-  "Toonflow 说明内容": [
-    "apps/web/src/components/settings/panels/personalization.vue"
-  ],
   "有未保存的修改": [
-    "apps/web/src/components/settings/panels/personalization.vue"
-  ],
-  "重新加载 Toonflow 说明": [
-    "apps/web/src/components/settings/panels/personalization.vue"
-  ],
-  "保存 Toonflow 说明": [
     "apps/web/src/components/settings/panels/personalization.vue"
   ],
   "启用本地记忆": [
@@ -3090,9 +3036,6 @@
     "apps/web/src/components/settings/panels/personalization.vue"
   ],
   "查看": [
-    "apps/web/src/components/settings/panels/personalization.vue"
-  ],
-  "Toonflow 记忆": [
     "apps/web/src/components/settings/panels/personalization.vue"
   ],
   "本地记忆内容": [
@@ -3140,9 +3083,6 @@
     "apps/web/src/components/settings/panels/personalization.vue"
   ],
   "读取本地记忆失败，请重试": [
-    "apps/web/src/components/settings/panels/personalization.vue"
-  ],
-  "将删除所有工作区共用的本地记忆及未保存的记忆修改，此操作无法撤销。Toonflow 说明会保留。": [
     "apps/web/src/components/settings/panels/personalization.vue"
   ],
   "本地记忆已更新，未删除任何内容。请重新查看后重试。": [
@@ -3372,9 +3312,6 @@
   "下载版本：{0} · {1}": [
     "apps/web/src/components/settings/panels/pluginMarket/ffmpeg.vue"
   ],
-  "保存在当前 Toonflow 服务的数据目录，下载后自动复用。": [
-    "apps/web/src/components/settings/panels/pluginMarket/ffmpeg.vue"
-  ],
   "下载版": [
     "apps/web/src/components/settings/panels/pluginMarket/ffmpeg.vue"
   ],
@@ -3384,13 +3321,7 @@
   "不可用": [
     "apps/web/src/components/settings/panels/pluginMarket/ffmpeg.vue"
   ],
-  "优先使用已下载的版本；未下载时，从当前 Toonflow 服务的系统 PATH 查找。": [
-    "apps/web/src/components/settings/panels/pluginMarket/ffmpeg.vue"
-  ],
   "仅使用此页面下载的版本。": [
-    "apps/web/src/components/settings/panels/pluginMarket/ffmpeg.vue"
-  ],
-  "仅从当前 Toonflow 服务的系统 PATH 查找 FFmpeg 与 ffprobe。": [
     "apps/web/src/components/settings/panels/pluginMarket/ffmpeg.vue"
   ],
   "等待下载": [
@@ -3719,9 +3650,6 @@
   "启动命令": [
     "apps/web/src/components/settings/panels/pluginMarket/mcpServers.vue"
   ],
-  "命令在运行 Toonflow 的电脑或服务端执行。": [
-    "apps/web/src/components/settings/panels/pluginMarket/mcpServers.vue"
-  ],
   "当前平台不支持本地 MCP，请改用远程连接。": [
     "apps/web/src/components/settings/panels/pluginMarket/mcpServers.vue"
   ],
@@ -4032,9 +3960,6 @@
     "apps/web/src/components/settings/panels/ui.vue"
   ],
   "圆润": [
-    "apps/web/src/components/settings/panels/ui.vue"
-  ],
-  "Toonflow 每一个灵感，都值得被看见": [
     "apps/web/src/components/settings/panels/ui.vue"
   ],
   "这是当前颜色、字体与圆角的实际效果。": [
@@ -4497,9 +4422,6 @@
   "正在安装插件…": [
     "apps/web/src/lib/desktopProtocol.ts"
   ],
-  "安装接口返回的响应无效，无法确认安装结果。请先检查插件列表，若未安装，请重启或更新 Toonflow 后重试。": [
-    "apps/web/src/lib/desktopProtocol.ts"
-  ],
   "安装接口未返回有效的插件名称，请先检查插件列表，确认插件是否已安装。": [
     "apps/web/src/lib/desktopProtocol.ts"
   ],
@@ -4507,12 +4429,6 @@
     "apps/web/src/lib/desktopProtocol.ts"
   ],
   "安装请求等待超时，请先查看插件是否已安装，再重试": [
-    "apps/web/src/lib/desktopProtocol.ts"
-  ],
-  "无法连接 Toonflow 本机服务，请确认应用已正常运行后重试。": [
-    "apps/web/src/lib/desktopProtocol.ts"
-  ],
-  "安装接口返回异常（HTTP {0}），请重启或更新 Toonflow 后重试。": [
     "apps/web/src/lib/desktopProtocol.ts"
   ],
   "{0}“{1}”安装失败：{2}": [
@@ -4716,9 +4632,6 @@
     "apps/web/src/lib/mobile.ts",
     "apps/desktop/src/connection.ts"
   ],
-  "请使用 Toonflow 桌面端或移动客户端连接其他设备": [
-    "apps/web/src/lib/mobile.ts"
-  ],
   "设备未返回有效的切换方式，请重试": [
     "apps/web/src/lib/mobile.ts"
   ],
@@ -4882,12 +4795,6 @@
   "通知桌面就绪失败（{0}）": [
     "apps/web/src/main.ts"
   ],
-  "当前 Microsoft Edge WebView2 Runtime 版本过旧。请以管理员身份运行微软最新版安装器；若仍提示已安装，请修复 WebView2 或联系管理员检查更新服务。更新完成后，请完全退出 Toonflow 再重新打开。": [
-    "apps/web/src/main.ts"
-  ],
-  "当前移动端浏览器内核缺少 Toonflow 所需能力。请更新 Toonflow 和系统浏览器内核；部分系统需要通过系统更新升级。更新完成后，请完全退出并重新打开 Toonflow。": [
-    "apps/web/src/main.ts"
-  ],
   "切回本机失败，请重试": [
     "apps/web/src/main.ts"
   ],
@@ -4937,9 +4844,6 @@
     "apps/web/src/pages/hello/index.vue"
   ],
   "稍后配置": [
-    "apps/web/src/pages/hello/index.vue"
-  ],
-  "© {0} Toonflow · 保留所有权利。": [
     "apps/web/src/pages/hello/index.vue"
   ],
   "保存引导状态失败，请重试": [
@@ -5217,7 +5121,8 @@
     "apps/web/src/pages/home/index.vue"
   ],
   "无法打开项目，请重试": [
-    "apps/web/src/pages/home/index.vue"
+    "apps/web/src/pages/home/index.vue",
+    "apps/web/src/pages/workspace/index.vue"
   ],
   "导出项目失败，请重试": [
     "apps/web/src/pages/home/index.vue"
@@ -5343,9 +5248,6 @@
     "apps/web/src/pages/workspace/index.vue"
   ],
   "使用教程": [
-    "apps/web/src/pages/workspace/index.vue"
-  ],
-  "Toonflow 需求/BUG反馈表": [
     "apps/web/src/pages/workspace/index.vue"
   ],
   "汇报 BUG": [
@@ -6367,8 +6269,9 @@
     "apps/web/src/pages/workspace/panels/document/components/fileTree.vue"
   ],
   "工作区": [
+    "apps/web/src/pages/workspace/panels/document/index.vue",
     "apps/web/src/pages/workspace/panels/document/components/fileTree.vue",
-    "apps/web/src/pages/workspace/panels/document/index.vue"
+    "apps/web/src/pages/workspace/panels/canvas/components/canvasMenu.vue"
   ],
   "无法保存文件树展开状态": [
     "apps/web/src/pages/workspace/panels/document/components/fileTree.vue"
@@ -6883,9 +6786,6 @@
   "重发消息不在当前对话中，请重新打开对话": [
     "apps/server/src/agent/runtime/index.ts"
   ],
-  "用户已插话，尚未开始的工具已跳过，请按新要求继续": [
-    "apps/server/src/agent/runtime/index.ts"
-  ],
   "模型返回了空摘要，已保留原上下文": [
     "apps/server/src/agent/runtime/index.ts"
   ],
@@ -6931,9 +6831,6 @@
   "图片请求预算必须为正安全整数": [
     "apps/server/src/agent/runtime/requests.ts"
   ],
-  "用户插话，按新要求继续": [
-    "apps/server/src/agent/runtime/requests.ts"
-  ],
   "历史图片附件记录无效": [
     "apps/server/src/agent/runtime/requests.ts"
   ],
@@ -6965,9 +6862,6 @@
     "apps/server/src/agent/runtime/sessions.ts"
   ],
   "这条消息已开始处理或已被取回，请刷新队列后重试": [
-    "apps/server/src/agent/runtime/sessions.ts"
-  ],
-  "这条消息已开始引导当前任务，不能再取回": [
     "apps/server/src/agent/runtime/sessions.ts"
   ],
   "父会话标识无效": [
@@ -7204,9 +7098,6 @@
     "apps/server/src/remoteConnection.ts"
   ],
   "正在切换连接，请稍候": [
-    "apps/server/src/remoteConnection.ts"
-  ],
-  "请扫描 Toonflow 的互联二维码": [
     "apps/server/src/remoteConnection.ts"
   ],
   "请输入 12 位数字配对码": [
@@ -7615,9 +7506,6 @@
   "项目包": [
     "apps/server/src/routes/workspaces/clone.ts"
   ],
-  "项目包必须包含有效的 Toonflow 画布 JSON 文件": [
-    "apps/server/src/routes/workspaces/clone.ts"
-  ],
   "项目下载目录超出所选位置": [
     "apps/server/src/routes/workspaces/clone.ts"
   ],
@@ -7862,9 +7750,6 @@
     "apps/server/src/utils/ffmpeg/index.ts",
     "packages/ffmpeg/src/index.ts"
   ],
-  "只允许 Toonflow 页面访问控制连接": [
-    "apps/server/src/utils/mcp/control.ts"
-  ],
   "页面来源无效": [
     "apps/server/src/utils/mcp/control.ts"
   ],
@@ -7875,16 +7760,7 @@
     "apps/server/src/utils/mcp/control.ts",
     "packages/mcp/src/index.ts"
   ],
-  "Toonflow 页面已断开，请重新调用 getAppState": [
-    "apps/server/src/utils/mcp/control.ts"
-  ],
-  "存在多个 Toonflow 页面，请用 target.connectionId 指定操作目标": [
-    "apps/server/src/utils/mcp/control.ts"
-  ],
   "控制连接已存在": [
-    "apps/server/src/utils/mcp/control.ts"
-  ],
-  "Toonflow 页面已断开，操作已取消": [
     "apps/server/src/utils/mcp/control.ts"
   ],
   "控制命令已取消或不存在": [
@@ -8088,9 +7964,6 @@
   "未知应用操作：{0}": [
     "apps/server/src/utils/mcp/operations.ts"
   ],
-  "Toonflow 服务尚未就绪": [
-    "apps/server/src/utils/mcp/operations.ts"
-  ],
   "素材文件不能超过 20 MB": [
     "apps/server/src/utils/mcp/operations.ts"
   ],
@@ -8199,9 +8072,6 @@
   "不能通过 MCP 修改连接凭证或项目列表": [
     "apps/server/src/utils/mcp/tools.ts"
   ],
-  "在目标 Toonflow 页面打开已有工作目录，并等待工作区就绪；操作前获取 getAppState 的 connectionId。": [
-    "apps/server/src/utils/mcp/tools.ts"
-  ],
   "切换工作区的 canvas 画布或 document 文档面板，先保存当前编辑。": [
     "apps/server/src/utils/mcp/tools.ts"
   ],
@@ -8220,22 +8090,10 @@
   "合并保存指定顶层设置项，同时更新页面；不修改 mcp 凭证与 stores 项目列表，嵌套设置应先读取再合并。": [
     "apps/server/src/utils/mcp/tools.ts"
   ],
-  "文件正在 Toonflow 中打开，请使用画布或文档工具修改，关闭后再执行文件操作": [
-    "apps/server/src/utils/mcp/tools.ts"
-  ],
-  "列出连接的 Toonflow 页面及其 connectionId、工作目录、画布、项目列表和节点能力。多个页面时必须用 target.connectionId 明确操作对象；无页面连接时只有显式 target.directory 的服务端工具可用。": [
-    "apps/server/src/utils/mcp/tools.ts"
-  ],
-  "请先打开 Toonflow 桌面或网页": [
-    "apps/server/src/utils/mcp/tools.ts"
-  ],
   "尚未绑定画布": [
     "apps/server/src/utils/mcp/tools.ts"
   ],
   "MCP 工具名称重复：{0}": [
-    "apps/server/src/utils/mcp/tools.ts"
-  ],
-  "工具已禁用，或所需 Toonflow 页面未连接，请重新读取工具列表": [
     "apps/server/src/utils/mcp/tools.ts"
   ],
   "MCP 不提供内置 Agent 会话能力：{0}": [
@@ -8269,9 +8127,6 @@
     "apps/server/src/utils/mcp/tools.ts"
   ],
   "应用操作不存在，请查询 listAppOperations": [
-    "apps/server/src/utils/mcp/tools.ts"
-  ],
-  "按用户请求调用 Toonflow 内置 Agent，等待本轮完成并返回对话文件与回复；会使用配置的模型。外部 Agent 可直接操作其他工具，仅需要委托内置 Agent 时调用。支持 MCP 取消，历史保存到工作区。": [
     "apps/server/src/utils/mcp/tools.ts"
   ],
   "音频输入必须是 Uint8Array": [
@@ -8460,9 +8315,6 @@
   "供应商 TypeScript 语法错误：{0}": [
     "apps/server/src/utils/media/provider.ts"
   ],
-  "检测到旧版 Toonflow 供应商 TS，无法在 Toonflow 2.0 中使用。请在「添加自定义媒体供应商」中点击「一键复制提示词」，结合旧代码和接口资料重新生成新版代码后再导入。": [
-    "apps/server/src/utils/media/provider.ts"
-  ],
   "供应商须通过 export default 导出对象": [
     "apps/server/src/utils/media/provider.ts"
   ],
@@ -8566,9 +8418,6 @@
     "apps/server/src/utils/media/tasks.ts"
   ],
   "设备互联尚未初始化": [
-    "apps/server/src/utils/mobileLink/index.ts"
-  ],
-  "只允许本机 Toonflow 页面管理设备互联": [
     "apps/server/src/utils/mobileLink/index.ts"
   ],
   "当前运行环境不支持共享后端": [
@@ -8774,9 +8623,6 @@
   "节点文件实际是 HTML 网页，不是节点脚本，请重新上传构建生成的 .umd.js 文件": [
     "apps/server/src/utils/plugins/install.ts"
   ],
-  "文件不是兼容的 Toonflow 节点，请使用节点脚手架构建生成的 .umd.js 文件": [
-    "apps/server/src/utils/plugins/install.ts"
-  ],
   "文件名与节点导出名不一致：{0} 需要导出 toonflowNodes.{1}，请按实际节点名修改文件名": [
     "apps/server/src/utils/plugins/install.ts"
   ],
@@ -8796,9 +8642,6 @@
     "apps/server/src/utils/plugins/install.ts"
   ],
   "文件扩展内容为空，请重新上传扩展脚本": [
-    "apps/server/src/utils/plugins/install.ts"
-  ],
-  "文件不是兼容的 Toonflow 文件扩展，请使用扩展脚手架构建并保留原文件名": [
     "apps/server/src/utils/plugins/install.ts"
   ],
   "文件扩展脚本语法无效，请重新构建完整的 .umd.js 文件": [
@@ -9512,7 +9355,8 @@
     "apps/desktop/src/update/windowsUpdater.ts"
   ],
   "更新重启已取消": [
-    "apps/desktop/src/update/windowsUpdater.ts"
+    "apps/desktop/src/update/windowsUpdater.ts",
+    "apps/desktop/src/index.ts"
   ],
   "更新助手启动错误日志保存失败：": [
     "apps/desktop/src/update/windowsUpdater.ts"
@@ -9696,5 +9540,317 @@
   ],
   "FFmpeg 不能操作悬空符号链接": [
     "packages/ffmpeg/src/runtime.ts"
+  ],
+  "当前 Microsoft Edge WebView2 Runtime 版本过旧。请以管理员身份运行微软最新版安装器；若仍提示已安装，请修复 WebView2 或联系管理员检查更新服务。更新完成后，请完全退出无限画布再重新打开。": [
+    "apps/web/src/main.ts"
+  ],
+  "当前移动端浏览器内核缺少无限画布所需能力。请更新无限画布和系统浏览器内核；部分系统需要通过系统更新升级。更新完成后，请完全退出并重新打开无限画布。": [
+    "apps/web/src/main.ts"
+  ],
+  "设置保存失败，无法连接服务，请检查服务状态": [
+    "apps/web/src/stores/settings.ts"
+  ],
+  "无限画布": [
+    "apps/web/src/components/settings/panels/deviceLink.vue",
+    "apps/web/src/components/settings/panels/about.vue",
+    "apps/web/src/components/mobileConnect.vue",
+    "apps/web/src/components/updateBox.vue",
+    "apps/web/src/pages/home/index.vue",
+    "apps/web/src/pages/hello/index.vue",
+    "apps/server/src/remoteConnection.ts",
+    "apps/server/src/routes/workspaces/clone.ts",
+    "apps/desktop/src/index.ts"
+  ],
+  "其他电脑、安卓设备可使用这里的项目与配置。连接时请保持无限画布运行。": [
+    "apps/web/src/components/settings/panels/deviceLink.vue"
+  ],
+  "无法连接时可尝试其他地址，并检查电脑防火墙是否允许无限画布联网。": [
+    "apps/web/src/components/settings/panels/deviceLink.vue"
+  ],
+  "撤销后，这个设备将无法继续访问当前无限画布。": [
+    "apps/web/src/components/settings/panels/deviceLink.vue"
+  ],
+  "命令在运行无限画布的电脑或服务端执行。": [
+    "apps/web/src/components/settings/panels/pluginMarket/mcpServers.vue"
+  ],
+  "保存在当前无限画布服务的数据目录，下载后自动复用。": [
+    "apps/web/src/components/settings/panels/pluginMarket/ffmpeg.vue"
+  ],
+  "优先使用已下载的版本；未下载时，从当前无限画布服务的系统 PATH 查找。": [
+    "apps/web/src/components/settings/panels/pluginMarket/ffmpeg.vue"
+  ],
+  "仅从当前无限画布服务的系统 PATH 查找 FFmpeg 与 ffprobe。": [
+    "apps/web/src/components/settings/panels/pluginMarket/ffmpeg.vue"
+  ],
+  "允许外部 Coding 工具和 Agent 操作无限画布。开启后，将客户端配置添加到对应工具中。": [
+    "apps/web/src/components/settings/panels/mcp/index.vue"
+  ],
+  "画布与节点操作需要无限画布界面保持打开。": [
+    "apps/web/src/components/settings/panels/mcp/index.vue"
+  ],
+  "无限画布 Skill": [
+    "apps/web/src/components/settings/panels/mcp/index.vue"
+  ],
+  "教外部 Agent 组合使用无限画布工具。将 SKILL.md 安装到对应 Coding 工具的技能目录。": [
+    "apps/web/src/components/settings/panels/mcp/index.vue"
+  ],
+  "无限画布说明": [
+    "apps/web/src/components/settings/panels/personalization.vue"
+  ],
+  "无限画布说明内容": [
+    "apps/web/src/components/settings/panels/personalization.vue"
+  ],
+  "重新加载无限画布说明": [
+    "apps/web/src/components/settings/panels/personalization.vue"
+  ],
+  "保存无限画布说明": [
+    "apps/web/src/components/settings/panels/personalization.vue"
+  ],
+  "无限画布记忆": [
+    "apps/web/src/components/settings/panels/personalization.vue"
+  ],
+  "将删除所有工作区共用的本地记忆及未保存的记忆修改，此操作无法撤销。无限画布说明会保留。": [
+    "apps/web/src/components/settings/panels/personalization.vue"
+  ],
+  "无限画布 Logo": [
+    "apps/web/src/components/settings/panels/about.vue"
+  ],
+  "无限画布交流群二维码": [
+    "apps/web/src/components/settings/panels/about.vue"
+  ],
+  "无限画布是为爱发电的开源项目。欢迎文明交流、友善反馈；回复可能需要一些时间，请避免责问或命令式沟通，感谢你的理解与尊重。": [
+    "apps/web/src/components/settings/panels/about.vue",
+    "apps/web/src/pages/workspace/index.vue"
+  ],
+  "无限画布商务合作二维码": [
+    "apps/web/src/components/settings/panels/about.vue"
+  ],
+  "无限画布每一个灵感，都值得被看见": [
+    "apps/web/src/components/settings/panels/ui.vue"
+  ],
+  "雾蓝": [
+    "apps/web/src/components/settings/panels/ui.vue"
+  ],
+  "排队消息": [
+    "apps/web/src/components/agent/conversation.vue"
+  ],
+  "发送引导，按这条消息继续当前任务，已完成的操作不会撤销": [
+    "apps/web/src/components/agent/conversation.vue"
+  ],
+  "请求失败": [
+    "apps/web/src/components/agent/replyStream.ts"
+  ],
+  "你好，我是无限画布助手": [
+    "apps/web/src/components/agent/conversation/messageList.vue"
+  ],
+  "当前任务的补充引导，已完成的操作不会撤销": [
+    "apps/web/src/components/agent/conversation/messageList.vue"
+  ],
+  "来自 {0} 的消息": [
+    "apps/web/src/components/agent/conversation/messageList.vue"
+  ],
+  "请使用无限画布桌面端或 Android 客户端连接其他设备。": [
+    "apps/web/src/components/mobileConnect.vue"
+  ],
+  "请扫描无限画布的设备互联二维码": [
+    "apps/web/src/components/mobileConnect.vue"
+  ],
+  "退出无限画布": [
+    "apps/web/src/components/desktopQuit.vue",
+    "apps/desktop/src/index.ts"
+  ],
+  "退出后，正在运行的任务将被中断。确定要退出吗？": [
+    "apps/web/src/components/desktopQuit.vue",
+    "apps/desktop/src/index.ts"
+  ],
+  "退出": [
+    "apps/web/src/components/desktopQuit.vue",
+    "apps/desktop/src/index.ts"
+  ],
+  "安装接口返回的响应无效，无法确认安装结果。请先检查插件列表，若未安装，请重启或更新无限画布后重试。": [
+    "apps/web/src/lib/desktopProtocol.ts"
+  ],
+  "无法连接无限画布本机服务，请确认应用已正常运行后重试。": [
+    "apps/web/src/lib/desktopProtocol.ts"
+  ],
+  "安装接口返回异常（HTTP {0}），请重启或更新无限画布后重试。": [
+    "apps/web/src/lib/desktopProtocol.ts"
+  ],
+  "请使用无限画布桌面端或移动客户端连接其他设备": [
+    "apps/web/src/lib/mobile.ts"
+  ],
+  "无限画布需求/BUG反馈表": [
+    "apps/web/src/pages/workspace/index.vue"
+  ],
+  "无限画布 Agent": [
+    "apps/web/src/pages/workspace/index.vue"
+  ],
+  "全局素材库": [
+    "apps/web/src/pages/workspace/panels/canvas/index.vue"
+  ],
+  "素材节点已移除，请重新选择": [
+    "apps/web/src/pages/workspace/panels/canvas/index.vue"
+  ],
+  "当前节点无法引用该素材": [
+    "apps/web/src/pages/workspace/panels/canvas/index.vue"
+  ],
+  "引用素材 {0}": [
+    "apps/web/src/pages/workspace/panels/canvas/components/assetBrowser.vue"
+  ],
+  "© {0} 无限画布 · 保留所有权利。": [
+    "apps/web/src/pages/hello/index.vue"
+  ],
+  "文件不是兼容的无限画布节点，请使用节点脚手架构建生成的 .umd.js 文件": [
+    "apps/server/src/utils/plugins/install.ts"
+  ],
+  "文件不是兼容的无限画布文件扩展，请使用扩展脚手架构建并保留原文件名": [
+    "apps/server/src/utils/plugins/install.ts"
+  ],
+  "无限画布服务尚未就绪": [
+    "apps/server/src/utils/mcp/operations.ts"
+  ],
+  "只允许无限画布页面访问控制连接": [
+    "apps/server/src/utils/mcp/control.ts"
+  ],
+  "无限画布页面已断开，请重新调用 getAppState": [
+    "apps/server/src/utils/mcp/control.ts"
+  ],
+  "存在多个无限画布页面，请用 target.connectionId 指定操作目标": [
+    "apps/server/src/utils/mcp/control.ts"
+  ],
+  "无限画布页面已断开，操作已取消": [
+    "apps/server/src/utils/mcp/control.ts"
+  ],
+  "在目标无限画布页面打开已有工作目录，并等待工作区就绪；操作前获取 getAppState 的 connectionId。": [
+    "apps/server/src/utils/mcp/tools.ts"
+  ],
+  "文件正在无限画布中打开，请使用画布或文档工具修改，关闭后再执行文件操作": [
+    "apps/server/src/utils/mcp/tools.ts"
+  ],
+  "列出连接的无限画布页面及其 connectionId、工作目录、画布、项目列表和节点能力。多个页面时必须用 target.connectionId 明确操作对象；无页面连接时只有显式 target.directory 的服务端工具可用。": [
+    "apps/server/src/utils/mcp/tools.ts"
+  ],
+  "请先打开无限画布桌面或网页": [
+    "apps/server/src/utils/mcp/tools.ts"
+  ],
+  "工具已禁用，或所需无限画布页面未连接，请重新读取工具列表": [
+    "apps/server/src/utils/mcp/tools.ts"
+  ],
+  "按用户请求调用无限画布内置 Agent，等待本轮完成并返回对话文件与回复；会使用配置的模型。外部 Agent 可直接操作其他工具，仅需要委托内置 Agent 时调用。支持 MCP 取消，历史保存到工作区。": [
+    "apps/server/src/utils/mcp/tools.ts"
+  ],
+  "只允许本机无限画布页面管理设备互联": [
+    "apps/server/src/utils/mobileLink/index.ts"
+  ],
+  "检测到旧版无限画布供应商 TS，无法在无限画布 2.0 中使用。请在「添加自定义媒体供应商」中点击「一键复制提示词」，结合旧代码和接口资料重新生成新版代码后再导入。": [
+    "apps/server/src/utils/media/provider.ts"
+  ],
+  "正在准备提交": [
+    "apps/server/src/utils/media/tasks.ts"
+  ],
+  "模型调用进行中": [
+    "apps/server/src/utils/media/tasks.ts"
+  ],
+  "模型调用记录保存失败，未提交生成请求": [
+    "apps/server/src/utils/media/tasks.ts"
+  ],
+  "[媒体任务] 开始": [
+    "apps/server/src/utils/media/tasks.ts"
+  ],
+  "[媒体任务] 结束": [
+    "apps/server/src/utils/media/tasks.ts"
+  ],
+  "清理模型调用记录失败": [
+    "apps/server/src/utils/media/tasks.ts"
+  ],
+  "最终状态保存失败，请在模型调用记录中重试保存": [
+    "apps/server/src/utils/media/tasks.ts"
+  ],
+  "本地任务已不可确认，远端状态未知；请查看供应商记录，勿直接重复提交。": [
+    "apps/server/src/utils/media/tasks.ts"
+  ],
+  "没有可重试保存的最终状态": [
+    "apps/server/src/utils/media/tasks.ts"
+  ],
+  "创建子 Agent 需要父会话": [
+    "apps/server/src/agent/runtime/delegation.ts"
+  ],
+  "Agent 会话标识无效": [
+    "apps/server/src/agent/runtime/agentTeam.ts"
+  ],
+  "Agent 会话记录损坏": [
+    "apps/server/src/agent/runtime/agentTeam.ts"
+  ],
+  "Agent 会话记录结构无效": [
+    "apps/server/src/agent/runtime/agentTeam.ts"
+  ],
+  "子 Agent 的会话归属不一致": [
+    "apps/server/src/agent/runtime/agentTeam.ts"
+  ],
+  "子 Agent 的父会话记录不一致": [
+    "apps/server/src/agent/runtime/agentTeam.ts"
+  ],
+  "Agent 父会话关系存在循环": [
+    "apps/server/src/agent/runtime/agentTeam.ts"
+  ],
+  "子 Agent 未登记在所属父会话中": [
+    "apps/server/src/agent/runtime/agentTeam.ts"
+  ],
+  "Agent 子会话关系存在循环或重复登记": [
+    "apps/server/src/agent/runtime/agentTeam.ts"
+  ],
+  "子 Agent 不属于当前会话树": [
+    "apps/server/src/agent/runtime/agentTeam.ts"
+  ],
+  "主 Agent": [
+    "apps/server/src/agent/runtime/agentTeam.ts"
+  ],
+  "当前 Agent 不属于此会话树": [
+    "apps/server/src/agent/runtime/agentTeam.ts"
+  ],
+  "当前任务已变化或正在停止，请刷新对话后重试": [
+    "apps/server/src/agent/runtime/index.ts"
+  ],
+  "服务端未能确认入队消息，请刷新对话后重试": [
+    "apps/server/src/agent/runtime/index.ts"
+  ],
+  "目标 Agent 没有可用的模型配置，请先在其会话中选择模型": [
+    "apps/server/src/agent/runtime/index.ts"
+  ],
+  "无法找到引导所属的当前任务": [
+    "apps/server/src/agent/runtime/delivery.ts"
+  ],
+  "[当前任务中的引导]\n": [
+    "apps/server/src/agent/runtime/delivery.ts"
+  ],
+  "这条消息是在当前任务执行过程中补充的引导。结合此前已接收的引导、已完成的工作和工具结果继续，不要把原任务当成已结束的上一轮。": [
+    "apps/server/src/agent/runtime/delivery.ts"
+  ],
+  "如果用户提出简短问题，先回答，再继续本轮尚未完成的工作。若用户明确取消、替换或暂停原任务，按最新要求处理。不要重复已经完成的操作。\n用户本次补充：": [
+    "apps/server/src/agent/runtime/delivery.ts"
+  ],
+  "用户消息尚未保存，无法记录任务归属": [
+    "apps/server/src/agent/runtime/delivery.ts"
+  ],
+  "请扫描无限画布的互联二维码": [
+    "apps/server/src/remoteConnection.ts"
+  ],
+  "排队或引导需要指定当前任务标识，请刷新对话后重试": [
+    "apps/server/src/routes/agent.ts"
+  ],
+  "项目包必须包含有效的无限画布画布 JSON 文件": [
+    "apps/server/src/routes/workspaces/clone.ts"
+  ],
+  "模型调用记录标识无效": [
+    "apps/server/src/routes/ai/media/generate.ts"
+  ],
+  "应用内退出弹窗显示失败：": [
+    "apps/desktop/src/index.ts"
+  ],
+  "退出确认失败：": [
+    "apps/desktop/src/index.ts"
+  ],
+  "无限画布 Android": [
+    "apps/mobile/src/server.ts"
   ]
 }

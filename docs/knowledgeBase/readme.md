@@ -8,6 +8,7 @@
 
 | 主题 | 维护说明 |
 | --- | --- |
+| 界面与品牌 | [外观与品牌](appearanceAndBrand.md) |
 | 工作区 | [工作区切换](workspaceSwitch.md) |
 | 媒体模型 | [安泰信媒体模型](antaixinModels.md) |
 | 生成节点 | [配置回执](compactNodeConfig.md)、[上传素材](generationNodeUpload.md)、[生成等待](generationWaiting.md)、[模型调用记录](nodeModelCalls.md) |

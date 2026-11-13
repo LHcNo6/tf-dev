@@ -56,7 +56,7 @@ import { locale } from "@toonflow/i18n/vue";
 import type { updateSnapshot } from "@toonflow/server/desktop";
 import { chatLocale } from "@/lib/i18n";
 import { actualPlatform, isMobile } from "@/lib/platform";
-import { saveSettings, settings, uiSettings } from "@/stores/settings";
+import { defaultUiSettings, saveSettings, settings, uiSettings } from "@/stores/settings";
 import { desktopUpdateSnapshot, stopDesktopUpdateObservation } from "@/stores/desktopUpdate";
 import { useWorkspaceStore } from "@/stores/workspace";
 import loadingPage from "@/components/loadingPage.vue";
@@ -164,19 +164,25 @@ watchEffect(() => {
   const { theme, primaryColor, fontScale, radius } = uiSettings.value;
   const dark = theme === "system" ? systemDark.value : theme === "dark";
   const root = document.documentElement;
+  const ui = settings.value.ui;
+  const configuredPrimary = ui && typeof ui === "object" && !Array.isArray(ui) ? (ui as Record<string, unknown>).primaryColor : undefined;
+  const hasCustomPrimary = typeof configuredPrimary === "string" && /^#[\da-f]{6}$/i.test(configuredPrimary)
+    && configuredPrimary.toLowerCase() !== defaultUiSettings.primaryColor;
+  const themePrimary = dark && !hasCustomPrimary ? "#87a9d3" : primaryColor;
   root.classList.toggle("dark", dark);
+  root.classList.toggle("defaultDarkPrimary", dark && !hasCustomPrimary);
   root.setAttribute("theme-mode", dark ? "dark" : "light");
   root.style.colorScheme = dark ? "dark" : "light";
   root.style.fontSize = `${(16 * fontScale) / 100}px`;
   root.style.setProperty("--ui-radius", `${radius}px`);
-  root.style.setProperty("--el-color-primary", primaryColor);
+  root.style.setProperty("--el-color-primary", themePrimary);
   for (let level = 1; level <= 9; level++) {
     root.style.setProperty(
       `--el-color-primary-light-${level}`,
-      `color-mix(in srgb, ${primaryColor} ${100 - level * 10}%, ${dark ? "#141414" : "#fff"})`
+      `color-mix(in srgb, ${themePrimary} ${100 - level * 10}%, ${dark ? "#141414" : "#fff"})`
     );
   }
-  root.style.setProperty("--el-color-primary-dark-2", `color-mix(in srgb, ${primaryColor} 80%, ${dark ? "#fff" : "#000"})`);
+  root.style.setProperty("--el-color-primary-dark-2", `color-mix(in srgb, ${themePrimary} 80%, ${dark ? "#fff" : "#000"})`);
 });
 </script>
 

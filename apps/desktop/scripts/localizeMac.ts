@@ -40,6 +40,7 @@ if (process.env.ELECTROBUN_OS === "macos") {
   }
 
   for (const [key, value] of [
+    ["CFBundleDisplayName", "<string>无限画布</string>"],
     ["CFBundleDevelopmentRegion", "<string>zh-Hans</string>"],
     ["CFBundleLocalizations", "<array><string>zh-Hans</string></array>"],
     ["NSMicrophoneUsageDescription", "<string>用于语音输入和显示麦克风音量。</string>"],
@@ -58,6 +59,6 @@ if (process.env.ELECTROBUN_OS === "macos") {
   const resourceDir = join(bundlePath, "Contents", "Resources", "zh-Hans.lproj");
   mkdirSync(resourceDir, { recursive: true });
   writeFileSync(join(resourceDir, "InfoPlist.strings"),
-    `CFBundleName = ${JSON.stringify(bundleName)};\nCFBundleDisplayName = ${JSON.stringify(bundleName)};\n`);
+    `CFBundleName = "无限画布";\nCFBundleDisplayName = "无限画布";\n`);
   console.log(`已设置 macOS 简体中文本地化：${bundlePath}`);
 }

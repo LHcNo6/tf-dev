@@ -112,7 +112,7 @@
         :min="0"
         :max="16"
         :step="2"
-        :marks="{ 0: '直角', 8: '默认', 16: '圆润' }"
+        :marks="{ 0: '直角', 12: '默认', 16: '圆润' }"
         aria-label="界面圆角"
         @change="(value) => typeof value === 'number' && updateUiSettings({ radius: value })" />
     </section>
@@ -120,7 +120,7 @@
     <el-card class="appearancePreview" shadow="never">
       <div class="previewIcon"><icon-sparkles :size="20" /></div>
       <div class="previewText">
-        <strong>Toonflow 每一个灵感，都值得被看见</strong>
+        <strong>无限画布每一个灵感，都值得被看见</strong>
         <p>这是当前颜色、字体与圆角的实际效果。</p>
       </div>
       <el-tag type="primary" effect="light">预览</el-tag>
@@ -163,6 +163,7 @@ const themes = [
   { value: "system", label: "跟随系统", description: "自动切换", icon: IconDeviceDesktop },
 ];
 const colors = [
+  { value: "#5477a6", label: "雾蓝" },
   { value: "#409eff", label: "天空蓝" },
   { value: "#6366f1", label: "鸢尾紫" },
   { value: "#a855f7", label: "薰衣紫" },

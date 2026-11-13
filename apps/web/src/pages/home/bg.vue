@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
-import logoUrl from "@toonflow/assets/logo.svg";
+import logoUrl from "@toonflow/assets/logoMark.svg";
 
 type FogPoint = { x: number; y: number; nx: number; ny: number; ink: number; halo: number; variation: number; pixelIndex: number };
 type LogoMask = { pixels: Uint8ClampedArray; halo: Uint8ClampedArray };
@@ -58,9 +58,14 @@ function sampleLogo(): LogoMask | undefined {
   const scale = Math.min((maskSize - 44) / (right - left + 1), (maskSize - 44) / (bottom - top + 1));
   const logoWidth = (right - left + 1) * scale;
   const logoHeight = (bottom - top + 1) * scale;
+  const source = document.createElement("canvas");
+  source.width = source.height = maskSize;
+  const sourceContext = source.getContext("2d");
+  if (!sourceContext) return;
+  // ACT: Chromium 对 SVG 图像的源区域裁剪可能绘出空白，先固定为位图再裁剪。
+  sourceContext.drawImage(mask, 0, 0);
   maskContext.clearRect(0, 0, maskSize, maskSize);
-  maskContext.drawImage(image, left / maskSize * image.naturalWidth, top / maskSize * image.naturalHeight,
-    (right - left + 1) / maskSize * image.naturalWidth, (bottom - top + 1) / maskSize * image.naturalHeight,
+  maskContext.drawImage(source, left, top, right - left + 1, bottom - top + 1,
     (maskSize - logoWidth) / 2, (maskSize - logoHeight) / 2, logoWidth, logoHeight);
   pixels = maskContext.getImageData(0, 0, maskSize, maskSize).data;
   const blurred = document.createElement("canvas");
@@ -135,7 +140,7 @@ function draw() {
   let modulation = 0;
   for (const { x, y, nx, ny, ink, halo, variation, pixelIndex } of points) {
     if (ink > 0.65) {
-      fogPixels.data[pixelIndex] = ink * 0.32 * 255;
+      fogPixels.data[pixelIndex] = ink * 0.72 * 255;
       continue;
     }
     if (x !== columnX) {

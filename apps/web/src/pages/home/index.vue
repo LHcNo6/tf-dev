@@ -4,8 +4,8 @@
     <aside id="homeSidebar" class="homeSidebar" aria-label="首页侧栏">
       <div class="sidebarHeader">
         <div class="sidebarBrand">
-          <el-image class="sidebarLogo" :src="logoUrl" fit="contain" alt="Toonflow" />
-          <span class="brandName">Toonflow</span>
+          <el-image class="sidebarLogo" :src="logoUrl" fit="contain" alt="无限画布" />
+          <span class="brandName">无限画布</span>
         </div>
         <button class="sidebarToggle" type="button" :aria-label="sidebarCollapsed ? '展开侧栏' : '收起侧栏'" :title="sidebarCollapsed ? '展开侧栏' : '收起侧栏'" :aria-expanded="!sidebarCollapsed" aria-controls="homeSidebar" @click="sidebarCollapsed = !sidebarCollapsed">
           <icon-layout-sidebar-left-expand v-if="sidebarCollapsed" :size="18" aria-hidden="true" />
@@ -38,10 +38,6 @@
           </span>
           <span class="sidebarText">设置</span>
         </button>
-        <a class="sidebarItem githubLink" href="https://github.com/HBAI-Ltd/Toonflow-app" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub">
-          <icon-brand-github :size="18" aria-hidden="true" />
-          <span class="sidebarText">GitHub</span>
-        </a>
       </div>
     </aside>
     <el-scrollbar ref="pageScroll" class="pageScroll" @scroll="updateActiveSection">
@@ -49,7 +45,7 @@
         <el-main class="pageContent">
           <section class="creationPanel" data-home-section="home" aria-label="创建项目">
             <div class="brand">
-              <el-image class="brandLogo" :src="logoUrl" fit="contain" alt="Toonflow" />
+              <el-image class="brandLogo" :src="logoUrl" fit="contain" alt="无限画布" />
               <h1>今天要做点什么？</h1>
             </div>
             <div class="promptArea">
@@ -430,7 +426,7 @@ async function exportProject(project: Project) {
   exportingDirectory.value = directory;
   try {
     let name = project.name.replace(/[<>:"/\\|?*\x00-\x1f\x7f-\x9f]/g, "_").slice(0, 120).replace(/[. ]+$/, "");
-    if (!name || /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(name)) name = "Toonflow";
+    if (!name || /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(name)) name = "无限画布";
     const files = useWorkspaceFiles(directory);
     await saveFile(() => files.exportZip(pageLifetime.signal), `${name}.zip`);
   } catch (error) {
@@ -489,12 +485,16 @@ async function createProject(fromPrompt = true) {
   color: var(--el-text-color-primary);
   background: color-mix(in srgb, var(--el-bg-color) 96%, var(--el-text-color-primary));
 
+  html:not(.dark) & { background: #f0f3f8; }
+
   .pageBackground {
     position: absolute;
     inset-block: 0;
     inset-inline-start: var(--sidebarWidth);
     width: calc(100% - var(--sidebarWidth));
     transition: inset-inline-start var(--sidebarMotion) ease, width var(--sidebarMotion) ease;
+
+    html:not(.dark) & { opacity: 0.7; }
 
     @media (prefers-reduced-motion: reduce) { transition: none; }
   }
@@ -541,6 +541,11 @@ async function createProject(fromPrompt = true) {
     background: inherit;
     transition: flex-basis var(--sidebarMotion) ease, width var(--sidebarMotion) ease;
 
+    html:not(.dark) & {
+      background: #e9eef5;
+      border-color: rgb(102 125 155 / 12%);
+    }
+
     .sidebarHeader {
       position: relative;
       display: flex;
@@ -565,7 +570,6 @@ async function createProject(fromPrompt = true) {
           height: 30px;
           transition: opacity var(--sidebarFade) ease;
 
-          .dark & { filter: invert(1); }
         }
 
         .brandName {
@@ -611,7 +615,7 @@ async function createProject(fromPrompt = true) {
       gap: 10px;
       padding: 10px 12px;
       border: 0;
-      border-radius: var(--ui-radius);
+      border-radius: calc(var(--ui-radius) * 7 / 6);
       background: transparent;
       color: var(--el-text-color-regular);
       font: inherit;
@@ -620,7 +624,7 @@ async function createProject(fromPrompt = true) {
       text-align: start;
       text-decoration: none;
       cursor: pointer;
-      transition: gap var(--sidebarMotion) ease, padding var(--sidebarMotion) ease;
+      transition: gap var(--sidebarMotion) ease, padding var(--sidebarMotion) ease, background-color 0.18s ease, color 0.18s ease, transform 0.14s ease;
 
       > svg { flex-shrink: 0; }
       .sidebarText {
@@ -655,6 +659,11 @@ async function createProject(fromPrompt = true) {
       &:focus-visible { outline: 2px solid var(--el-color-primary); outline-offset: 2px; }
       &:disabled { cursor: wait; opacity: 0.6; }
       &.active { background: var(--el-fill-color-darker); color: var(--el-text-color-primary); font-weight: 500; }
+      html:not(.dark) & {
+        color: #596779;
+        &:hover:not(:disabled), &.active { background: #dce7f4; color: #304e72; }
+      }
+      &:active:not(:disabled) { transform: scale(0.97); }
       &.connected { color: var(--el-color-success); }
     }
 
@@ -667,6 +676,7 @@ async function createProject(fromPrompt = true) {
     @media (prefers-reduced-motion: reduce) {
       --sidebarMotion: 0ms;
       --sidebarFade: 0ms;
+      .sidebarItem { transition: none; &:active:not(:disabled) { transform: none; } }
     }
   }
 
@@ -700,9 +710,6 @@ async function createProject(fromPrompt = true) {
               width: clamp(28px, 3.4vw, 44px);
               height: clamp(28px, 3.4vw, 44px);
 
-              .dark & {
-                filter: invert(1);
-              }
             }
 
             h1 {
@@ -719,11 +726,17 @@ async function createProject(fromPrompt = true) {
 
             .promptCard {
               position: relative;
-              border-radius: calc(var(--ui-radius) * 3);
+              border-radius: calc(var(--ui-radius) * 2.5);
               border-color: var(--el-border-color-light);
               background: color-mix(in srgb, var(--el-bg-color-overlay) 70%, transparent);
               box-shadow: 0 12px 36px rgb(0 0 0 / 6%), inset 0 1px 0 color-mix(in srgb, var(--el-text-color-primary) 4%, transparent);
               transition: border-color 0.2s, box-shadow 0.2s;
+
+              html:not(.dark) & {
+                background: rgb(255 255 255 / 87%);
+                border-color: rgb(164 182 204 / 32%);
+                box-shadow: 0 18px 52px rgb(76 105 143 / 10%), 0 2px 8px rgb(76 105 143 / 4%);
+              }
 
               &:focus-within, &.draggingAttachments {
                 border-color: var(--el-color-primary-light-5);
@@ -834,6 +847,8 @@ async function createProject(fromPrompt = true) {
                     margin: 0;
                     border-radius: calc(var(--ui-radius) * 2);
 
+                    &:hover:not(:disabled) { box-shadow: 0 5px 13px color-mix(in srgb, var(--el-color-primary) 24%, transparent); }
+
                     &.is-circle { width: 38px; border-radius: 50%; }
                   }
                 }
@@ -883,10 +898,20 @@ async function createProject(fromPrompt = true) {
 
             .projectCard {
               position: relative;
-              border-radius: calc(var(--ui-radius) * 2.5);
+              border-radius: calc(var(--ui-radius) * 2.25);
               border-color: var(--el-border-color-lighter);
               background: color-mix(in srgb, var(--el-bg-color-overlay) 70%, transparent);
               box-shadow: var(--el-box-shadow-lighter);
+              transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+
+              html:not(.dark) & {
+                background: rgb(255 255 255 / 86%);
+                border-color: rgb(164 182 204 / 28%);
+                box-shadow: 0 8px 26px rgb(76 105 143 / 9%), 0 1px 4px rgb(76 105 143 / 4%);
+                &:hover { border-color: rgb(137 164 195 / 50%); box-shadow: 0 15px 32px rgb(76 105 143 / 15%), 0 2px 7px rgb(76 105 143 / 5%); }
+              }
+
+              &:hover { transform: translateY(-3px); }
 
               &:focus-within {
                 border-color: var(--el-color-primary-light-5);
@@ -897,7 +922,7 @@ async function createProject(fromPrompt = true) {
                 height: 100%;
                 min-height: 240px;
                 border: 0;
-                border-radius: calc(var(--ui-radius) * 2.5);
+                border-radius: calc(var(--ui-radius) * 2.25);
                 background: transparent;
                 color: inherit;
                 font: inherit;
@@ -924,10 +949,12 @@ async function createProject(fromPrompt = true) {
                   border-radius: 50%;
                   background: var(--el-color-primary);
                   color: var(--el-color-white);
+                  transition: background-color 0.18s ease, box-shadow 0.18s ease;
 
                   .isLoading { animation: launchSpin 1.5s linear infinite; }
 
                   @media (prefers-reduced-motion: reduce) {
+                    transition: none;
                     .isLoading { animation: none; }
                   }
                 }
@@ -939,6 +966,11 @@ async function createProject(fromPrompt = true) {
 
                   .launchTitle { font-size: 15px; font-weight: 500; line-height: 1.8; }
                   .launchDescription { color: var(--el-text-color-regular); font-size: 13px; line-height: 1.6; }
+                }
+
+                &:hover:not(:disabled) .launchIcon {
+                  background: var(--el-color-primary-dark-2);
+                  box-shadow: 0 5px 13px color-mix(in srgb, var(--el-color-primary) 24%, transparent);
                 }
               }
 
@@ -998,6 +1030,8 @@ async function createProject(fromPrompt = true) {
               }
 
               @media (prefers-reduced-motion: reduce) {
+                transition: none;
+                &:hover { transform: none; }
                 .projectActions { transition: none; }
               }
             }

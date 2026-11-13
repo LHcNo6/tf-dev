@@ -7,13 +7,14 @@ ManifestDPIAware true
 SetFont "Microsoft YaHei UI" 9
 
 !define appName "Toonflow"
+!define appDisplayName "无限画布"
 !define uninstallKey "Software\Microsoft\Windows\CurrentVersion\Uninstall\${appIdentifier}.stable"
 Var removeUserData
 Var removeUserDataCheckbox
 Var installStep
 
-Name "${appName}"
-Caption "${appName}"
+Name "${appDisplayName}"
+Caption "${appDisplayName}"
 BrandingText " "
 OutFile "${outputFile}"
 InstallDir "$LOCALAPPDATA\${appIdentifier}\stable"
@@ -27,11 +28,11 @@ ShowInstDetails show
 !include MUI2.nsh
 !define MUI_ICON "${appIcon}"
 !define MUI_UNICON "${appIcon}"
-!define MUI_DIRECTORYPAGE_TEXT_TOP "请选择 Toonflow 的安装目录。"
+!define MUI_DIRECTORYPAGE_TEXT_TOP "请选择无限画布的安装目录。"
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !define MUI_FINISHPAGE_RUN "$INSTDIR\app\Resources\app\startupLauncher.exe"
-!define MUI_FINISHPAGE_RUN_TEXT "立即打开 Toonflow"
+!define MUI_FINISHPAGE_RUN_TEXT "立即打开无限画布"
 !define MUI_PAGE_CUSTOMFUNCTION_SHOW showFinishPage
 !insertmacro MUI_PAGE_FINISH
 UninstPage custom un.showUninstallOptions un.leaveUninstallOptions
@@ -56,9 +57,9 @@ checkRunning:
   Pop $1
   ${If} $0 != 0
     ${If} $0 == 1
-      StrCpy $2 "Toonflow 仍在运行，请先关闭此安装目录的应用，再点击“重试”。$\r$\n$INSTDIR$\r$\n$1"
+      StrCpy $2 "无限画布仍在运行，请先关闭此安装目录的应用，再点击“重试”。$\r$\n$INSTDIR$\r$\n$1"
     ${Else}
-      StrCpy $2 "无法确认 Toonflow 是否已关闭，已停止${operation}。请关闭应用后重试。$\r$\n检测返回码：$0$\r$\n$1"
+      StrCpy $2 "无法确认无限画布是否已关闭，已停止${operation}。请关闭应用后重试。$\r$\n检测返回码：$0$\r$\n$1"
     ${EndIf}
     DetailPrint "$2"
     MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "$2" /SD IDCANCEL IDRETRY checkRunning
@@ -96,7 +97,7 @@ Function un.showUninstallOptions
     SetErrorLevel 2
     Quit
   ${EndIf}
-  ${NSD_CreateLabel} 0 0 100% 24u "即将卸载 Toonflow，点击“卸载”继续。"
+  ${NSD_CreateLabel} 0 0 100% 24u "即将卸载无限画布，点击“卸载”继续。"
   Pop $0
   ${NSD_CreateCheckbox} 0 36u 100% 14u "同时删除用户数据"
   Pop $removeUserDataCheckbox
@@ -126,7 +127,7 @@ Section "Install"
   IfFileExists "$INSTDIR\app\*.*" 0 installApp
   ReadINIStr $0 "$INSTDIR\toonflow.ini" "application" "identifier"
   ${If} $0 != "${appIdentifier}"
-    MessageBox MB_OK|MB_ICONSTOP "所选目录中已有不属于 Toonflow 的 app 文件夹，请选择其他安装目录。" /SD IDOK
+    MessageBox MB_OK|MB_ICONSTOP "所选目录中已有不属于无限画布的 app 文件夹，请选择其他安装目录。" /SD IDOK
     SetErrorLevel 2
     Abort
   ${EndIf}
@@ -180,7 +181,7 @@ installApp:
   Pop $0
   Pop $1
   ${If} $0 != 0
-    MessageBox MB_OK|MB_ICONSTOP "应用解压失败，请确认目标目录可写并关闭正在运行的 Toonflow 后重试。$\r$\n解压返回码：$0$\r$\n$1" /SD IDOK
+    MessageBox MB_OK|MB_ICONSTOP "应用解压失败，请确认目标目录可写并关闭正在运行的无限画布后重试。$\r$\n解压返回码：$0$\r$\n$1" /SD IDOK
     SetErrorLevel 2
     Abort
   ${EndIf}
@@ -205,7 +206,7 @@ installApp:
   WriteUninstaller "$INSTDIR\UninstallNSIS.exe"
   IfErrors installFailed
   StrCpy $installStep "写入系统卸载信息"
-  WriteRegStr HKCU "${uninstallKey}" "DisplayName" "${appName}"
+  WriteRegStr HKCU "${uninstallKey}" "DisplayName" "${appDisplayName}"
   WriteRegStr HKCU "${uninstallKey}" "DisplayVersion" "${appVersion}"
   WriteRegStr HKCU "${uninstallKey}" "InstallLocation" "$INSTDIR"
   WriteRegStr HKCU "${uninstallKey}" "toonflowInstallDirectory" "$INSTDIR"
@@ -219,14 +220,14 @@ installApp:
   WriteRegStr HKCU "Software\Classes\toonflow\DefaultIcon" "" '$\"$INSTDIR\app\Resources\app.ico$\",0'
   WriteRegStr HKCU "Software\Classes\toonflow\shell\open\command" "" '$\"$INSTDIR\app\Resources\app\protocolLauncher.exe$\" $\"%1$\"'
   IfErrors installFailed
-  CreateShortCut "$DESKTOP\${appName}.lnk" "$INSTDIR\app\Resources\app\startupLauncher.exe" "" "$INSTDIR\app\Resources\app.ico"
+  CreateShortCut "$DESKTOP\${appDisplayName}.lnk" "$INSTDIR\app\Resources\app\startupLauncher.exe" "" "$INSTDIR\app\Resources\app.ico"
   IfErrors 0 installDone
   ; ACT: 快捷方式不影响程序使用，失败时保留成功安装结果并告知手动启动路径。
-  MessageBox MB_OK|MB_ICONEXCLAMATION "Toonflow 已安装，但无法创建桌面快捷方式。可以从以下位置启动：$\r$\n$INSTDIR\app\Resources\app\startupLauncher.exe" /SD IDOK
+  MessageBox MB_OK|MB_ICONEXCLAMATION "无限画布已安装，但无法创建桌面快捷方式。可以从以下位置启动：$\r$\n$INSTDIR\app\Resources\app\startupLauncher.exe" /SD IDOK
   Goto installDone
 
 installFailed:
-  MessageBox MB_OK|MB_ICONSTOP "安装未完成。$\r$\n失败步骤：$installStep$\r$\n安装目录：$INSTDIR$\r$\n$\r$\n请确认目录可写并关闭 Toonflow 后重试，详细信息见安装窗口。" /SD IDOK
+  MessageBox MB_OK|MB_ICONSTOP "安装未完成。$\r$\n失败步骤：$installStep$\r$\n安装目录：$INSTDIR$\r$\n$\r$\n请确认目录可写并关闭无限画布后重试，详细信息见安装窗口。" /SD IDOK
   SetErrorLevel 2
   Abort
 installDone:
@@ -237,13 +238,13 @@ Section "Uninstall"
   GetFullPathName $0 "$INSTDIR"
   ReadINIStr $1 "$INSTDIR\toonflow.ini" "application" "installDirectory"
   ${If} $0 != $1
-    MessageBox MB_OK|MB_ICONSTOP "卸载目录与 Toonflow 的安装目录不一致，已停止卸载。" /SD IDOK
+    MessageBox MB_OK|MB_ICONSTOP "卸载目录与无限画布的安装目录不一致，已停止卸载。" /SD IDOK
     SetErrorLevel 2
     Abort
   ${EndIf}
   ReadINIStr $0 "$INSTDIR\toonflow.ini" "application" "identifier"
   ${If} $0 != "${appIdentifier}"
-    MessageBox MB_OK|MB_ICONSTOP "无法确认此目录属于 Toonflow，已停止卸载。" /SD IDOK
+    MessageBox MB_OK|MB_ICONSTOP "无法确认此目录属于无限画布，已停止卸载。" /SD IDOK
     SetErrorLevel 2
     Abort
   ${EndIf}
@@ -273,6 +274,8 @@ Section "Uninstall"
   ${If} $0 == $INSTDIR
     Delete "$DESKTOP\${appName}.lnk"
     Delete "$SMPROGRAMS\${appName}.lnk"
+    Delete "$DESKTOP\${appDisplayName}.lnk"
+    Delete "$SMPROGRAMS\${appDisplayName}.lnk"
     IfErrors uninstallFailed
   ${EndIf}
   ClearErrors
@@ -305,7 +308,7 @@ uninstallMetadataFailed:
   SetErrorLevel 2
   Goto uninstallDone
 uninstallFailed:
-  MessageBox MB_OK|MB_ICONSTOP "未能删除全部文件，请关闭 Toonflow 及相关窗口后重新卸载。用户数据仅按刚才的选择处理。" /SD IDOK
+  MessageBox MB_OK|MB_ICONSTOP "未能删除全部文件，请关闭无限画布及相关窗口后重新卸载。用户数据仅按刚才的选择处理。" /SD IDOK
   SetErrorLevel 2
   Abort
 uninstallDone:

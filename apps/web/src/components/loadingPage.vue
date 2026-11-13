@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { onBeforeUnmount, ref, watch } from "vue";
-import logoRaw from "@toonflow/assets/logo.svg?raw";
+import logoRaw from "@toonflow/assets/logoMark.svg?raw";
 import logoUrl from "@toonflow/assets/logo.svg";
 
 const props = defineProps<{ active: boolean }>();
@@ -85,8 +85,6 @@ function finishFilling() {
     aspect-ratio: 1;
     transform: translate(-50%, -50%);
 
-    .dark & { filter: invert(1); }
-
     .logoOutline {
       width: 100%;
       line-height: 0;
@@ -94,8 +92,8 @@ function finishFilling() {
 
       :deep(svg) { display: block; width: 100%; height: auto; overflow: visible; }
       :deep(path) {
-        stroke: #000;
-        stroke-width: 14;
+        stroke: var(--el-color-primary);
+        stroke-width: 9;
         stroke-linecap: round;
         stroke-linejoin: round;
         fill: none;
