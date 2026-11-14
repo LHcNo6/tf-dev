@@ -1,14 +1,14 @@
 ---
 name: canvas
-description: Operate Infinite Canvas using canvas tools to create, switch, and rename canvases; add, move, rename, connect, and delete nodes; arrange the whole canvas, fit the viewport, and invoke registered node functions. Use for current-canvas operations or node workflows.
+description: Use to add, connect, move, rename, or delete nodes in Infinite Canvas, arrange layouts, switch canvases, or invoke node functions. Perform and verify changes through canvas tools. Use a production skill for a complete story or video project.
 metadata:
-  version: "2.1.2"
-  displayName: Canvas Operations Guide
+  version: "2.1.3"
+  displayName: Build and Organize Canvas Nodes
   author: Infinite Canvas
   github: https://github.com/HBAI-Ltd/Toonflow-app
 ---
 
-# Canvas Operations Guide
+# Build and Organize Canvas Nodes
 
 Use English for explanations and newly created text unless the user requests another language. Preserve supplied dialogue, exact reference handles, tool parameters, and model-required fixed syntax. Supporting source material does not override the selected output language.
 

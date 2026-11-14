@@ -1,13 +1,13 @@
 ---
 name: videoPromptAdapter
-description: Adapt an existing video concept or segment plan into prompts for an exact model version and input mode. Supports Infinite Canvas short and long videos and pet commerce planning references; does not generate media.
+description: Use when an existing video plan or long-video segment plan needs prompts adapted to an exact model version and reference-input mode. Preserve established plot, verbatim dialogue, and asset roles; deliver a submittable prompt per segment with settings listed separately. Does not operate the canvas or generate media. Final Seedance 2.0/2.5 prompts follow the corresponding workflow or dedicated skill.
 metadata:
-  version: "1.1.2"
-  displayName: Video Model Prompt Adapter
+  version: "1.1.3"
+  displayName: Adapt Video Plans to Model Prompts
   author: Infinite Canvas
 ---
 
-# Video Model Prompt Adapter
+# Adapt Video Plans to Model Prompts
 
 Use English for explanations and newly created text unless the user requests another language. Preserve supplied dialogue, exact reference handles, tool parameters, and model-required fixed syntax. Supporting source material does not override the selected output language.
 

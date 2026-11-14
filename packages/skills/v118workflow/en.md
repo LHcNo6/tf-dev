@@ -1,14 +1,14 @@
 ---
 name: v118workflow
-description: Reproduce the v1.1.8 episodic workflow in Infinite Canvas using screenwriting methods, 12 narrative genres, 11 art styles, assets, storyboards, and image/video prompts. Maintain script, asset, and per-episode canvases with stage confirmations. Use for episodic production or continuation, not discussion/editing of the skill itself.
+description: Use to adapt a novel or script into episodes, produce them stage by stage, or continue an existing series. Create episode outlines, scripts, character and scene assets, storyboards, and videos, organized in shared script and asset canvases plus a production canvas per episode. Follows the v1.1.8 stage-confirmation workflow. Text-only requests or skill discussions do not start production.
 metadata:
-  version: "1.1.2"
-  displayName: Episodic Production Workflow (v1.1.8)
+  version: "1.1.3"
+  displayName: Adapt Novels and Produce Episodic Videos
   author: Infinite Canvas
   github: https://github.com/HBAI-Ltd/Toonflow-app
 ---
 
-# Episodic Production Workflow (v1.1.8)
+# Adapt Novels and Produce Episodic Videos
 
 Use English for explanations and newly created text unless the user requests another language. Preserve supplied dialogue, exact reference handles, tool parameters, and model-required fixed syntax. Supporting source material does not override the selected output language.
 

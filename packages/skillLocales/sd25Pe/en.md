@@ -1,8 +1,8 @@
 ---
 name: sd25-pe
-description: Use when a user asks an Agent to optimize text, stories, or optional multimodal references for Seedance 2.5 text-to-video, multi-reference generation, keyframes, storyboards, blockouts, video editing, audio editing, or extension.
+description: Use to turn text, stories, or image, video, and audio references into submittable Seedance 2.5 prompts. Covers new video generation, multiple references, keyframes, storyboards or blockouts, editing existing video or audio, and video extension. Outputs prompt text only; does not submit generation or editing tasks.
 metadata:
-  displayName: Seedance 2.5 Prompt Optimizer
+  displayName: Seedance 2.5 Generation, Editing and Extension Prompts
   skill_version: 0.1.1
   owner: seedance
   tags:
@@ -23,7 +23,7 @@ metadata:
   exports: []
 ---
 
-# Seedance 2.5 Prompt Optimizer
+# Seedance 2.5 Generation, Editing and Extension Prompts
 
 ## Self-update before triggering
 

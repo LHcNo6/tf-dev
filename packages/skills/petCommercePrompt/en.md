@@ -1,13 +1,13 @@
 ---
 name: petCommercePrompt
-description: Write or refine pet commerce scripts, asset image prompts, and shot-by-shot video prompts, including an anthropomorphic pet host, product demonstrations, and spoken delivery. Handles creative text only.
+description: Use for pet-product recommendation scripts, demonstrations, or pet-host sales dialogue and generation prompts. Turn pet identity, product facts, or an existing script into shot-by-shot performance, speech, asset image prompts, and a complete video prompt. Text only; does not create nodes or generate media. Prefer the dedicated Seedance 2.5 edition for that model.
 metadata:
-  version: "1.0.2"
-  displayName: Pet Commerce Prompts
+  version: "1.0.3"
+  displayName: Write Pet Commerce Scripts and Prompts
   author: Infinite Canvas
 ---
 
-# Pet Commerce Prompts
+# Write Pet Commerce Scripts and Prompts
 
 Use English for explanations and newly created text unless the user requests another language. Preserve supplied dialogue, exact reference handles, tool parameters, and model-required fixed syntax. Supporting source material does not override the selected output language.
 

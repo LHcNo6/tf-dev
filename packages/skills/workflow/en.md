@@ -1,14 +1,14 @@
 ---
 name: workflow
-description: Turn ideas, novels, or final scripts into reviewable text, image assets, and video clips in the current Infinite Canvas project. Supports existing media, continuation, and local revisions. Use for actual production; text-only requests and discussion or editing of this skill do not authorize canvas production.
+description: Use to turn an idea, novel, or script into video, or continue and revise an existing project. Produce scripts, character and scene assets, and video clips in Infinite Canvas, reusing existing media. Prefer the dedicated skills for pet commerce shorts, videos over 30 seconds, or episodic projects. Text-only requests or skill discussions do not start production.
 metadata:
-  version: "2.7.5"
-  displayName: Video Production Workflow
+  version: "2.7.6"
+  displayName: Turn Ideas and Scripts into Video
   author: Infinite Canvas
   github: https://github.com/HBAI-Ltd/Toonflow-app
 ---
 
-# Infinite Canvas Production Workflow
+# Turn Ideas and Scripts into Video
 
 Use English for explanations and newly created text unless the user requests another language. Preserve supplied dialogue, exact reference handles, tool parameters, and model-required fixed syntax. Supporting source material does not override the selected output language.
 

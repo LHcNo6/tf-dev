@@ -1,14 +1,14 @@
 ---
 name: videoPrompting
-description: Draft and refine prompts for video generation models (including text-to-video, image/keyframe-to-video, and reference-driven generation), and create character-sheet prompts for image models when the goal is character consistency before image-to-video. Use when a user asks for a "video prompt", a model-specific prompt such as MiniMax H3, Seedance 2.0, Seedance 2.5, Ovi, Veo 3, Wan 2.2, Wan Animate 2, LTX-2, LTX-2.3, or LTX-2.5, or a consistent-character prompt such as "character sheet prompt", "character turnaround", "character reference sheet", or "photographic identity sheet".
+description: Use to draft or refine text-to-video, image-to-video, or multi-reference video prompts, or image prompts for character turnarounds and identity sheets. Follow model-specific guides for Seedance, MiniMax, Veo, Wan, Ovi, and LTX. Delivers prompts only, not images or videos. Use “Adapt Video Plans to Model Prompts” (videoPromptAdapter) for an existing segment plan.
 metadata:
-  version: "1.0.1"
-  displayName: Video Prompting (Third Party)
+  version: "1.0.2"
+  displayName: Write Video and Character Reference Image Prompts
   author: Square Zero Labs
   github: https://github.com/Square-Zero-Labs/video-prompting-skill
 ---
 
-# Video Prompting
+# Write Video and Character Reference Image Prompts
 
 Use English for explanations and newly created text unless the user requests another language. Preserve supplied dialogue, exact reference handles, tool parameters, and model-required fixed syntax. Supporting source material does not override the selected output language.
 

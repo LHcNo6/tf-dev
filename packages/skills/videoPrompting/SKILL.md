@@ -1,16 +1,16 @@
 ---
 name: videoPrompting
-description: 编写和优化视频生成提示词，支持文生视频、图像或关键帧生视频及多参考生成；也为角色一致性编写角色参考板图像提示词。用户请求视频提示词、角色三视图或身份参考板，或指定 MiniMax H3、Seedance 2.0/2.5、Ovi、Veo 3、Wan 2.2、Wan Animate 2、LTX-2/2.3/2.5 时使用。
+description: 需要编写、优化文生视频、图生视频、多参考视频提示词，或角色三视图、身份参考板的图像提示词时使用。按目标模型专篇组织内容，涵盖 Seedance、MiniMax、Veo、Wan、Ovi 和 LTX；只交付提示词，不生成图片或视频。已有分段方案的适配使用“视频方案转模型提示词”（videoPromptAdapter）。
 metadata:
   locales:
     en: en.md
-  version: "1.0.1"
-  displayName: 视频提示词（第三方）
+  version: "1.0.2"
+  displayName: 视频与角色参考图提示词编写
   author: Square Zero Labs
   github: https://github.com/Square-Zero-Labs/video-prompting-skill
 ---
 
-# 视频提示词
+# 视频与角色参考图提示词编写
 
 无限画布适配版：技能名称和资源路径已按项目命名约定调整。来源及许可证见 `sourceInfo.md` 和 `license.txt`。由 `videoPromptAdapter` 调用时，其执行、事实、素材、声音和授权规则优先。
 

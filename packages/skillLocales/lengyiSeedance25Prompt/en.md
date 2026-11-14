@@ -1,11 +1,11 @@
 ---
 name: lengyi-seedance25-prompt
-description: Design Seedance 2.5 continuous multi-shot video prompts from a story excerpt, short plot, or theme. Prepare subject and scene image prompts, then one submission-ready video prompt with a story-driven shot count, normally 20–30 seconds and at most 30 seconds.
+description: Use to expand a novel excerpt, one-line plot, or theme into a Seedance 2.5 multi-shot short-video prompt, normally 20–30 seconds and at most 30 seconds. Design subject and scene reference image prompts first, then one complete video prompt with shot timing, actions, and camera moves. Text only; does not generate assets or video.
 metadata:
-  displayName: Seedance 2.5 Continuous Shot Prompts
+  displayName: Turn Stories into Multi-Shot Prompts (Seedance 2.5)
 ---
 
-# Seedance 2.5 Continuous Shot Prompts
+# Turn Stories into Multi-Shot Prompts (Seedance 2.5)
 
 Expand the input into a continuous 20–30 second shot sequence and deliver one video prompt. Anchor subjects, scenes, and sound in its header, followed by numbered shots. Use English unless the user specifies another language; preserve verbatim dialogue, reference handles, and required model syntax. Supporting references retain their original language and do not override this delivery language.
 

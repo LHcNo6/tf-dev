@@ -713,6 +713,8 @@ Agent 扫描工作区 skill/ 与数据目录 skills/，同名时工作区优先�
 |metadata\.locales\.en|可选，同目录英文入口文件名，例如 `en.md`；中文使用 `SKILL.md`，其他界面语言使用英文入口，两个入口保持相同 name。|
 |metadata\.github|可选、无账号密码的 [https://github\.com](https://github.com) 链接。|
 
+展示名以用户要完成的任务命名，例如“宠物带货脚本与提示词”“长视频分段制作与合成”。描述写明何时使用、产出什么，以及模型、时长或只写文字/实际生成等必要边界。Agent 发现和 `skillOperator` 列表依赖技术 `name` 与 `description`，触发条件不能只放在展示名或正文。调整展示文案时保留现有调用标识，并同步已声明的中英文入口及内置技能版本；当前命名对照见[Skill 名称与描述维护](knowledgeBase/skillLanguages.md#应用导向名称与描述)。
+
 disable\-model\-invocation 是 SDK 固定协议字段，保留短横线；SDK 列表中的 disableModelInvocation 是解析后的属性，不可混写。其他字段如 allowed\-tools、model 不会开通授权或模型能力。
 
 安装器兼容已有短横线名称，新技能遵循宿主小驼峰规则。当前 SDK 可能对小驼峰产生诊断但仍加载；不要依赖缺失 name 的回退或宽松加载。

@@ -1,11 +1,11 @@
 ---
 name: seedance
-description: Design Seedance 2.0 and 2.5 video and image prompts, including character references, first frames, image-to-video, storyboards, camera moves, short drama, advertising, and long videos. Optional dreamina CLI execution requires runtime support and user authorization.
+description: Use for Seedance 2.0 or 2.5 drama, advertising, or long-video projects that need video prompts and supporting reference image prompts. Develop characters, first frames, shots, camera moves, and sound from a concept or script; confirm the model version first. Delivers prompts by default. Optional dreamina CLI generation requires available tools and user authorization.
 metadata:
-  displayName: Seedance Video and Image Prompts
+  displayName: Dreamina Video and Reference Image Prompts (Seedance)
 ---
 
-# Seedance 2.0 / 2.5 Video and Image Prompts
+# Dreamina Video and Reference Image Prompts (Seedance)
 
 Act as a prompt engineer for Seedance and its image preparation workflow, using NanoBanana by default or Dreamina images when requested. Make useful creative decisions about duration, production path, the first two seconds, asset roles, and platform constraints. Resolve a weak concept before decorating it with cinematic vocabulary.
 

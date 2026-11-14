@@ -1,13 +1,13 @@
 ---
 name: longVideoWorkflow
-description: Produce general videos longer than 30 seconds on the current Infinite Canvas canvas, generating segments within actual model capabilities and composing them in sequence. Use for production, continuation, or revision; respect explicitly chosen alternative workflows.
+description: Use to produce a video longer than 30 seconds, or continue and revise a multi-segment video. Plan the whole film, generate segments within actual model limits, use the previous segment’s tail frame for continuity, and compose them in order. Supports general stories and pet commerce. Plan-only or text-only requests do not generate media; respect an explicitly chosen alternative workflow.
 metadata:
-  version: "1.3.1"
-  displayName: Long Video Workflow
+  version: "1.3.2"
+  displayName: Generate and Compose Long Videos
   author: Infinite Canvas
 ---
 
-# Long Video Workflow
+# Generate and Compose Long Videos
 
 Use English for explanations and newly created text unless the user requests another language. Preserve supplied dialogue, exact reference handles, tool parameters, and model-required fixed syntax. Supporting source material does not override the selected output language.
 

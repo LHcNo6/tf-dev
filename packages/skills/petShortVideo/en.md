@@ -1,13 +1,13 @@
 ---
 name: petShortVideo
-description: Produce pet commerce videos up to 30 seconds on the Infinite Canvas canvas, preparing pet, optional product, and scene assets plus one video. Also supports pet shorts without products when explicitly requested.
+description: Use to turn a pet concept, story, or product selling points into a commerce video up to 30 seconds. Prepare the script, pet, optional product, and scene assets in Infinite Canvas, then generate one video within authorization. Also supports non-commerce pet shorts when explicitly selected. Use a pet commerce writing skill for scripts or prompts only, and the long-video skill for videos over 30 seconds.
 metadata:
-  version: "1.3.2"
-  displayName: Pet Short Video Workflow
+  version: "1.3.3"
+  displayName: Produce Pet Commerce Shorts (Up to 30s)
   author: Infinite Canvas
 ---
 
-# Pet Short Video Workflow
+# Produce Pet Commerce Shorts (Up to 30s)
 
 Use English for explanations and newly created text unless the user requests another language. Preserve supplied dialogue, exact reference handles, tool parameters, and model-required fixed syntax. Supporting source material does not override the selected output language.
 

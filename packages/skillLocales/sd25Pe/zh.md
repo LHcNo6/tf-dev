@@ -1,9 +1,9 @@
 ---
 name: sd25-pe
-description: 将文本、故事及可选多模态参考整理成 Seedance 2.5 可直接提交的提示词，支持文生视频、多参考、关键帧、分镜板、白模、视频与音频编辑及视频延长；本技能仅输出文本。
+description: 使用 Seedance 2.5，需要将文本、故事或图片、视频、音频参考整理成可提交提示词时使用。支持新视频生成、多参考与关键帧、分镜板或白模参考，以及已有视频或音频的编辑、视频延长。只输出提示词文本，不提交生成或编辑任务。
 metadata:
   skill_version: 0.1.1
-  displayName: Seedance 2.5 提示词优化
+  displayName: Seedance 2.5 生成、编辑与延长提示词
   owner: seedance
   locales:
     en: en.md
@@ -25,7 +25,7 @@ metadata:
   exports: []
 ---
 
-# Seedance 2.5 提示词优化
+# Seedance 2.5 生成、编辑与延长提示词
 
 ## 每个会话首次触发前更新
 

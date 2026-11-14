@@ -4,9 +4,9 @@
 
 | 技术 name | 本目录 | 中文展示名 |
 | --- | --- | --- |
-| `seedance` | `seedance/` | Seedance 视频与图片提示词 |
-| `sd25-pe` | `sd25Pe/` | Seedance 2.5 提示词优化 |
-| `lengyi-seedance25-prompt` | `lengyiSeedance25Prompt/` | Seedance 2.5 连续镜头提示词 |
+| `seedance` | `seedance/` | 即梦视频与参考图提示词（Seedance） |
+| `sd25-pe` | `sd25Pe/` | Seedance 2.5 生成、编辑与延长提示词 |
+| `lengyi-seedance25-prompt` | `lengyiSeedance25Prompt/` | 故事转多镜头提示词（Seedance 2.5） |
 
 2026-11-13 以当前数据目录内已安装入口为依据整理。中文 `zh.md` 对应目标包的 `SKILL.md`，英文 `en.md` 对应目标包同目录的 `en.md`；中文入口声明 `metadata.locales.en: en.md`。两者保持原技术 name，中文与英文默认交付语言不同，用户指定语言、逐字对白、引用标签及模型固定语法优先。译本将重复说明合并整理，不把第三方能力描述当成本平台实测结果。
 
