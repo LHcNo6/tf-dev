@@ -1,0 +1,288 @@
+{
+  "date": "2026-11-14",
+  "purpose": "图片指令库卡片与详情效果预览；原创虚构宠物及用品，不代表真实商品或身份保持承诺。",
+  "processing": {
+    "format": "WebP",
+    "maxDimensions": [
+      640,
+      640
+    ],
+    "quality": 85,
+    "method": 6
+  },
+  "cost": "MCP 未提供实际费用；失败请求也不推定免费。",
+  "notes": [
+    "原图保留于 outputs/imageCommandsFlare/，目录名沿用首次尝试的模型；以每条 model 为准。",
+    "部分 Flare 图生图、文生图及 Sunburst 中等质量请求返回 HTTP 524 或连接中断，没有产出文件；最后采用成功返回且实际核对的图片。",
+    "头像为白底原创图裁切，其失败的单独生图请求不计入最终生成张数。",
+    "共 24 个网页预览：20 张 Flare、3 张 Sunburst、1 张裁切派生。"
+  ],
+  "assets": [
+    {
+      "id": "whiteBackground",
+      "asset": "apps/web/src/assets/imageCommands/whiteBackground.webp",
+      "operation": "generate_image",
+      "tool": "antaixin_images",
+      "model": "gpt-image-2.5-flare",
+      "quality": "high",
+      "size": "1024x1024",
+      "original": "outputs/imageCommandsFlare/whiteBackground.png",
+      "promptSummary": "原创虚构金棕白色柯基，纯白无缝背景，全身三分之四坐姿，自然柔光与接触阴影，无配件、人、文字或水印。原始请求完整提示词未保留，此处是摘要。"
+    },
+    {
+      "id": "premiumShowcase",
+      "asset": "apps/web/src/assets/imageCommands/premiumShowcase.webp",
+      "operation": "generate_image",
+      "tool": "antaixin_images",
+      "model": "gpt-image-2.5-flare",
+      "quality": "low",
+      "size": "1024x1024",
+      "original": "outputs/imageCommandsFlare/premiumShowcase.png",
+      "prompt": "Premium pet product photography for a visual image-command library card. One elegant matte sage-green ceramic dog bowl, softly rounded shape, a warm ivory interior, standing on a low cream travertine display plinth. A tiny tasteful dried oat stem rests far behind, no other products. Sophisticated warm beige seamless studio backdrop, a broad softbox from upper left, delicate ceramic texture and subtle shadows, ample clean margins. Square balanced composition, object complete and centered, quiet high-end pet brand art direction. No dog, no people, no text, no logo, no watermark, no packaging claims, no UI."
+    },
+    {
+      "id": "flatLay",
+      "asset": "apps/web/src/assets/imageCommands/flatLay.webp",
+      "operation": "generate_image",
+      "tool": "antaixin_images",
+      "model": "gpt-image-2.5-flare",
+      "quality": "low",
+      "size": "1024x1024",
+      "original": "outputs/imageCommandsFlare/flatLay.png",
+      "prompt": "Top-down flat-lay photograph of a tidy coordinated pet care kit: sage-green ceramic dog bowl, a rolled cream leash, tan leather collar, a small wooden grooming brush, and one cream cotton towel. Warm ivory tabletop, balanced spacing, soft daylight from upper left and natural shadows. Exactly these five items, all fully visible. No dog, no humans, no lettering or brands."
+    },
+    {
+      "id": "macro",
+      "asset": "apps/web/src/assets/imageCommands/macro.webp",
+      "operation": "generate_image",
+      "tool": "antaixin_images",
+      "model": "gpt-image-2.5-flare",
+      "quality": "low",
+      "size": "1024x1024",
+      "original": "outputs/imageCommandsFlare/macro.png",
+      "prompt": "A single original fictional Pembroke Welsh corgi: golden tan and white coat, broad white blaze between brown eyes, large upright ears, white chest and paws. Image-effect library preview. Complete subject centered with clear margins. No humans, no text, no logos, no watermark, no collage, no UI. Extreme macro photograph focused on the corgi's moist black nose and surrounding cream-white muzzle fur, with a hint of whiskers. Show believable fine nose texture, shallow depth of field, soft side light, creamy warm background, detailed and endearing, luxurious animal photography. Only one natural muzzle."
+    },
+    {
+      "id": "studioLight",
+      "asset": "apps/web/src/assets/imageCommands/studioLight.webp",
+      "operation": "generate_image",
+      "tool": "antaixin_images",
+      "model": "gpt-image-2.5-flare",
+      "quality": "medium",
+      "size": "1024x1024",
+      "original": "outputs/imageCommandsFlare/studioLight.png",
+      "prompt": "A single original fictional Pembroke Welsh corgi: golden tan and white coat, broad white blaze between brown eyes, large upright ears, white chest and paws. Image-effect library preview. Complete subject centered with clear margins. No humans, no text, no logos, no watermark, no collage, no UI. Premium softbox studio pet photography on a warm taupe background. Soft large key light, gentle fill and a delicate rim light reveal detailed fluffy fur, realistic animal anatomy. Full body sitting at a three-quarter angle, natural happy gaze. Restrained editorial color palette, soft shadow, clean visual focus."
+    },
+    {
+      "id": "bokeh",
+      "asset": "apps/web/src/assets/imageCommands/bokeh.webp",
+      "operation": "generate_image",
+      "tool": "antaixin_images",
+      "model": "gpt-image-2.5-flare",
+      "quality": "low",
+      "size": "1024x1024",
+      "original": "outputs/imageCommandsFlare/bokeh.png",
+      "prompt": "A single original fictional Pembroke Welsh corgi: golden tan and white coat, broad white blaze between brown eyes, large upright ears, white chest and paws. Image-effect library preview. Complete subject centered with clear margins. No humans, no text, no logos, no watermark, no collage, no UI. Photorealistic portrait of the corgi sitting in a lush green garden, tack-sharp eyes, fur and ears, with strong beautiful creamy bokeh in distant foliage and small circular golden highlights. Soft daylight, elegant shallow-depth portrait lens character, subject easy to recognize, cinematic but natural."
+    },
+    {
+      "id": "goldenHour",
+      "asset": "apps/web/src/assets/imageCommands/goldenHour.webp",
+      "operation": "generate_image",
+      "tool": "antaixin_images",
+      "model": "gpt-image-2.5-flare",
+      "quality": "low",
+      "size": "1024x1024",
+      "original": "outputs/imageCommandsFlare/goldenHour.png",
+      "prompt": "A single original fictional Pembroke Welsh corgi: golden tan and white coat, broad white blaze between brown eyes, large upright ears, white chest and paws. Image-effect library preview. Complete subject centered with clear margins. No humans, no text, no logos, no watermark, no collage, no UI. Photorealistic corgi sitting in an amber meadow at sunset, warm low golden sidelight and a delicate glowing rim around its ears. Softly blurred distant hills, natural warm fur colors, full dog visible."
+    },
+    {
+      "id": "watercolor",
+      "asset": "apps/web/src/assets/imageCommands/watercolor.webp",
+      "operation": "generate_image",
+      "tool": "antaixin_images",
+      "model": "gpt-image-2.5-sunburst",
+      "quality": "low",
+      "size": "1024x1024",
+      "original": "outputs/imageCommandsFlare/watercolor.png",
+      "prompt": "An original watercolor painting of a golden tan and white corgi with upright ears, white face blaze and brown eyes. Transparent ochre pigment, soft sage washes, delicate ivory paper texture, loose hand-painted edges, full sitting dog with generous white margins. No text, signature, watermark, people or logo."
+    },
+    {
+      "id": "oilPainting",
+      "asset": "apps/web/src/assets/imageCommands/oilPainting.webp",
+      "operation": "generate_image",
+      "tool": "antaixin_images",
+      "model": "gpt-image-2.5-sunburst",
+      "quality": "low",
+      "size": "1024x1024",
+      "original": "outputs/imageCommandsFlare/oilPainting.png",
+      "prompt": "An original oil painting on textured canvas of a golden tan and white Pembroke Welsh corgi sitting against a dark olive background. Broad white facial blaze, upright ears and warm brown eyes. Expressive visible oil brushstrokes, warm ochre and ivory colors, chiaroscuro light, full body, generous margins. No signature, text, watermark, humans or logos."
+    },
+    {
+      "id": "lineArt",
+      "asset": "apps/web/src/assets/imageCommands/lineArt.webp",
+      "operation": "generate_image",
+      "tool": "antaixin_images",
+      "model": "gpt-image-2.5-flare",
+      "quality": "low",
+      "size": "1024x1024",
+      "original": "outputs/imageCommandsFlare/lineArt.png",
+      "prompt": "A single original fictional Pembroke Welsh corgi: golden tan and white coat, broad white blaze between brown eyes, large upright ears, white chest and paws. Image-effect library preview. Complete subject centered with clear margins. No humans, no text, no logos, no watermark, no collage, no UI. Minimal elegant black ink line drawing on pure warm-white paper. This corgi sitting full body, clean expressive contours with slightly varied line weight, recognizable large ears and face blaze marked with a few fine interior lines. Sparse intentional details, airy negative space. Only black linework, no color fills, no shading, no text."
+    },
+    {
+      "id": "paperCraft",
+      "asset": "apps/web/src/assets/imageCommands/paperCraft.webp",
+      "operation": "generate_image",
+      "tool": "antaixin_images",
+      "model": "gpt-image-2.5-flare",
+      "quality": "low",
+      "size": "1024x1024",
+      "original": "outputs/imageCommandsFlare/paperCraft.png",
+      "prompt": "A single original fictional Pembroke Welsh corgi: golden tan and white coat, broad white blaze between brown eyes, large upright ears, white chest and paws. Image-effect library preview. Complete subject centered with clear margins. No humans, no text, no logos, no watermark, no collage, no UI. An exquisite handmade layered paper sculpture of the sitting corgi. Tan, cream and white cut cardstock pieces form the dog with visible crisp cut edges, folded planes, tiny layered shadows and carefully assembled ears and face blaze. Pale sky-blue paper backdrop, softly lit tabletop art-object photography. Truly three-dimensional layered cut paper, not a photo with paper texture."
+    },
+    {
+      "id": "pixelArt",
+      "asset": "apps/web/src/assets/imageCommands/pixelArt.webp",
+      "operation": "generate_image",
+      "tool": "antaixin_images",
+      "model": "gpt-image-2.5-flare",
+      "quality": "low",
+      "size": "1024x1024",
+      "original": "outputs/imageCommandsFlare/pixelArt.png",
+      "prompt": "A single original fictional Pembroke Welsh corgi: golden tan and white coat, broad white blaze between brown eyes, large upright ears, white chest and paws. Image-effect library preview. Complete subject centered with clear margins. No humans, no text, no logos, no watermark, no collage, no UI. Pixel art sprite portrait, deliberately visible large square pixels, limited 16-color palette, charming retro videogame aesthetic, simple pale blue background, no anti-aliasing."
+    },
+    {
+      "id": "petAvatar",
+      "asset": "apps/web/src/assets/imageCommands/petAvatar.webp",
+      "operation": "crop",
+      "sourceImage": "outputs/imageCommandsFlare/whiteBackground.png",
+      "crop": [
+        240,
+        0,
+        940,
+        700
+      ]
+    },
+    {
+      "id": "pet3d",
+      "asset": "apps/web/src/assets/imageCommands/pet3d.webp",
+      "operation": "generate_image",
+      "tool": "antaixin_images",
+      "model": "gpt-image-2.5-flare",
+      "quality": "low",
+      "size": "1024x1024",
+      "original": "outputs/imageCommandsFlare/pet3d.png",
+      "prompt": "A single original fictional Pembroke Welsh corgi: golden tan and white coat, broad white blaze between brown eyes, large upright ears, white chest and paws. Image-effect library preview. Complete subject centered with clear margins. No humans, no text, no logos, no watermark, no collage, no UI. Premium stylized 3D animated character, rounded playful proportions, expressive brown eyes, soft realistic fur tufts, gentle studio lighting, pale lavender seamless background, polished CGI render."
+    },
+    {
+      "id": "petChibi",
+      "asset": "apps/web/src/assets/imageCommands/petChibi.webp",
+      "operation": "edit_image",
+      "tool": "antaixin_images",
+      "model": "gpt-image-2.5-flare",
+      "quality": "high",
+      "size": "1024x1024",
+      "original": "outputs/imageCommandsFlare/petChibi.png",
+      "referenceImage": "outputs/imageCommandsFlare/whiteBackground.png",
+      "prompt": "Create ONE finished effect-preview image for a pet image-command library. Use the supplied original fictional corgi image only as the identity reference: preserve golden-tan and white coat, white blaze, upright ears, brown eyes and recognizable face. No humans, no text, no logos, no watermark, no UI. Square standalone composition, keep entire subject within frame with generous margins. Chibi illustration: redesign this corgi with an oversized round head, a very small chubby body and tiny complete animal paws, big expressive eyes and upright ears. Original clean 2D character illustration with subtle shading and a pale buttery-yellow background. Preserve tan-white identity markings, cute silhouette, full body."
+    },
+    {
+      "id": "petFigure",
+      "asset": "apps/web/src/assets/imageCommands/petFigure.webp",
+      "operation": "generate_image",
+      "tool": "antaixin_images",
+      "model": "gpt-image-2.5-flare",
+      "quality": "low",
+      "size": "1024x1024",
+      "original": "outputs/imageCommandsFlare/petFigure.png",
+      "prompt": "A single original fictional Pembroke Welsh corgi: golden tan and white coat, broad white blaze between brown eyes, large upright ears, white chest and paws. Image-effect library preview. Complete subject centered with clear margins. No humans, no text, no logos, no watermark, no collage, no UI. A collectible miniature resin corgi figurine displayed inside a crystal clear acrylic display cube on an ivory plinth. Fine sculpted fur details, tiny paws, soft studio shadows, warm cream background, unbranded packaging without writing."
+    },
+    {
+      "id": "petPlush",
+      "asset": "apps/web/src/assets/imageCommands/petPlush.webp",
+      "operation": "generate_image",
+      "tool": "antaixin_images",
+      "model": "gpt-image-2.5-flare",
+      "quality": "low",
+      "size": "1024x1024",
+      "original": "outputs/imageCommandsFlare/petPlush.png",
+      "prompt": "A single original fictional Pembroke Welsh corgi: golden tan and white coat, broad white blaze between brown eyes, large upright ears, white chest and paws. Image-effect library preview. Complete subject centered with clear margins. No humans, no text, no logos, no watermark, no collage, no UI. A real handmade soft plush corgi toy photographed in a studio, short golden tan plush fabric and fluffy white chest, stitched brown eyes, textile seams, stubby plush paws, cream backdrop."
+    },
+    {
+      "id": "petFelt",
+      "asset": "apps/web/src/assets/imageCommands/petFelt.webp",
+      "operation": "generate_image",
+      "tool": "antaixin_images",
+      "model": "gpt-image-2.5-flare",
+      "quality": "low",
+      "size": "1024x1024",
+      "original": "outputs/imageCommandsFlare/petFelt.png",
+      "prompt": "A single original fictional Pembroke Welsh corgi: golden tan and white coat, broad white blaze between brown eyes, large upright ears, white chest and paws. Image-effect library preview. Complete subject centered with clear margins. No humans, no text, no logos, no watermark, no collage, no UI. A handcrafted needle-felted wool miniature corgi, visibly fuzzy wool fibers, soft rounded handmade shape and tiny black bead eyes. Object photography on pale blush paper, warm soft light, full small sculpture visible."
+    },
+    {
+      "id": "petSticker",
+      "asset": "apps/web/src/assets/imageCommands/petSticker.webp",
+      "operation": "generate_image",
+      "tool": "antaixin_images",
+      "model": "gpt-image-2.5-flare",
+      "quality": "low",
+      "size": "1024x1024",
+      "original": "outputs/imageCommandsFlare/petSticker.png",
+      "prompt": "A single original fictional Pembroke Welsh corgi: golden tan and white coat, broad white blaze between brown eyes, large upright ears, white chest and paws. Image-effect library preview. Complete subject centered with clear margins. No humans, no text, no logos, no watermark, no collage, no UI. A single die-cut cute corgi sticker, bold clean dark outline, flat warm colors with a few soft highlights, happy tongue-out expression and playful sitting pose, thick white sticker border on pale mint background. Only one sticker, no sticker sheet."
+    },
+    {
+      "id": "petDaily",
+      "asset": "apps/web/src/assets/imageCommands/petDaily.webp",
+      "operation": "generate_image",
+      "tool": "antaixin_images",
+      "model": "gpt-image-2.5-flare",
+      "quality": "low",
+      "size": "1024x1024",
+      "original": "outputs/imageCommandsFlare/petDaily.png",
+      "prompt": "A single original fictional Pembroke Welsh corgi: golden tan and white coat, broad white blaze between brown eyes, large upright ears, white chest and paws. Image-effect library preview. Complete subject centered with clear margins. No humans, no text, no logos, no watermark, no collage, no UI. Natural realistic pet lifestyle photograph: corgi sitting on a cream rug beside a linen sofa in a bright calm living room, morning window light, relaxed alert face, warm wood and ivory interior, full dog visible, few props."
+    },
+    {
+      "id": "petCamping",
+      "asset": "apps/web/src/assets/imageCommands/petCamping.webp",
+      "operation": "generate_image",
+      "tool": "antaixin_images",
+      "model": "gpt-image-2.5-flare",
+      "quality": "low",
+      "size": "1024x1024",
+      "original": "outputs/imageCommandsFlare/petCamping.png",
+      "prompt": "A single original fictional Pembroke Welsh corgi: golden tan and white coat, broad white blaze between brown eyes, large upright ears, white chest and paws. Image-effect library preview. Complete subject centered with clear margins. No humans, no text, no logos, no watermark, no collage, no UI. Photorealistic corgi sitting on soft grass next to a small sage-green camping tent, beautiful peaceful mountain meadow, morning light, tasteful outdoor pet lifestyle editorial, complete dog prominent, no people, no campfire."
+    },
+    {
+      "id": "petBirthday",
+      "asset": "apps/web/src/assets/imageCommands/petBirthday.webp",
+      "operation": "generate_image",
+      "tool": "antaixin_images",
+      "model": "gpt-image-2.5-flare",
+      "quality": "low",
+      "size": "1024x1024",
+      "original": "outputs/imageCommandsFlare/petBirthday.png",
+      "prompt": "Square studio pet birthday portrait. One happy golden tan and white corgi with big upright ears, sitting beside a few pastel peach and sage balloons. Warm cream seamless background, soft light, full dog visible with generous margins. Original fictional pet. No people, text, numbers, food, logos or watermark."
+    },
+    {
+      "id": "petCover",
+      "asset": "apps/web/src/assets/imageCommands/petCover.webp",
+      "operation": "generate_image",
+      "tool": "antaixin_images",
+      "model": "gpt-image-2.5-sunburst",
+      "quality": "low",
+      "size": "1024x1024",
+      "original": "outputs/imageCommandsFlare/petCover.png",
+      "prompt": "A bright editorial pet portrait for a short-video cover. One cheerful golden tan and white corgi with upright ears and white face blaze, lively curious brown eyes and a playful forward lean. Pale turquoise seamless studio backdrop, beautiful soft light, complete ears and paws visible, clean space above its head. No text, title, logo, watermark or people."
+    },
+    {
+      "id": "petProduct",
+      "asset": "apps/web/src/assets/imageCommands/petProduct.webp",
+      "operation": "generate_image",
+      "tool": "antaixin_images",
+      "model": "gpt-image-2.5-flare",
+      "quality": "low",
+      "size": "1024x1024",
+      "original": "outputs/imageCommandsFlare/petProduct.png",
+      "prompt": "A single original fictional Pembroke Welsh corgi: golden tan and white coat, broad white blaze between brown eyes, large upright ears, white chest and paws. Image-effect library preview. Complete subject centered with clear margins. No humans, no text, no logos, no watermark, no collage, no UI. A natural pet product lifestyle photograph: this corgi sitting alongside one sage-green ceramic dog bowl on an ivory floor, warm natural window light and calm cream background. The complete dog and bowl both clearly visible, product shape realistic, relaxed friendly gaze, no branding, no food."
+    }
+  ]
+}

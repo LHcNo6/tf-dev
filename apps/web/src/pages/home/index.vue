@@ -13,7 +13,7 @@
         </button>
       </div>
       <nav class="sidebarNav" aria-label="首页导航">
-        <button v-for="section in homeSections" :key="section.id" class="sidebarItem" :class="{ active: activeSection === section.id }" type="button" :aria-current="activeSection === section.id ? 'location' : undefined" :aria-label="translate(section.label)" :title="translate(section.label)" @click="scrollToSection(section.id)">
+        <button v-for="section in homeSections" :key="section.id" class="sidebarItem" :class="{ active: !libraryVisible && activeSection === section.id }" type="button" :aria-current="!libraryVisible && activeSection === section.id ? 'location' : undefined" :aria-label="translate(section.label)" :title="translate(section.label)" @click="scrollToSection(section.id)">
           <component :is="section.icon" :size="18" aria-hidden="true" />
           <span class="sidebarText">{{ translate(section.label) }}</span>
         </button>
@@ -21,6 +21,10 @@
         <button class="sidebarItem" :class="{ active: assetsVisible }" type="button" aria-label="素材库" title="素材库" aria-haspopup="dialog" :aria-expanded="assetsVisible" @click="assetsVisible = true">
           <icon-library-photo :size="18" aria-hidden="true" />
           <span class="sidebarText">素材库</span>
+        </button>
+        <button class="sidebarItem libraryEntry" :class="{ active: libraryVisible }" type="button" :aria-current="libraryVisible ? 'page' : undefined" aria-label="指令库" title="指令库" @click="openImageCommands">
+          <icon-sparkles :size="18" aria-hidden="true" />
+          <span class="sidebarText">指令库</span>
         </button>
       </nav>
       <div class="sidebarFooter">
@@ -42,7 +46,8 @@
       </div>
     </aside>
     <el-scrollbar ref="pageScroll" class="pageScroll" @scroll="updateActiveSection">
-      <div class="pageBody">
+      <imageCommands v-if="libraryVisible" @select="selectHomeImageCommand" />
+      <div v-show="!libraryVisible" class="pageBody">
         <el-main class="pageContent">
           <section class="creationPanel" data-home-section="home" aria-label="创建项目">
             <div class="brand">
@@ -58,11 +63,13 @@
                 </div>
                 <input ref="attachmentInput" type="file" :accept="attachmentAccept" multiple hidden :disabled="creating || opening" @change="selectAttachments" />
                 <attachmentList v-if="promptAttachments.length" class="promptAttachments" :attachments="promptAttachments" removable restorable :disabled="creating || opening" @remove="promptAttachments.splice($event, 1)" @restore="restoreAttachment" />
-                <el-input ref="promptInput" v-model="prompt" type="textarea" :autosize="{ minRows: 3, maxRows: 8 }" resize="none" :disabled="creating || opening" :placeholder="promptPlaceholder" aria-label="创作描述" @paste.capture="pasteAttachments" />
+                <div v-if="selectedImageCommand" class="selectedImageCommand" role="status"><strong>{{ selectedImageCommand.name }}</strong><span>{{ selectedImageCommand.input }}</span></div>
+                <el-input ref="promptInput" v-model="prompt" type="textarea" :autosize="{ minRows: 3, maxRows: 8 }" resize="none" :disabled="creating || opening" :placeholder="promptPlaceholder" aria-label="创作描述" @paste.capture="pasteAttachments" @keydown.capture="handleHomeCommandKeydown" />
                 <template #footer>
                   <div class="composerFooter">
                     <div class="composerTools">
                       <el-button class="attachmentButton" text circle :icon="IconPaperclip" :disabled="creating || opening" aria-label="添加附件" title="添加附件" @click="attachmentInput?.click()" />
+                      <skillMenu ref="homeCommandMenu" :active="!libraryVisible" :disabled="creating || opening" :includeSkills="false" :query="homeCommandQuery" :editor="promptInput?.$el" @selectCommand="selectHomeImageCommand" @dismiss="homeCommandDismissed = true" />
                       <workspacePicker ref="promptWorkspacePicker" v-model="workspaceDirectory" :disabled="creating || opening" />
                     </div>
                     <div class="sendActions">
@@ -132,6 +139,7 @@ import {
   IconArrowUp, IconPlus, IconLoader2,
   IconFolder, IconEdit, IconFileZip,
   IconTrash, IconPaperclip,
+  IconSparkles,
 } from "@tabler/icons-vue";
 import modelPopover from "@/components/modelPopover.vue";
 import attachmentList from "@/components/agent/attachmentList.vue";
@@ -151,6 +159,8 @@ import bg from "./bg.vue";
 import explore from "./explore.vue";
 import projectCover from "./projectCover.vue";
 import workspacePicker from "./workspacePicker.vue";
+import skillMenu from "@/components/agent/skillMenu.vue";
+import { useImageCommands } from "@/lib/imageCommands";
 
 const settingsVisible = ref(false);
 const assetsVisible = ref(false);
@@ -166,6 +176,8 @@ const homeSections = [
 ];
 const mobileConnect = defineAsyncComponent(() => import("@/components/mobileConnect.vue"));
 const router = useRouter();
+const libraryVisible = computed(() => router.currentRoute.value.query.view === "imageCommands");
+const imageCommands = defineAsyncComponent(() => import("./imageCommands.vue"));
 const pageLifetime = new AbortController();
 const creating = ref(false);
 const opening = ref(false);
@@ -173,7 +185,13 @@ const exportingDirectory = ref("");
 const promptWorkspacePicker = ref<InstanceType<typeof workspacePicker>>();
 const relocationPicker = ref<InstanceType<typeof workspacePicker>>();
 const prompt = ref("");
+const { imageCommands: imageCommandCatalog } = useImageCommands();
+const selectedImageCommand = computed(() => imageCommandCatalog.value.find(item => item.id === /^\s*\/([a-zA-Z][a-zA-Z0-9]*)(?=\s|$)/.exec(prompt.value)?.[1]));
 const promptInput = ref<InputInstance>();
+const homeCommandMenu = ref<InstanceType<typeof skillMenu>>();
+const homeCommandDismissed = ref(false);
+const homeCommandQuery = computed(() => homeCommandDismissed.value ? undefined : /^\/([^\s/]*)$/.exec(prompt.value)?.[1]);
+watch(prompt, () => { homeCommandDismissed.value = false; });
 const promptAttachments = ref<AgentAttachment[]>([]);
 const attachmentInput = ref<HTMLInputElement>();
 const attachmentAccept = `image/*,video/*,${readableFileAccept}`;
@@ -257,7 +275,31 @@ const selectedModel = ref("");
 const reasoningEffort = ref("");
 const sortedProjects = computed(() => [...projectList.value].sort((left, right) => right.lastOpenedAt - left.lastOpenedAt));
 
-function scrollToSection(section: string) {
+async function openImageCommands() {
+  await router.push({ path: "/home", query: { ...router.currentRoute.value.query, view: "imageCommands" } });
+  pageScroll.value?.scrollTo({ top: 0 });
+}
+
+function handleHomeCommandKeydown(event: Event) {
+  if (event instanceof KeyboardEvent) homeCommandMenu.value?.handleKeydown(event);
+}
+
+async function selectHomeImageCommand(id: string) {
+  if (creating.value || opening.value) return;
+  prompt.value = `/${id} ${prompt.value.replace(/^\s*\/[^\s/]*(?=\s|$)\s*/, "")}`;
+  homeCommandDismissed.value = true;
+  await scrollToSection("home");
+  await nextTick();
+  promptInput.value?.focus();
+}
+
+async function scrollToSection(section: string) {
+  if (libraryVisible.value) {
+    const query = { ...router.currentRoute.value.query };
+    delete query.view;
+    await router.push({ path: "/home", query });
+    await nextTick();
+  }
   const wrap = pageScroll.value?.wrapRef;
   const target = wrap?.querySelector<HTMLElement>(`[data-home-section="${section}"]`);
   if (!wrap || !target) return;
@@ -269,6 +311,7 @@ function scrollToSection(section: string) {
 }
 
 function updateActiveSection() {
+  if (libraryVisible.value) return;
   const wrap = pageScroll.value?.wrapRef;
   if (!wrap) return;
   backgroundScrollTop.value = wrap.scrollTop;
@@ -548,6 +591,12 @@ async function createProject(fromPrompt = true) {
       border-color: rgb(102 125 155 / 12%);
     }
 
+    .libraryEntry {
+      margin-top: 7px;
+      border: 1px solid var(--el-border-color-lighter);
+      background: color-mix(in srgb, var(--el-color-primary) 5%, transparent);
+    }
+
     .sidebarHeader {
       position: relative;
       display: flex;
@@ -728,6 +777,11 @@ async function createProject(fromPrompt = true) {
 
             .promptCard {
               position: relative;
+              overflow: visible;
+              :deep(.skillPopup) {
+                top: calc(100% + 8px);
+                bottom: auto;
+              }
               border-radius: calc(var(--ui-radius) * 2.5);
               border-color: var(--el-border-color-light);
               background: color-mix(in srgb, var(--el-bg-color-overlay) 70%, transparent);
@@ -770,6 +824,17 @@ async function createProject(fromPrompt = true) {
 
               .promptAttachments {
                 margin-bottom: 12px;
+              }
+
+              .selectedImageCommand {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px 12px;
+                margin-bottom: 8px;
+                font-size: 12px;
+                line-height: 1.6;
+                color: var(--el-text-color-secondary);
+                strong { color: var(--el-color-primary); font-weight: 500; }
               }
 
               :deep(.el-textarea__inner) {

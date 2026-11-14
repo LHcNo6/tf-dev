@@ -3,10 +3,14 @@ import type { UserMessage } from "@earendil-works/pi-ai";
 import type { AgentSession } from "@earendil-works/pi-coding-agent";
 import type { AgentMessageDelivery } from "@/agent/runtime/types";
 import { agentUserMessageSchema, getQueuedMessageId, getToolResultText } from "@/agent/runtime/sessions";
+import { expandImageCommand } from "@/lib/imageCommands";
 
 type UserMessageDetails = Omit<z.infer<typeof agentUserMessageSchema>, "messageId">;
+const manualCommandMessages = new WeakSet<UserMessage>();
 
-export function configureAgentDelivery(session: AgentSession, initial?: UserMessageDetails, initialTaskId?: string) {
+export function markManualImageCommand(message: UserMessage) { manualCommandMessages.add(message); }
+
+export function configureAgentDelivery(session: AgentSession, initial?: UserMessageDetails, initialTaskId?: string, manualImageCommands = false) {
   session.setSteeringMode("all");
   session.setFollowUpMode("one-at-a-time");
   const history = session.sessionManager;
@@ -32,6 +36,14 @@ export function configureAgentDelivery(session: AgentSession, initial?: UserMess
   function prepareMessage(message: UserMessage, original: UserMessageDetails, mode?: AgentMessageDelivery["mode"]) {
     const details: UserMessageDetails = { ...original, delivery: undefined,
       queueId: queuedModes.has(message) ? getQueuedMessageId(message) : undefined };
+    // 仅首次真人消息或真人入队消息可以触发；先保留原文，再展开实际进入历史的首段文字。
+    if (((firstMessage && manualImageCommands) || manualCommandMessages.has(message)) && expandImageCommand(original.content)) {
+      if (typeof message.content === "string") message.content = expandImageCommand(message.content) ?? message.content;
+      else {
+        const firstText = message.content.find(part => part.type === "text");
+        if (firstText?.type === "text") firstText.text = expandImageCommand(firstText.text) ?? firstText.text;
+      }
+    }
     if (mode === "steer") {
       if (!taskMessageId) throw new Error("无法找到引导所属的当前任务");
       const guidance = "[当前任务中的引导]\n"
@@ -44,6 +56,7 @@ export function configureAgentDelivery(session: AgentSession, initial?: UserMess
       details.delivery = { mode, taskMessageId: "" };
     }
     originals.set(message, details);
+    manualCommandMessages.delete(message);
   }
 
   function saveDetails(message: UserMessage, messageId: string) {

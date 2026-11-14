@@ -7,6 +7,7 @@ import u from "@/utils";
 import { translateError, translateMessage } from "@/lib/i18n";
 import { thinkingLevels } from "@/lib/modelReasoning";
 import { getAgentModelConfiguration } from "@/agent/runtime/model";
+import { expandImageCommand } from "@/lib/imageCommands";
 
 const inputSchema = z.object({
   prompt: z.string().trim(), directory: z.string().min(1),
@@ -57,6 +58,7 @@ export default Router().post("/", validateFields(inputSchema.shape), async (req,
     unregister = u.agent.registerAgentRun(run);
     const cwd = await workspace;
     controller.signal.throwIfAborted();
+    expandImageCommand(options.prompt);
     getAgentModelConfiguration(options.providerId, options.modelId, options.thinkingLevel);
     res.set({ "Content-Type": "application/x-ndjson; charset=utf-8", "Cache-Control": "no-cache, no-transform", "X-Accel-Buffering": "no" });
     res.flushHeaders();
@@ -71,7 +73,7 @@ export default Router().post("/", validateFields(inputSchema.shape), async (req,
     heartbeat = setInterval(() => {
       if (!res.destroyed && !res.writableEnded && !res.writableNeedDrain) res.write("\n");
     }, 20000);
-    await u.agent.run({ ...options, runId, cwd, canvas: bridge?.context, question: questions.context, signal: controller.signal, onCancel: stop }, send);
+    await u.agent.run({ ...options, manualImageCommands: true, runId, cwd, canvas: bridge?.context, question: questions.context, signal: controller.signal, onCancel: stop }, send);
     send({ type: "done" });
   } catch (error) {
     if (!res.headersSent) throw error;

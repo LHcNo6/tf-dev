@@ -14,7 +14,7 @@ import { createAgentTools } from "@/agent/tools";
 import { createAgentResources } from "@/agent/runtime/resources";
 import { createAgentModel, getAgentModelConfiguration } from "@/agent/runtime/model";
 import { configureAgentRequests } from "@/agent/runtime/requests";
-import { configureAgentDelivery } from "@/agent/runtime/delivery";
+import { configureAgentDelivery, markManualImageCommand } from "@/agent/runtime/delivery";
 import { getAgentImageReference, getOffloadedImageText, readAgentImage } from "@/agent/runtime/imageAttachments";
 import { createSubAgentTool } from "@/agent/tools/subAgent";
 import { createMemoryTool } from "@/agent/tools/memory";
@@ -29,6 +29,7 @@ import {
 import { isMemoryEnabled } from "@/utils/personalization";
 import { lockWorkspaceFiles, resolveWorkspacePath } from "@/utils/workspace/files";
 import { t } from "@/lib/i18n";
+import { expandImageCommand } from "@/lib/imageCommands";
 import { decodeTextFile } from "@/lib/documentFormats";
 import type { ThinkingLevel } from "@/lib/modelReasoning";
 
@@ -45,6 +46,7 @@ type AgentOptions = {
   expectedRunId?: string;
   resendFrom?: string;
   streamingBehavior?: "steer" | "followUp";
+  manualImageCommands?: boolean;
   canvas?: CanvasContext;
   question?: QuestionContext;
   signal?: AbortSignal;
@@ -66,6 +68,7 @@ export async function run(
     expectedRunId,
     resendFrom,
     streamingBehavior,
+    manualImageCommands = false,
     canvas,
     question,
     signal,
@@ -80,6 +83,8 @@ export async function run(
   mentions = agentMentionsSchema.parse(mentions);
   validateMentionTokens(prompt, mentions);
   if (!prompt.trim() && !attachments.length && !mentions.length) throw Object.assign(new Error("请输入消息、提及或添加附件"), { status: 400 });
+  // 只校验真人提交的命令；展开在消息实际投递时完成，排队、引导和重发沿用同一入口。
+  if (manualImageCommands && !peerMessage) expandImageCommand(prompt);
   getAgentModelConfiguration(providerId, modelId, thinkingLevel);
   const attachmentContents: (z.infer<typeof agentAttachmentsSchema>[number] & { content?: string })[] = [];
   for (const attachment of attachments) {
@@ -123,6 +128,7 @@ export async function run(
     // ACT: 此入口禁用扩展及模板，SDK 在首个 await 前同步入队；先取得对象，避免确认前已被消费。
     const queue = active.session.agent.getQueuedMessages();
     const message = [...queue.steering, ...queue.followUp].find(message => message.role === "user" && !previousMessages.has(message));
+    if (manualImageCommands && message?.role === "user") markManualImageCommand(message);
     const queueId = message && getQueuedMessageId(message);
     await pending;
     if (!queueId) throw new Error("服务端未能确认入队消息，请刷新对话后重试");
@@ -241,7 +247,7 @@ export async function run(
     configureAgentRequests(session, undefined, signal, replyTo => send({ type: "retry", blockPrefix: `${messageIndex}:`, replyTo }));
     const delivery = configureAgentDelivery(session, peerMessage ? undefined : {
       content: prompt.trim(), attachments, mentions, delivery: originalMessage?.delivery,
-    }, peerMessage?.id);
+    }, peerMessage?.id, manualImageCommands && !peerMessage);
     active.forgetQueuedMessage = delivery.forgetQueuedMessage;
     active.session = session;
 

@@ -42,7 +42,7 @@
       <input ref="attachmentInput" type="file" :accept="attachmentAccept" multiple hidden :disabled="locked || running" @change="selectAttachments" />
       <el-button text circle :disabled="locked || running" aria-label="添加附件" :title="running ? '生成期间仅支持发送文字' : '添加附件'" @click="attachmentInput?.click()"><icon-paperclip :size="16" /></el-button>
       <mentionMenu ref="mentionMenuRef" :directory="directory" :active="active" :disabled="locked || running || !directory" :query="mentionQuery" :editor="senderElement" :currentCanvasId="createCanvasContext?.()?.id" @open="captureMentionPosition" @select="insertMentions" @dismiss="mentionQuery = undefined" />
-      <skillMenu ref="skillMenuRef" :directory="directory" :active="active" :disabled="locked || running || !directory" :query="skillQuery" :editor="senderElement" @select="selectSkill" @dismiss="skillQuery = undefined" />
+      <skillMenu ref="skillMenuRef" :directory="directory" :active="active" :disabled="locked || !directory" :includeSkills="!running" :query="skillQuery" :editor="senderElement" @select="selectSkill" @selectCommand="selectImageCommand" @dismiss="skillQuery = undefined" />
       <el-button class="voiceButton" :class="{ voiceActive }" text circle :disabled="!voiceSupported || (!voiceActive && locked)" :aria-label="voiceButtonLabel" :aria-pressed="voiceActive" :title="voiceButtonLabel" @click="voiceActive ? cancelVoiceInput() : startVoiceInput()"><icon-microphone :size="18" /></el-button>
       <contextUsagePopover v-model:visible="contextMenuVisible" :usage="contextUsage" :stats="stats" :contextWindow="contextWindow" :disabled="voiceActive" />
       <el-button v-if="running" class="stopButton" text circle :disabled="stopping" aria-label="停止生成" title="停止生成" @click="emit('stop')"><icon-player-stop-filled :size="14" /></el-button>
@@ -232,6 +232,20 @@ async function selectSkill(name: string) {
   if (first?.type === "Write") first.text = `/skill:${name} ${first.text.replace(skillQuery.value !== undefined ? /^\/\S*/ : /^\s*\/skill:\S+(?:\s+|$)/, "")}`;
   if (!model.length) model.push([]);
   if (first?.type !== "Write") model[0]!.unshift({ type: "Write", text: `/skill:${name} ` });
+  skillQuery.value = undefined;
+  mentionMenuRef.value?.closeMenu();
+  await instance.reset({ clearHistory: false, chatNode: model });
+  if (sender === instance) instance.focus("last");
+}
+
+async function selectImageCommand(id: string) {
+  const instance = sender;
+  if (!instance || locked.value) return;
+  const model = instance.getModel();
+  const first = model[0]?.[0];
+  if (first?.type === "Write") first.text = `/${id} ${first.text.replace(/^\s*\/[^\s/]*(?=\s|$)\s*/, "")}`;
+  if (!model.length) model.push([]);
+  if (first?.type !== "Write") model[0]!.unshift({ type: "Write", text: `/${id} ` });
   skillQuery.value = undefined;
   mentionMenuRef.value?.closeMenu();
   await instance.reset({ clearHistory: false, chatNode: model });

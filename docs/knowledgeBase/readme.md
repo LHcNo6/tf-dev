@@ -15,6 +15,7 @@
 | 视频制作 | [宠物短视频与带货提示词](petShortVideo.md)、[视频尾帧](videoLastFrame.md)、[视频合成](videoComposition.md) |
 | Agent 工具 | [回复与工具活动](agentReplies.md)、[沙盒导出](sandboxExports.md) |
 | Skill | [名称、描述与语言选择](skillLanguages.md) |
+| 图片创作 | [手动图片指令库与效果预览](imageCommands.md) |
 
 子包专属说明仍保留在对应包内，例如 [MCP](../../packages/mcp/README.md)、[多语言](../../packages/i18n/readme.md)；需要作为项目入口时在本表链接，不复制全文。
 
