@@ -68,7 +68,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, shallowRef } from "vue";
 import { ElMessage } from "element-plus";
-import { IconArrowUpRight, IconCamera, IconCopy, IconLayoutGrid, IconMoodSmile, IconPalette, IconPaw, IconSearch, IconShoppingBag, IconTent } from "@tabler/icons-vue";
+import { IconArrowUpRight, IconCalendar, IconCamera, IconCopy, IconCube, IconLayoutGrid, IconMoodSmile, IconPackage, IconPalette, IconPaw, IconPhotoEdit, IconSearch, IconShoppingBag, IconSpeakerphone, IconTent, IconUsers } from "@tabler/icons-vue";
 import type { ImageCommand } from "@toonflow/server/imageCommands";
 import { useImageCommands } from "@/lib/imageCommands";
 import { writeClipboardText } from "@/lib/clipboard";
@@ -91,7 +91,7 @@ const filteredCommands = computed(() => {
 });
 
 function categoryIcon(name: string) {
-  return ({ 基础摄影: IconCamera, 通用风格: IconPalette, 宠物形象: IconPaw, 宠物材质与表情: IconMoodSmile, 宠物生活: IconTent, 宠物内容与带货: IconShoppingBag })[name] ?? IconPaw;
+  return ({ 基础摄影: IconCamera, 通用风格: IconPalette, 宠物形象: IconPaw, 宠物材质与表情: IconMoodSmile, 宠物生活: IconTent, 宠物内容与带货: IconShoppingBag, 图片编辑: IconPhotoEdit, 包装与品牌: IconPackage, 户外广告展示: IconSpeakerphone, 数字广告素材: IconSpeakerphone, 生活场景: IconTent, 材质与工艺: IconPalette, "3D 与数字特效": IconCube, 社交媒体内容: IconLayoutGrid, 节日与季节: IconCalendar, 人物与角色: IconUsers, 宠物摄影: IconCamera, 宠物艺术风格: IconPalette, 宠物广告展示: IconSpeakerphone, 宠物数字特效: IconCube, 宠物节日与季节: IconCalendar, 宠物图片编辑: IconPhotoEdit })[name] ?? IconPaw;
 }
 
 async function copy(text: string) {
@@ -131,7 +131,7 @@ onMounted(reload);
   .libraryLayout {
     display: grid; grid-template-columns: 176px minmax(0, 1fr); gap: 30px; padding-top: 24px;
     .categorySidebar {
-      display: flex; flex-direction: column; gap: 5px; align-self: start; position: sticky; top: 24px;
+      display: flex; flex-direction: column; gap: 5px; align-self: start; position: sticky; top: 24px; max-height: calc(100dvh - 96px); overflow-y: auto;
       .categoryHeading { margin: 0 10px 12px; color: var(--el-text-color-secondary); font-size: 11px; letter-spacing: 0.08em; }
       button { display: flex; align-items: center; gap: 9px; width: 100%; padding: 11px 10px; border: 0; border-radius: 9px; background: transparent; color: var(--el-text-color-regular); font: inherit; font-size: 12px; text-align: start; cursor: pointer; transition: background-color 0.16s ease; svg { flex-shrink: 0; } small { margin-inline-start: auto; color: var(--el-text-color-secondary); font: 11px ui-monospace, monospace; } &.active { color: var(--el-color-primary); background: color-mix(in srgb, var(--el-color-primary) 10%, transparent); } &:hover { background: var(--el-fill-color); } }
     }

@@ -186,7 +186,7 @@ const promptWorkspacePicker = ref<InstanceType<typeof workspacePicker>>();
 const relocationPicker = ref<InstanceType<typeof workspacePicker>>();
 const prompt = ref("");
 const { imageCommands: imageCommandCatalog } = useImageCommands();
-const selectedImageCommand = computed(() => imageCommandCatalog.value.find(item => item.id === /^\s*\/([a-zA-Z][a-zA-Z0-9]*)(?=\s|$)/.exec(prompt.value)?.[1]));
+const selectedImageCommand = computed(() => imageCommandCatalog.value.find(item => item.id === /^\s*\/([a-zA-Z0-9]*[a-zA-Z][a-zA-Z0-9]*)(?=\s|$)/.exec(prompt.value)?.[1]));
 const promptInput = ref<InputInstance>();
 const homeCommandMenu = ref<InstanceType<typeof skillMenu>>();
 const homeCommandDismissed = ref(false);

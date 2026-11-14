@@ -6,6 +6,13 @@
 
 知识库建立于 2026-11-10；此前已有功能的行为和验证见[主题维护](../readme.md#主题维护)。
 
+- 2026-11-14：[剩余通用方向完整转为宠物领域](imageCommandsPetCoverage20261114.md)
+- 2026-11-14：[完整通用图片指令迁入](imageCommandsGeneralImport20261114.md)
+- 2026-11-14：[第六批包装、开箱与品牌展示指令](imageCommandsSixthBatch20261114.md)
+- 2026-11-14：[第五批通用表现与宠物材质、周边指令](imageCommandsFifthBatch20261114.md)
+- 2026-11-14：[第四批宠物商品与活动图文指令](imageCommandsFourthBatch20261114.md)
+- 2026-11-14：[第三批图片编辑与修图指令](imageCommandsThirdBatch20261114.md)
+- 2026-11-14：[第二批宠物 IP 与剧情素材指令](imageCommandsSecondBatch20261114.md)
 - 2026-11-14：[图片指令卡片与效果预览图](imageCommandPreviews20261114.md)
 - 2026-11-14：[手动图片指令库与宠物预设](imageCommands20261114.md)
 - 2026-11-14：[Skill 应用导向名称与触发描述](skillNaming20261114.md)
